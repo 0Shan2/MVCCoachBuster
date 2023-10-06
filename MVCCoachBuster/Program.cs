@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MVCCoachBuster.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<CoachBusterContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CoachBusterContext") ?? throw new InvalidOperationException("Connection string 'CoachBusterContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
