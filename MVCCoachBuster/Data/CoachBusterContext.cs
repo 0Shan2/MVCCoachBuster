@@ -14,6 +14,14 @@ namespace MVCCoachBuster.Data
         {
         }
 
-        public DbSet<MVCCoachBuster.Models.Rol> Rol { get; set; } = default!;
+        public DbSet<Rol> Rol { get; set; } 
+        public DbSet<Usuario> Usuarios { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Rol>().ToTable("Rol");
+            modelBuilder.Entity<Usuario>().ToTable("Usuario");
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
