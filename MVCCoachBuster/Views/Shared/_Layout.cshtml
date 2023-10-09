@@ -6,6 +6,8 @@
     <title>@ViewData["Title"] - MVCCoachBuster</title>
     <link rel="stylesheet" href="~/lib/fortawesome/fontawesome-free/css/all.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MVCCoachBuster.styles.css" asp-append-version="true" />
 </head>
@@ -35,6 +37,10 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                         </li>
                     </ul>
+                </div>
+                <div class="d-flex">
+               
+                    <button class="btn btn-light ms-3" asp-controller="Roles" asp-action="Index">Login</button>
                 </div>
             </div>
         </nav>

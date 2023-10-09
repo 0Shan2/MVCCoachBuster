@@ -41,7 +41,10 @@ namespace MVCCoachBuster.Data
             var planes = new Plan[]
             {
                new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2, Suscrito = true, UsuarioId = usuarios[0].Id},
-           
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2, Suscrito = true, UsuarioId = usuarios[0].Id},
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2, Suscrito = true, UsuarioId = usuarios[0].Id},
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2, Suscrito = true, UsuarioId = usuarios[0].Id},
+
             };
 
             context.Planes.AddRange(planes);

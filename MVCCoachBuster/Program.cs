@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MVCCoachBuster.Data;
@@ -12,6 +13,17 @@ builder.Services.AddDbContext<CoachBusterContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Autorizacion con esquemas especificos
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/AccesoDenegado";
+        options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+        options.SlidingExpiration = true;
+    });
 
 builder.Services.AddNotyf(config =>
 {
@@ -48,7 +60,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
