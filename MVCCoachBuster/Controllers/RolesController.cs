@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
 using MVCCoachBuster.Models;
@@ -11,12 +12,15 @@ namespace MVCCoachBuster.Controllers
     {
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
+        private readonly INotyfService _servicioNotificacion;
 
         //1º)Obtenemos acceso a IConfiguration 
-        public RolesController(CoachBusterContext context, IConfiguration configuration)
+        public RolesController(CoachBusterContext context, IConfiguration configuration,
+            INotyfService servicioNotificacion)
         {
             _context = context;
             _configuration = configuration;
+            _servicioNotificacion = servicioNotificacion;
         }
 
 
@@ -83,7 +87,8 @@ namespace MVCCoachBuster.Controllers
                     .Any(u => u.Nombre.ToLower().Trim() == rol.Nombre.ToLower().Trim());
                 if (existeElemtnoBd)
                 {
-                    ModelState.AddModelError("", "El rol que esta intentado crear, ya existe.");
+                    _servicioNotificacion.Warning("El rol que esta intentado crear, ya existe.");
+                    //ModelState.AddModelError("", "El rol que esta intentado crear, ya existe.");
                     return View(rol);
                 }
 
@@ -91,10 +96,12 @@ namespace MVCCoachBuster.Controllers
                 {
                     _context.Add(rol);
                     await _context.SaveChangesAsync();
+                    _servicioNotificacion.Success($"ÉXITO al crear el rol {rol.Nombre}");
                 }
                 catch (DbUpdateException) // Exceptción causa por eventos externos
                 {
-                    ModelState.AddModelError("", "Lo sentimos, ha ocurrido un error. Intente de nuevo.");
+                    _servicioNotificacion.Warning("Lo sentimos, ha ocurrido un error. Intente de nuevo.");
+                    //ModelState.AddModelError("", "Lo sentimos, ha ocurrido un error. Intente de nuevo.");
                     return View(rol);
                 }
                 return RedirectToAction(nameof(Index));
@@ -138,7 +145,8 @@ namespace MVCCoachBuster.Controllers
                     && u.Id != rol.Id);
                 if (existeElemtnoBd)
                 {
-                    ModelState.AddModelError("", "Ya existe un rol con este nombre.");
+                    _servicioNotificacion.Warning("Ya existe un rol con este nombre.");
+                    //ModelState.AddModelError("", "Ya existe un rol con este nombre.");
                     return View(rol);
                 }
 
@@ -147,6 +155,7 @@ namespace MVCCoachBuster.Controllers
                     _context.Update(rol);
                     //Si no hay errores, la clase es actualizada correctamente
                     await _context.SaveChangesAsync();
+                    _servicioNotificacion.Success($"ÉXITO al actualziar el rol {rol.Nombre}");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -187,17 +196,10 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Roles == null)
-            {
-                return Problem("Entity set 'CoachBusterContext.Rol'  is null.");
-            }
             var rol = await _context.Roles.FindAsync(id);
-            if (rol != null)
-            {
-                _context.Roles.Remove(rol);
-            }
-            
+            _context.Roles.Remove(rol);
             await _context.SaveChangesAsync();
+            _servicioNotificacion.Success($"ÉXITO al eliminar el rol {rol.Nombre}");
             return RedirectToAction(nameof(Index));
         }
 
