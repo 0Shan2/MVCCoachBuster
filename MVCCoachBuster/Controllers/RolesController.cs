@@ -22,20 +22,20 @@ namespace MVCCoachBuster.Controllers
         // GET: Roles
         public async Task<IActionResult> Index()
         {
-              return _context.Rol != null ? 
-                          View(await _context.Rol.ToListAsync()) :
+              return _context.Roles != null ? 
+                          View(await _context.Roles.ToListAsync()) :
                           Problem("Entity set 'CoachBusterContext.Rol'  is null.");
         }
 
         // GET: Roles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Rol == null)
+            if (id == null || _context.Roles == null)
             {
                 return NotFound();
             }
 
-            var rol = await _context.Rol
+            var rol = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (rol == null)
             {
@@ -70,12 +70,12 @@ namespace MVCCoachBuster.Controllers
         // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Rol == null)
+            if (id == null || _context.Roles == null)
             {
                 return NotFound();
             }
 
-            var rol = await _context.Rol.FindAsync(id);
+            var rol = await _context.Roles.FindAsync(id);
             if (rol == null)
             {
                 return NotFound();
@@ -121,12 +121,12 @@ namespace MVCCoachBuster.Controllers
         // GET: Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Rol == null)
+            if (id == null || _context.Roles == null)
             {
                 return NotFound();
             }
 
-            var rol = await _context.Rol
+            var rol = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (rol == null)
             {
@@ -141,14 +141,14 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Rol == null)
+            if (_context.Roles == null)
             {
                 return Problem("Entity set 'CoachBusterContext.Rol'  is null.");
             }
-            var rol = await _context.Rol.FindAsync(id);
+            var rol = await _context.Roles.FindAsync(id);
             if (rol != null)
             {
-                _context.Rol.Remove(rol);
+                _context.Roles.Remove(rol);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +157,7 @@ namespace MVCCoachBuster.Controllers
 
         private bool RolExists(int id)
         {
-          return (_context.Rol?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Roles?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

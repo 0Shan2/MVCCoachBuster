@@ -27,6 +27,10 @@ using(var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<CoachBusterContext>();
     context.Database.EnsureCreated();
+    //Llamamos a DBInitializer
+    // 1º) Como ya teniamos la bdd creada, tenemo que eliminarla
+    // 2º) Herramientas -> Adm,instrador paque NuGets -> Consola : Drop-Database -confirm
+    DbInitializer.Initialize(context); 
 }
 
 app.UseHttpsRedirection();
