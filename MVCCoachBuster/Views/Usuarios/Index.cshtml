@@ -1,37 +1,39 @@
-﻿@model IEnumerable<MVCCoachBuster.Models.Usuario>
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<Usuario>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Usuarios";
 }
 
-<h1>Index</h1>
+@await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
+    TerminoBusqueda = Model.TerminoBusqueda,
+    TituloCrear = "Crear Rol",
+    Total = Model.Total
+})
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<table class="table table-hover table-bordered table-striped">
+    <thead class="bg-secondary text-white">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Registros[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Correo)
+                @Html.DisplayNameFor(model => model.Registros[0].Correo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contrasena)
+                @Html.DisplayNameFor(model => model.Registros[0].Telefono)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Telefono)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rol)
+                @Html.DisplayNameFor(model => model.Registros[0].Rol)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model.Registros)
+        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
@@ -40,20 +42,26 @@
                 @Html.DisplayFor(modelItem => item.Correo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Contrasena)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Telefono)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Rol.Id)
+                @Html.DisplayFor(modelItem => item.Rol.Nombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <partial name="Acciones/_Crud" model="@item.Id" />
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<!--Elemento de paginación-->
+@Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
+    Pagina=page,
+    TerminoBusqueda=Model.TerminoBusqueda
+}),
+    new PagedListRenderOptions{
+        LiElementClasses = new string[]{"page-item"},
+        PageClasses = new string[]{"page-link"}
+    }
+)

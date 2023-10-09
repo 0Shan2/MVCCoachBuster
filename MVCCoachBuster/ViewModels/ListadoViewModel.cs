@@ -9,5 +9,6 @@ namespace MVCCoachBuster.ViewModels
         public int? Pagina { get; set; }
         public IPagedList<T> Registros { get; set; }
         public int Total { get; set; } = 0;
+        public string TituloCrear { get; set; }
     }
 }
