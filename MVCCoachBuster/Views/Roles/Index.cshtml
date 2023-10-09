@@ -1,25 +1,51 @@
-﻿@model IEnumerable<MVCCoachBuster.Models.Rol>
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+<!-- Index deja de ser IEnumerable sino ListadoViewModel-->
+@model ListadoViewModel<Rol>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Roles";
 }
 
 <h1>Index</h1>
 
+<p class="text-end">
+    @Model.Total registros
+</p>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<!-- Para la busqueda -->
+<div class="col-md-6">
+    <form>
+        <div class="row">
+            <div class="input-group">
+                <input asp-for="TerminoBusqueda" class="form-control" placeholder="Término de búsqueda" aria-label="Término de búsqueda" />
+                <button class="btn btn-info" name="botonBusqueda" id="botonBusquead" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>&nbsp;Buscar
+                </button>
+                <a class="btn btn-secondary" asp-action="Index">
+                    <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Limpiar
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Registros[0].Nombre)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Registros) { 
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
@@ -33,3 +59,13 @@
 }
     </tbody>
 </table>
+
+<!-- HTML Helper de este componente-->
+@Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
+    Pagina=page
+}),
+    new PagedListRenderOptions{
+        LiElementClasses = new string[]{"page-item"},
+        PageClasses = new string[]{"page-link"}
+    }
+)
