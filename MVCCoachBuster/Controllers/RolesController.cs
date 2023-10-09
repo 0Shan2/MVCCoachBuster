@@ -25,7 +25,9 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Index(ListadoViewModel<Rol> viewModel)
         {
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
-            var consulta = _context.Roles.AsQueryable(); //AsQueryable para poder hacer la busqueda
+            var consulta = _context.Roles
+                .OrderBy(m=>m.Nombre)
+                .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
             
             //2º) Para buscar un rol

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCCoachBuster", "MVCCoachBuster\MVCCoachBuster.csproj", "{B1666A3D-3E6E-4F1D-B357-1EBD189952F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCCoachBuster", "MVCCoachBuster\MVCCoachBuster.csproj", "{B1666A3D-3E6E-4F1D-B357-1EBD189952F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
