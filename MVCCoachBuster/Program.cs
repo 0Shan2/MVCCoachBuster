@@ -1,8 +1,10 @@
 ﻿using AspNetCoreHero.ToastNotification;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MVCCoachBuster.Data;
+using MVCCoachBuster.Helpers;
+using MVCCoachBuster.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Vamos añadir nuestra base de datos
@@ -32,6 +34,9 @@ builder.Services.AddNotyf(config =>
     config.Position = NotyfPosition.BottomRight;
 });
 
+// Agregamos en instancia de Singleton, ya que solo queremos una instancia estos elementos en nuestros componentes
+builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
+builder.Services.AddSingleton<UsuarioFactoria>();
 
 var app = builder.Build();
 
@@ -49,7 +54,8 @@ using(var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<CoachBusterContext>();
-    context.Database.EnsureCreated();
+    //context.Database.EnsureCreated();
+
     //Llamamos a DBInitializer
     // 1º) Como ya teniamos la bdd creada, tenemo que eliminarla
     // 2º) Herramientas -> Adm,instrador paque NuGets -> Consola : Drop-Database -confirm

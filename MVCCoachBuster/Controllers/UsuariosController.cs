@@ -2,30 +2,61 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
+using MVCCoachBuster.Helpers;
 using MVCCoachBuster.Models;
+using MVCCoachBuster.ViewModels;
+using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly CoachBusterContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly INotyfService _servicioNotificacion;
+        private readonly UsuarioFactoria _usuarioFactoria;
 
-        public UsuariosController(CoachBusterContext context)
+        public UsuariosController(CoachBusterContext context, IConfiguration configuration,
+            INotyfService servicioNotificacion, UsuarioFactoria usuarioFactoria)
         {
             _context = context;
+            _configuration = configuration;
+            _servicioNotificacion = servicioNotificacion;
+            _usuarioFactoria = usuarioFactoria;
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ListadoViewModel<Usuario> viewModel)
         {
-            var coachBusterContext = _context.Usuarios.Include(u => u.Rol);
-            return View(await coachBusterContext.ToListAsync());
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+
+            var consulta = _context.Usuarios
+                            .Include(u => u.Rol)
+                            .OrderBy(m => m.Nombre)
+                            .AsNoTracking();
+
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
+            {
+                consulta = consulta.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda)
+                                || u.Nombre.Contains(viewModel.TerminoBusqueda));
+            }
+
+            viewModel.TituloCrear = "Crear Usuario";
+            viewModel.Total = consulta.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+
+            viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
+            return View(viewModel);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,11 +76,13 @@ namespace MVCCoachBuster.Controllers
             return View(usuario);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Create
         public IActionResult Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Roles, "Id", "Id");
-            return View();
+            AgregarUsuarioViewModel viewModel = new AgregarUsuarioViewModel();
+            viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
+            return View(viewModel);
         }
 
         // POST: Usuarios/Create
@@ -57,18 +90,42 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Correo,Contrasena,Telefono,RolId")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Nombre,Correo,Contrasena,ConfirmarContrasena,Telefono,RolId")] UsuarioRegistroDto usuario)
         {
+            AgregarUsuarioViewModel viewModel = new AgregarUsuarioViewModel();
+            viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
+            viewModel.Usuario = usuario;
+
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
+                // En caso de que exista un usuario con esa cuenta, mandamos error
+                var existeUsuarioBd = _context.Usuarios
+                    .Any(u => u.Correo.ToLower().Trim() == usuario.Correo.ToLower().Trim());
+                if (existeUsuarioBd)
+                {
+                    ModelState.AddModelError("Usuario.Correo", $"Ya existe una cuenta con el correo {usuario.Correo}");
+                    _servicioNotificacion.Warning($"Ya existe una cuenta con el correo {usuario.Correo}");
+                    return View(viewModel);
+                }
+                
+                try
+                {
+                    var usuarioAgregar = _usuarioFactoria.CrearUsuario(usuario);
+                    _context.Usuarios.Add(usuarioAgregar);
+                    await _context.SaveChangesAsync();
+                    _servicioNotificacion.Success($"ÉXITO al crear el usuario con correo {usuario.Correo}");
+                }
+                catch (DbUpdateException)
+                {
+                    _servicioNotificacion.Warning("Lo sentimos, ha ocurrido un error. Intente nuevamente.");
+                    return View(viewModel);
+                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Roles, "Id", "Id", usuario.RolId);
-            return View(usuario);
+            return View(viewModel);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,8 +139,10 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Roles, "Id", "Id", usuario.RolId);
-            return View(usuario);
+            EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
+            viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
+            viewModel.Usuario = _usuarioFactoria.CrearUsuarioEdicion(usuario);
+            return View(viewModel);
         }
 
         // POST: Usuarios/Edit/5
@@ -91,8 +150,12 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Correo,Contrasena,Telefono,RolId")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Correo,Telefono,RolId")] UsuarioEdicionDto usuario)
         {
+            EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
+            viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
+            viewModel.Usuario = usuario;
+
             if (id != usuario.Id)
             {
                 return NotFound();
@@ -102,8 +165,11 @@ namespace MVCCoachBuster.Controllers
             {
                 try
                 {
-                    _context.Update(usuario);
+                    var usuarioBd = await _context.Usuarios.FindAsync(usuario.Id);
+                    _usuarioFactoria.ActualizarDatosUsuario(usuario, usuarioBd);
+
                     await _context.SaveChangesAsync();
+                    _servicioNotificacion.Success($"ÉXITO al actualizar el usuario cuyo correo es: {usuario.Correo}");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,10 +184,11 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Roles, "Id", "Id", usuario.RolId);
-            return View(usuario);
+            
+            return View(viewModel);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

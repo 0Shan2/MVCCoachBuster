@@ -1,52 +1,84 @@
-﻿@model MVCCoachBuster.Models.Usuario
+﻿@using MVCCoachBuster.ViewModels
+@model AgregarUsuarioViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Usuario";
 }
-
-<h1>Create</h1>
-
-<h4>Usuario</h4>
+<h4>@ViewData["Title"]</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <label asp-for="Usuario.RolId" class="control-label"></label>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">
+                        <i class="fa-solid fa-users"></i>
+                    </label>
+                    <select asp-for="Usuario.RolId" class="form-select" asp-items="Model.ListadoRoles">
+                        <option value="">---Seleccionar Rol---</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Usuario.RolId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Usuario.Nombre" class="control-label"></label>
+                <input asp-for="Usuario.Nombre" class="form-control" />
+                <span asp-validation-for="Usuario.Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Usuario.Telefono" class="control-label"></label>
+                <input asp-for="Usuario.Telefono" class="form-control" />
+                <span asp-validation-for="Usuario.Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Usuario.Correo" class="control-label"></label>
+                <input asp-for="Usuario.Correo" class="form-control" />
+                <span asp-validation-for="Usuario.Correo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Usuario.Contrasena" class="control-label"></label>
+                <input asp-for="Usuario.Contrasena" class="form-control" />
+                <span asp-validation-for="Usuario.Contrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Usuario.ConfirmarContrasena" class="control-label"></label>
+                <input asp-for="Usuario.ConfirmarContrasena" class="form-control" />
+                <span asp-validation-for="Usuario.ConfirmarContrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <partial name="Acciones/_Create" />
+            </div>
+        </div>
+        @* Implementación Imagen 
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <label asp-for="Usuario.Foto" style="width: 100%;"></label>
+                @if (Model.Usuario.Foto != null)
+                {
+                    <img id="foto" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Usuario.Foto))">
+                }
+                else
+                {
+                    <img id="foto" style="width:350px;height:350px; object-fit:cover" src="">
+                }
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="Usuario.Foto"
+                       class="form-control"
+                       onchange="document.getElementById('foto').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="Usuario.Foto" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Contrasena" class="control-label"></label>
-                <input asp-for="Contrasena" class="form-control" />
-                <span asp-validation-for="Contrasena" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RolId" class="control-label"></label>
-                <select asp-for="RolId" class ="form-control" asp-items="ViewBag.RolId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+        *@
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
