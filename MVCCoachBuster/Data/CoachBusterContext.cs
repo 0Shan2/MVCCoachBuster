@@ -16,8 +16,6 @@ namespace MVCCoachBuster.Data
 
         public DbSet<Rol> Roles { get; set; } 
         public DbSet<Usuario> Usuarios { get; set; }
-
-
         public DbSet<Plan> Planes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

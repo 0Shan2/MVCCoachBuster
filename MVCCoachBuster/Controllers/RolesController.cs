@@ -27,12 +27,13 @@ namespace MVCCoachBuster.Controllers
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Roles.AsQueryable(); //AsQueryable para poder hacer la busqueda
 
+            
             //2º) Para buscar un rol
-            if (String.IsNullOrEmpty(viewModel.TerminoBusqueda))
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
                 consulta = consulta.Where(u=>u.Nombre.Contains(viewModel.TerminoBusqueda));
             }
-
+            
             viewModel.Total = consulta.Count();
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina); 
