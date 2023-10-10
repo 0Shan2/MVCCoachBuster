@@ -7,21 +7,23 @@ using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
 using MVCCoachBuster.ViewModels;
 using System.Security.Claims;
+using MVCCoachBuster.Models;
 
 namespace MVCCoachBuster.Controllers
 {
     public class AccountController : Controller
     {
         private readonly CoachBusterContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly IPasswordHasher<Usuario> _passwordHasher;
         private readonly INotyfService _servicioNotificacion;
 
         //1º)Obtenemos acceso a IConfiguration 
-        public AccountController(CoachBusterContext context, IConfiguration configuration,
+        //
+        public AccountController(CoachBusterContext context, IPasswordHasher<Usuario> passwordHasher,
             INotyfService servicioNotificacion)
         {
             _context = context;
-            _configuration = configuration;
+            _passwordHasher = passwordHasher;
             _servicioNotificacion = servicioNotificacion;
         }
         public IActionResult Index()
