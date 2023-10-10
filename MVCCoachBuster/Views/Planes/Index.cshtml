@@ -17,7 +17,7 @@
 
 
 <table class="table table-hover table-bordered table-striped">
-    <thead class="bg-primary text-white">
+    <thead class="bg-secondary text-white">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Registros[0].Nombre)
@@ -64,3 +64,14 @@
 }
     </tbody>
 </table>
+
+<!--Elemento de paginación-->
+@Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
+    Pagina=page,
+    TerminoBusqueda=Model.TerminoBusqueda
+}),
+    new PagedListRenderOptions{
+        LiElementClasses = new string[]{"page-item"},
+        PageClasses = new string[]{"page-link"}
+    }
+)

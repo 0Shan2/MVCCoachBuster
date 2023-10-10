@@ -40,6 +40,15 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Rol.Id)
         </dd>
+
+        <!--Imagen-->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Foto)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="@Model.Foto" alt="Imagen de usuario"  />
+            @Html.DisplayNameFor(model => model.Foto)
+        </dd>
     </dl>
 </div>
 <div>
