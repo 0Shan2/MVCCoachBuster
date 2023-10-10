@@ -19,6 +19,7 @@ builder.Services.AddDbContext<CoachBusterContext>(options =>
 builder.Services.AddControllersWithViews();
 
 //Autorizacion con esquemas especificos
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
         options.Cookie.HttpOnly = true;
