@@ -28,7 +28,7 @@ namespace MVCCoachBuster.Controllers
             _servicioNotificacion = servicioNotificacion;
         }
 
-
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes
         public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
         {
@@ -36,7 +36,7 @@ namespace MVCCoachBuster.Controllers
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Planes
                 .OrderBy(m => m.Nombre)
-                .Include(m => m.entrenador)
+                .Include(m => m.Entrenador)
                 .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
 
@@ -53,7 +53,7 @@ namespace MVCCoachBuster.Controllers
             // código asíncrono
             return View(viewModel);
         }
-
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -63,7 +63,7 @@ namespace MVCCoachBuster.Controllers
             }
 
             var plan = await _context.Planes
-                .Include(p => p.entrenador)
+                .Include(p => p.Entrenador)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (plan == null)
             {
@@ -72,7 +72,7 @@ namespace MVCCoachBuster.Controllers
 
             return View(plan);
         }
-
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Create
         public IActionResult Create()
         {
@@ -116,7 +116,7 @@ namespace MVCCoachBuster.Controllers
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
             return View(plan);
         }
-
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -183,7 +183,7 @@ namespace MVCCoachBuster.Controllers
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
             return View(plan);
         }
-
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -193,7 +193,7 @@ namespace MVCCoachBuster.Controllers
             }
 
             var plan = await _context.Planes
-                .Include(p => p.entrenador)
+                .Include(p => p.Entrenador)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (plan == null)
             {
@@ -226,5 +226,26 @@ namespace MVCCoachBuster.Controllers
         {
           return _context.Planes.Any(e => e.Id == id);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------------
+        //Método para sacar las lista de entrenadores
+        public IActionResult ListaEntrenadores()
+        {
+            //Filtra los usuarios con el rol "entrenador"
+            var entrenadores = _context.Usuarios.Where( u => u.Rol.Nombre == "Entrenador").ToList();
+
+            // Crear una lista de SelectListItem a partir de los entrenadores
+            var listaEntrenadores = entrenadores.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(), // Supongo que el Id es un entero
+                Text = u.Nombre
+            }).ToList();
+
+            // Agregar la lista de entrenadores a ViewBag.UsuarioId
+            ViewBag.UsuarioId = listaEntrenadores;
+
+            return View();
+        }
+
     }
 }

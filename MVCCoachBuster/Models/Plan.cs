@@ -22,8 +22,9 @@ namespace MVCCoachBuster.Models
 
         public bool Suscrito { get; set; }
 
+        [Display(Name ="Entrenador")]
         public int UsuarioId { get; set; }
-        public virtual Usuario entrenador { get; set; }
+        public virtual Usuario Entrenador { get; set; }
 
 
     }
