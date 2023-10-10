@@ -16,6 +16,7 @@ namespace MVCCoachBuster.ViewModels
         [Display(Name = "¿Recordarme?")]
         public bool Recordarme { get; set; }
 
+        
         public string ReturnUrl { get; set; }
     }
 }
