@@ -52,5 +52,19 @@ namespace MVCCoachBuster.Helpers
             usuarioBd.RolId = usuario.RolId;
         }
 
+        public CambiarContrasenaViewModel CrearCambiarContrasenaViewModel(Usuario usuario)
+        {
+            return new CambiarContrasenaViewModel
+            {
+                Id = usuario.Id,
+                Correo = usuario.Correo
+            };
+        }
+
+        public void ActualizarContrasenaUsuario(CambiarContrasenaViewModel usuarioVM, Usuario usuarioBd)
+        {
+            usuarioBd.Contrasena = _passwordHasher.HashPassword(usuarioBd, usuarioVM.Contrasena);
+        }
+
     }
 }
