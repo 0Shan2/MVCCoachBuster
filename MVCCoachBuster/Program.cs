@@ -10,9 +10,15 @@ using MVCCoachBuster.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 //Vamos añadir nuestra base de datos
+/*
+   builder.Services.AddDbContext<CoachBusterContext>(options =>
+   options.UseSqlServer(builder.Configuration.GetConnectionString("CoachBusterContext") ??
+   throw new InvalidOperationException("Connection string 'CoachBusterContext' not found.")));
+*/
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<CoachBusterContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CoachBusterContext") ??
-    throw new InvalidOperationException("Connection string 'CoachBusterContext' not found.")));
+    options.UseSqlServer(connectionString));
+
 
 
 // Add services to the container.
