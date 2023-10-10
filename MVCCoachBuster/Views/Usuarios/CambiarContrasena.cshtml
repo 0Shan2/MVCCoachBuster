@@ -1,0 +1,42 @@
+﻿@using MVCCoachBuster.ViewModels
+@model CambiarContrasenaViewModel
+
+@{
+    ViewData["Title"] = "Cambiar Contraseña del usuario " + Model.Correo;
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Correo" class="control-label"></label>
+                <input asp-for="Correo" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contrasena" class="control-label"></label>
+                <input asp-for="Contrasena" class="form-control" />
+                <span asp-validation-for="Contrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmarContrasena" class="control-label"></label>
+                <input asp-for="ConfirmarContrasena" class="form-control" />
+                <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <partial name="Acciones/_Edit" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

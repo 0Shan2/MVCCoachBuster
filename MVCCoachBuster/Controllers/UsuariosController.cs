@@ -231,5 +231,58 @@ namespace MVCCoachBuster.Controllers
         {
           return _context.Usuarios.Any(e => e.Id == id);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------------
+        public async Task<IActionResult> CambiarContrasena(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _context.Usuarios
+                .Include(u => u.Rol)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            CambiarContrasenaViewModel viewModel = _usuarioFactoria.CrearCambiarContrasenaViewModel(usuario);
+            return View(viewModel);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarContrasena(int id, [Bind("Id,Correo,Contrasena,ConfirmarContrasena")] CambiarContrasenaViewModel viewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var usuarioBd = await _context.Usuarios.FindAsync(viewModel.Id);
+                    _usuarioFactoria.ActualizarContrasenaUsuario(viewModel, usuarioBd);
+                    await _context.SaveChangesAsync();
+                    _servicioNotificacion.Success($"ÉXITO al actualizar la contraseña del usuario: {usuarioBd.Correo}");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UsuarioExists(viewModel.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(viewModel);
+        }
     }
 }
