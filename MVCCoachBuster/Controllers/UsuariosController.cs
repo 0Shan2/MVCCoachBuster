@@ -90,7 +90,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Correo,Contrasena,ConfirmarContrasena,Telefono,RolId")] UsuarioRegistroDto usuario)
+        public async Task<IActionResult> Create([Bind("Nombre,Correo,Contrasena,ConfirmarContrasena,Telefono,RolId,Foto")] UsuarioRegistroDto usuario)
         {
             AgregarUsuarioViewModel viewModel = new AgregarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
@@ -111,6 +111,16 @@ namespace MVCCoachBuster.Controllers
                 try
                 {
                     var usuarioAgregar = _usuarioFactoria.CrearUsuario(usuario);
+                    
+                    //Para añadir la imagen
+                    if(Request.Form.Files.Count > 0)
+                    {
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        using var dataStream = new MemoryStream();
+                        await archivo.CopyToAsync(dataStream);
+                        usuarioAgregar.Foto = dataStream.ToArray();
+                    }
+                    
                     _context.Usuarios.Add(usuarioAgregar);
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al crear el usuario con correo {usuario.Correo}");
@@ -150,7 +160,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Correo,Telefono,RolId")] UsuarioEdicionDto usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Correo,Telefono,RolId, Foto")] UsuarioEdicionDto usuario)
         {
             EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
@@ -167,6 +177,15 @@ namespace MVCCoachBuster.Controllers
                 {
                     var usuarioBd = await _context.Usuarios.FindAsync(usuario.Id);
                     _usuarioFactoria.ActualizarDatosUsuario(usuario, usuarioBd);
+
+                    //Para añadir la imagen
+                    if (Request.Form.Files.Count > 0)
+                    {
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        using var dataStream = new MemoryStream();
+                        await archivo.CopyToAsync(dataStream);
+                        usuarioBd.Foto = dataStream.ToArray();
+                    }
 
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el usuario cuyo correo es: {usuario.Correo}");

@@ -21,7 +21,8 @@ namespace MVCCoachBuster.Models
         public int RolId { get; set; }
         public Rol Rol { get; set; }
 
-
+        //Añadir imagen
+        public byte[] Foto { get; set; }
 
 
     }

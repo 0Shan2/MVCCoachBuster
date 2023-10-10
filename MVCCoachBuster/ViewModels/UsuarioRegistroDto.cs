@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace MVCCoachBuster.ViewModels
 {
@@ -33,6 +34,8 @@ namespace MVCCoachBuster.ViewModels
         [Required(ErrorMessage = "El perfil del usuario es obligatorio.")]
         [Display(Name = "Rol")]
         public int RolId { get; set; }
-        
+
+        //Añadir imagen
+        public byte[] Foto { get; set; }
     }
 }

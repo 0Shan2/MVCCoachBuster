@@ -8,9 +8,10 @@
 
 <h4>Plan</h4>
 <hr />
+
+<form asp-action="Create">
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
@@ -56,10 +57,9 @@
             <div class="form-group">
                 <partial name="Acciones/_Create" />
             </div>
-        </form>
     </div>
 </div>
-
+</form>
 
 
 @section Scripts {

@@ -32,6 +32,19 @@ namespace MVCCoachBuster.Helpers
             return usuario;
         }
 
+        public UsuarioRegistroDto CrearUsuarioRegistro(Usuario usuario)
+        {
+             return new UsuarioRegistroDto
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Correo = usuario.Correo,
+                Telefono = usuario.Telefono,
+                RolId = usuario.RolId,
+                Foto = usuario.Foto
+            };
+        }
+
         public UsuarioEdicionDto CrearUsuarioEdicion(Usuario usuario)
         {
            return new UsuarioEdicionDto()
@@ -40,8 +53,9 @@ namespace MVCCoachBuster.Helpers
                 Nombre = usuario.Nombre,
                 Correo = usuario.Correo,
                 Telefono = usuario.Telefono,
-                RolId = usuario.RolId
-            };
+                RolId = usuario.RolId,
+                Foto = usuario.Foto
+           };
         }
 
         public void ActualizarDatosUsuario(UsuarioEdicionDto usuario, Usuario usuarioBd)

@@ -18,6 +18,9 @@ namespace MVCCoachBuster.ViewModels
         [Display(Name = "Rol")]
         public int RolId { get; set; }
 
+        //Agregamos la imagen
+        [Display(Name = "Foto")]
+        public byte[] Foto { get; set; }
     }
 }
 
