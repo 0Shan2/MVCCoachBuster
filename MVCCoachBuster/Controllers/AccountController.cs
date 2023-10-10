@@ -69,7 +69,6 @@ namespace MVCCoachBuster.Controllers
 					var claims = new List<Claim>
 					{
 						new Claim(ClaimTypes.Name, usuarioBd.Nombre),
-						new Claim("FullName", usuarioBd.Nombre ),
 						new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
 					};
 
