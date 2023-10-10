@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MVCCoachBuster.Data;
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<CoachBusterContext>(options =>
 builder.Services.AddControllersWithViews();
 
 //Autorizacion con esquemas especificos
+/*
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
         options.Cookie.HttpOnly = true;
@@ -26,7 +28,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
         options.SlidingExpiration = true;
     });
-
+*/
 builder.Services.AddNotyf(config =>
 {
     config.DurationInSeconds = 5;

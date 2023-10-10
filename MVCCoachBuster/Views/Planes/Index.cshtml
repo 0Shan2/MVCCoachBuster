@@ -1,45 +1,45 @@
-﻿@model IEnumerable<MVCCoachBuster.Models.Plan>
-
+﻿
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+<!-- Index deja de ser IEnumerable sino ListadoViewModel-->
+@model ListadoViewModel<Plan>
 @{
     ViewData["Title"] = "Planes";
     
 }
-<p class="text-end">
 
-    @Model.Count() registros
+@await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
+    TerminoBusqueda = Model.TerminoBusqueda,
+    TituloCrear = "Crear Plan",
+    Total = Model.Total
+})
 
-</p>
 
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table table-hover table-bordered table-striped">
     <thead class="bg-primary text-white">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Registros[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
+                @Html.DisplayNameFor(model => model.Registros[0].Descripcion)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Precio)
+                @Html.DisplayNameFor(model => model.Registros[0].Precio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Suscrito)
+                @Html.DisplayNameFor(model => model.Registros[0].Suscrito)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.entrenador)
+                @Html.DisplayNameFor(model => model.Registros[0].entrenador)
             </th>
         
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Registros) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
@@ -58,9 +58,7 @@
             </td>
            
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <partial name="Acciones/_Crud" model="@item.Id" />
             </td>
         </tr>
 }
