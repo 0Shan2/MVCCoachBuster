@@ -49,7 +49,7 @@ namespace MVCCoachBuster.Controllers
             {
 				var usuarioBd = _context.Usuarios
 		              .Include(u => u.Rol)
-		              .FirstOrDefault(u => u.Nombre.ToLower().Trim() == viewModel.Username.ToLower().Trim());
+		              .FirstOrDefault(u => u.Correo.ToLower().Trim() == viewModel.Correo.ToLower().Trim());
 				//si no existe el usuario enviamos una notificacion
 				if (usuarioBd == null)
 				{
@@ -65,10 +65,10 @@ namespace MVCCoachBuster.Controllers
 					//La contraseña es correcta
 
 					//Claim es un fragmento de información del usuario, en este caso
-					//agregamos su username, su nombre completo y el nombre de su perfil.
+					//agregamos su correo y el rol.
 					var claims = new List<Claim>
 					{
-						new Claim(ClaimTypes.Name, usuarioBd.Nombre),
+						new Claim(ClaimTypes.Email, usuarioBd.Correo),
 						new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
 					};
 

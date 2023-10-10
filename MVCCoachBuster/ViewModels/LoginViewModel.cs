@@ -6,7 +6,8 @@ namespace MVCCoachBuster.ViewModels
     {
         [Required(ErrorMessage = "La cuenta del usuario es requerida.")]
         [Display(Name = "Cuenta")]
-        public string Username { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string Correo { get; set; }
 
         [Required(ErrorMessage = "La contraseña del usuario es requerida.")]
         [DataType(DataType.Password)]
