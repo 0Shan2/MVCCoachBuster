@@ -26,6 +26,8 @@ namespace MVCCoachBuster.Models
         public int UsuarioId { get; set; }
         public virtual Usuario Entrenador { get; set; }
 
+       // public string Imagen {  get; set; }
+
         
 
 
