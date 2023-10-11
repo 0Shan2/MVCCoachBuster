@@ -19,6 +19,12 @@ body {
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2&display=swap");
 /* This pen */
 
+/*imagen details*/
+.img-fluid {
+    max-width: 100px; /* Establece el ancho máximo deseado */
+    max-height: 100px;
+}
+
 
 .dark {
     background: #110f16;
