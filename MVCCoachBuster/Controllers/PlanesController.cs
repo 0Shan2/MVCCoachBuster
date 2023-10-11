@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
+    [Authorize(Policy = "Gestión")]
     public class PlanesController : Controller
     {
         private readonly CoachBusterContext _context;
@@ -30,6 +32,7 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes
+        [AllowAnonymous]
         public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
         {
 
@@ -74,6 +77,7 @@ namespace MVCCoachBuster.Controllers
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Create
+        
         public IActionResult Create()
         {
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre");
@@ -119,6 +123,7 @@ namespace MVCCoachBuster.Controllers
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Planes == null)

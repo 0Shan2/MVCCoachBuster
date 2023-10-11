@@ -25,7 +25,6 @@ builder.Services.AddDbContext<CoachBusterContext>(options =>
 builder.Services.AddControllersWithViews();
 
 //Autorizacion con esquemas especificos
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
         options.Cookie.HttpOnly = true;
@@ -35,6 +34,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
         options.SlidingExpiration = true;
     });
+
+//Política de privacidad 
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("Admin", policy => policy.RequireRole("Administrador"));
+    options.AddPolicy("Gestión", policy => policy.RequireRole("Administrador", "Entrenador"));
+    options.AddPolicy("Todo", policy => policy.RequireRole("Administrador", "Entrenador", "Usuario"));
+});
 
 builder.Services.AddNotyf(config =>
 {

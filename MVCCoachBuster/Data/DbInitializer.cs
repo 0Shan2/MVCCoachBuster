@@ -27,6 +27,8 @@ namespace MVCCoachBuster.Data
 
             var usuarios = new Usuario[]
             {
+
+                 new Usuario{Nombre="Admin", Correo="a@a.es",  Contrasena = "admin123", Telefono=620380297, RolId = roles[1].Id},
                  new Usuario{Nombre="usuario", Correo="usuario@prueba.com",  Contrasena = "Usuario1@", Telefono=620380297, RolId = roles[2].Id},
 
 

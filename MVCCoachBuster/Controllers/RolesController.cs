@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
@@ -8,6 +9,7 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class RolesController : Controller
     {
         private readonly CoachBusterContext _context;
