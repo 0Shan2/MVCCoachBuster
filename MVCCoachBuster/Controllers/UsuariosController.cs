@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
+    [Authorize(Policy = "Gestión")]
     public class UsuariosController : Controller
     {
         private readonly CoachBusterContext _context;
@@ -78,6 +80,7 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Create
+        [Authorize(Policy = "Admin")]
         public IActionResult Create()
         {
             AgregarUsuarioViewModel viewModel = new AgregarUsuarioViewModel();
@@ -209,6 +212,7 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Delete/5
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Usuarios == null)

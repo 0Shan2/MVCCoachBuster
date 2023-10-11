@@ -9,9 +9,11 @@ using MVCCoachBuster.ViewModels;
 using System.Security.Claims;
 using MVCCoachBuster.Models;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCCoachBuster.Controllers
 {
+    
     public class AccountController : Controller
     {
         private readonly CoachBusterContext _context;
