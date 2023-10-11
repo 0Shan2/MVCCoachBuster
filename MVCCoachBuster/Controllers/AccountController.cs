@@ -8,6 +8,7 @@ using MVCCoachBuster.Data;
 using MVCCoachBuster.ViewModels;
 using System.Security.Claims;
 using MVCCoachBuster.Models;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace MVCCoachBuster.Controllers
 {
@@ -102,8 +103,6 @@ namespace MVCCoachBuster.Controllers
         }
 
 
-
-
 		[HttpPost]
         public async Task<IActionResult> Logout()
         {
@@ -116,5 +115,66 @@ namespace MVCCoachBuster.Controllers
         {
             return View();
         }
+
+
+        //------------------------------------------------------------------------------------------------------------------------------------
+        // Registrar a un usuario con los campos: Correo y Contraseña
+        public IActionResult Registro()
+        {
+            var viewModel = new RegistroUsuarioViewModel();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Registro(RegistroUsuarioViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // En caso de que exista un usuario con esa cuenta, mandamos error
+                var existeUsuarioBd = _context.Usuarios
+                    .Any(u => u.Correo.ToLower().Trim() == model.Correo.ToLower().Trim());
+                if (existeUsuarioBd)
+                {
+                    ModelState.AddModelError("Usuario.Correo", $"Ya existe una cuenta con el correo {model.Correo}");
+                    _servicioNotificacion.Warning($"Ya existe una cuenta con el correo {model.Correo}");
+                    return View(model);
+                }
+
+                try
+                {
+                    //Para encriptar la contraseña
+                    // Hashear la contraseña antes de guardarla
+                    
+
+                    // Crear un nuevo usuario en la base de datos
+                    var nuevoUsuario = new Usuario
+                    {
+                        Nombre = model.Nombre,
+                        Correo = model.Correo,
+                        RolId = 3
+                    };
+                    nuevoUsuario.Contrasena = _passwordHasher.HashPassword(nuevoUsuario, model.Contrasena);
+
+
+
+                    _context.Usuarios.Add(nuevoUsuario);
+                    await _context.SaveChangesAsync();
+
+                    _servicioNotificacion.Success("Registro exitoso. Ahora puedes iniciar sesión.");
+
+                } catch (DbUpdateException ) 
+                {
+                    _servicioNotificacion.Warning("Lo sentimos, ha ocurrido un error. Intente nuevamente.");
+                    return View(model);
+                }
+
+                return RedirectToAction("Index", "Home");  // Redirigir a la página de inicio o a donde desees
+            }
+
+            // Si el modelo no es válido, vuelve a mostrar el formulario de registro con mensajes de error
+            return View("Registro", model);
+        }
+
     }
 }
