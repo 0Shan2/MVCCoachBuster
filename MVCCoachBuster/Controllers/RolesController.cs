@@ -9,7 +9,7 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
-    [Authorize(Policy = "Admin")]
+    [Authorize(Roles = "Administrador")]
     public class RolesController : Controller
     {
         private readonly CoachBusterContext _context;
