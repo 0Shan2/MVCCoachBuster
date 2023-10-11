@@ -101,6 +101,7 @@ namespace MVCCoachBuster.Controllers
 
                 try
                 {
+                   
                     _context.Add(plan);
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al crear el plan {plan.Nombre}");

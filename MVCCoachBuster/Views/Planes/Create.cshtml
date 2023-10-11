@@ -9,7 +9,7 @@
 <h4>Plan</h4>
 <hr />
 
-<form asp-action="Create">
+<form asp-action="Create" enctype="multipart/form-data>
 <div class="row">
     <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -34,12 +34,6 @@
                 </label>
             </div>
             <!--Seleccionar entrenador-->
-           <!-- <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-             </div> -->
-
-
             <div class="form-group mt-3">
                 <label asp-for="UsuarioId" class="control-label"></label>
                 <div class="input-group mb-3">
@@ -53,11 +47,11 @@
                 <span asp-validation-for="UsuarioId" class="text-danger"></span>
             </div>
 
-
             <div class="form-group">
                 <partial name="Acciones/_Create" />
             </div>
     </div>
+       
 </div>
 </form>
 
