@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -276,10 +277,11 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         //Método para sacar las lista de entrenadores
+        /*
         public IActionResult ListaEntrenadores()
         {
             //Filtra los usuarios con el rol "entrenador"
-            var entrenadores = _context.Usuarios.Where( u => u.Rol.Nombre == "Entrenador").ToList();
+            var entrenadores = _context.Usuarios.Where( u => u.Rol.Id == 2).ToList();
 
             // Crear una lista de SelectListItem a partir de los entrenadores
             var listaEntrenadores = entrenadores.Select(u => new SelectListItem
@@ -293,6 +295,6 @@ namespace MVCCoachBuster.Controllers
 
             return View();
         }
-
+        */
     }
 }

@@ -31,14 +31,14 @@ namespace MVCCoachBuster.Data
 
 			var passwordHasher = new PasswordHasher<Usuario>(); // Reemplaza 'Usuario' con tu modelo de usuario
 
-			var contrasenaHash = passwordHasher.HashPassword(null, "admin123");
+			var contrasenaHash = passwordHasher.HashPassword(null, "pruebas123");
 
 			var usuarios = new Usuario[]
             {
 
-                 new Usuario{Nombre="Admin", Correo="a@a.es",  Contrasena = contrasenaHash, Telefono=620380297, RolId = roles[1].Id},
-
-                 new Usuario{Nombre="usuario", Correo="usuario@prueba.com",  Contrasena = "Usuario1@", Telefono=620380297, RolId = roles[2].Id},
+                 new Usuario{Nombre="Admin", Correo="admin@a.es",  Contrasena = contrasenaHash, Telefono=620380297, RolId = roles[1].Id},
+                 new Usuario{Nombre="Entrenador", Correo="entrenador@e.es",  Contrasena = contrasenaHash, Telefono=1234123, RolId = roles[2].Id},
+                 new Usuario{Nombre="usuario", Correo="usuario@u.es",  Contrasena = contrasenaHash, Telefono=620380297, RolId = roles[2].Id},
 
 
 

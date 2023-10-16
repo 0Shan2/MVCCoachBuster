@@ -48,10 +48,23 @@
                 @Html.DisplayFor(modelItem => item.Rol.Nombre)
             </td>
             <td>
+
+                <!--En caso de ser Entrenador, no puede editar las contraseñas del administrador ni de los demás entrenadores-->
                     <partial name="Acciones/_Crud" model="@item.Id" />
-                    <a asp-action="CambiarContrasena" asp-route-id="@item.Id" class="btn btn-warning">
-                        <i class="fa-solid fa-key"></i>&nbsp;Contrase&ntilde;a
-                    </a>
+
+                    @if (User.IsInRole("Entrenador") && item.Rol.Nombre == "Administrador" || item.Rol.Nombre == "Entrenador")
+                    {
+                        <p class="btn btn-warning disabled">
+                            <i class="fa-solid fa-key"></i>&nbsp;Contraseña
+                        </p>
+                    }
+                    else
+                    {
+                        <a asp-action="CambiarContrasena" asp-route-id="@item.Id" class="btn btn-warning">
+                            <i class="fa-solid fa-key"></i>&nbsp;Contraseña
+                        </a>
+                    }
+
             </td>
         </tr>
 }

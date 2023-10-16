@@ -10,15 +10,15 @@ using MVCCoachBuster.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 //Vamos añadir nuestra base de datos
-
+/*
    builder.Services.AddDbContext<CoachBusterContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("CoachBusterContext") ??
    throw new InvalidOperationException("Connection string 'CoachBusterContext' not found.")));
-/*
+*/
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<CoachBusterContext>(options =>
     options.UseSqlServer(connectionString));
-*/
+
 
 
 // Add services to the container.
@@ -70,7 +70,8 @@ using(var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<CoachBusterContext>();
-    context.Database.EnsureCreated();
+    //Comentar la siguiente linea si se usa SQL Server
+   // context.Database.EnsureCreated();
 
     //Llamamos a DBInitializer
     // 1º) Como ya teniamos la bdd creada, tenemo que eliminarla
