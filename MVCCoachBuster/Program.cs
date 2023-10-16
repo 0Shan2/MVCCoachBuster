@@ -52,6 +52,7 @@ builder.Services.AddNotyf(config =>
 // Agregamos en instancia de Singleton, ya que solo queremos una instancia estos elementos en nuestros componentes
 builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 builder.Services.AddSingleton<UsuarioFactoria>();
+builder.Services.AddSingleton<PlanFactoria>();
 
 var app = builder.Build();
 

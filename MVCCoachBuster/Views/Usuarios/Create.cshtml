@@ -52,27 +52,7 @@
                 <partial name="Acciones/_Create" />
             </div>
         </div>
-        <!-- Implementación Imagen  -->
-        <div class="col-md-6">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Usuario.Foto" style="width: 100%;"></label>
-                @if (Model.Usuario.Foto != null)
-                {
-                    <img id="foto" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Usuario.Foto))">
-                }
-                else
-                {
-                    <img id="foto" style="width:350px;height:350px; object-fit:cover" src="">
-                }
-                <input type="file"
-                       accept=".png,.jpg,.jpeg,.gif,.tif"
-                       asp-for="Usuario.Foto"
-                       class="form-control"
-                       onchange="document.getElementById('foto').src = window.URL.createObjectURL(this.files[0])" />
-                <span asp-validation-for="Usuario.Foto" class="text-danger"></span>
-            </div>
-        </div>
+
         
     </div>
 </form>

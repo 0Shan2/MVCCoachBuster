@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MVCCoachBuster.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace MVCCoachBuster.Models
+namespace MVCCoachBuster.ViewModels
 {
-    public class Plan
+    public class PlanCreacionEdicionDto
     {
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre del entrenamiento es requerido.")]
@@ -20,14 +22,11 @@ namespace MVCCoachBuster.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Precio { get; set; }
 
-        [Display(Name ="Entrenador")]
+        [Display(Name = "Entrenador")]
         public int UsuarioId { get; set; }
         public virtual Usuario Entrenador { get; set; }
 
-        public string Foto { get; set; }
-
-
-
+        public byte[] Foto { get; set; }
 
     }
 }

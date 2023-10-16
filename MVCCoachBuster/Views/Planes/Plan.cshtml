@@ -1,16 +1,20 @@
-﻿@model MVCCoachBuster.ViewModels.AgregarEditarPlanViewModel
+﻿@using MVCCoachBuster.ViewModels
+@model AgregarEditarPlanViewModel
+
 @{
-    ViewData["Title"] = "Crear Plan";
+    ViewData["Title"] = Model.Plan.Id > 0 ? "Editando " + Model.Plan.Nombre : "Crear Plan";
 }
 <h4>@ViewData["Title"]</h4>
-
-<h4>Plan</h4>
 <hr />
+<form asp-action="@(Model.Plan.Id > 0 ? "Edit" : "Create" )" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
 
-<form asp-action="Create" enctype="multipart/form-data>
-<div class="row">
-    <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (Model.Plan.Id > 0)
+            {
+                <input type="hidden" asp-for="Plan.Id" />
+            }
             <div class="form-group">
                 <label asp-for="Plan.Nombre" class="control-label"></label>
                 <input asp-for="Plan.Nombre" class="form-control" />
@@ -18,12 +22,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Plan.Descripcion" class="control-label"></label>
-                <input asp-for="Plan.Descripcion" class="form-control" />
+                <textarea asp-for="Plan.Descripcion" class="form-control"></textarea>
                 <span asp-validation-for="Plan.Descripcion" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Plan.Precio" class="control-label"></label>
-                <input asp-for="Plan.Precio" class="form-control" />
+                <input asp-for="Plan.Precio" class="form-control text-end" />
                 <span asp-validation-for="Plan.Precio" class="text-danger"></span>
             </div>
 
@@ -41,27 +46,34 @@
                 <span asp-validation-for="Plan.UsuarioId" class="text-danger"></span>
             </div>
 
-
        
+            <div class="form-group mt-3">
+                @if (Model.Plan.Id > 0)
+                {
+                    <partial name="Acciones/_Edit" />
+                }
+                else
+                {
+                    <partial name="Acciones/_Create" />
+                }
 
-            <div class="form-group">
-                <partial name="Acciones/_Create" />
             </div>
-         
-    </div>
-        <!-- Implementación Imagen  -->
+
+        </div>
+
+        @* Implementación Imagen *@
         <div class="col-md-6">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Plan.Foto" style="width: 100%;"></label>
-            @if (Model.Plan.Foto != null)
-            {
-                    <img id="foto" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Plan.Foto))">
-            }
-            else
-            {
-                    <img id="foto" style="width:350px;height:350px; object-fit:cover" src="">
-            }
+                @if (Model.Plan.Foto != null)
+                {
+                    <img id="foto" class="img-fluid" src="data:image/*;base64,@(Convert.ToBase64String(Model.Plan.Foto))">
+                }
+                else
+                {
+                    <img id="foto" class="img-fluid" src="">
+                }
                 <input type="file"
                        accept=".png,.jpg,.jpeg,.gif,.tif"
                        asp-for="Plan.Foto"
@@ -70,11 +82,13 @@
                 <span asp-validation-for="Plan.Foto" class="text-danger"></span>
             </div>
         </div>
-       
-</div>
+        @* Implementación Imagen *@
+    </div>
+
 </form>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

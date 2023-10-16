@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
+using MVCCoachBuster.Helpers;
 using MVCCoachBuster.Models;
 using MVCCoachBuster.ViewModels;
 using X.PagedList;
@@ -20,14 +21,17 @@ namespace MVCCoachBuster.Controllers
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
         private readonly INotyfService _servicioNotificacion;
+        private readonly PlanFactoria _planFactoria;
 
         //1º)Obtenemos acceso a IConfiguration 
         public PlanesController(CoachBusterContext context, IConfiguration configuration,
-            INotyfService servicioNotificacion)
+            INotyfService servicioNotificacion, PlanFactoria planFactoria)
         {
             _context = context;
             _configuration = configuration;
             _servicioNotificacion = servicioNotificacion;
+            _planFactoria = planFactoria;
+
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -80,8 +84,9 @@ namespace MVCCoachBuster.Controllers
         
         public IActionResult Create()
         {
+            AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre");
-            return View();
+            return View("Plan", viewModel);
         }
 
         // POST: Planes/Create
@@ -89,10 +94,14 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId")] Plan plan)
+        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan)
         {
+            AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
+            viewModel.Plan = plan;
             if (ModelState.IsValid)
             {
+                
+
                 // 2º)Validamos si ya hay un rol con el mismo nombre
                 var existeElemtnoBd = _context.Roles
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim());
@@ -105,8 +114,18 @@ namespace MVCCoachBuster.Controllers
 
                 try
                 {
-                   
-                    _context.Add(plan);
+                    var nuevoPlan=_planFactoria.CrearPlan(plan);
+
+                    //Para añadir la imagen
+                    if (Request.Form.Files.Count > 0)
+                    {
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        nuevoPlan.Foto = await Utilerias.LeerImagen(archivo);
+
+
+                    }
+
+                    _context.Add(nuevoPlan);
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al crear el plan {plan.Nombre}");
                 }
@@ -114,12 +133,12 @@ namespace MVCCoachBuster.Controllers
                 {
                     _servicioNotificacion.Warning("Lo sentimos, ha ocurrido un error. Intente de nuevo.");
                     //ModelState.AddModelError("", "Lo sentimos, ha ocurrido un error. Intente de nuevo.");
-                    return View(plan);
+                    return View("Plan", viewModel);
                 }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
-            return View(plan);
+            return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Edit/5
@@ -136,8 +155,15 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
+            AgregarEditarPlanViewModel viewModel= new AgregarEditarPlanViewModel();
+ 
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
-            return View(plan);
+            viewModel.Plan = _planFactoria.CrearPlan(plan);
+            if (!String.IsNullOrEmpty(plan.Foto))
+            {
+                viewModel.Plan.Foto = await Utilerias.ConvertirImagenABytes(plan.Foto);
+            }
+            return View("Plan", viewModel);
         }
 
         // POST: Planes/Edit/5
@@ -145,8 +171,10 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId")] Plan plan)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan)
         {
+            AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
+            viewModel.Plan = plan;
             if (id != plan.Id)
             {
                 return NotFound();
@@ -168,7 +196,20 @@ namespace MVCCoachBuster.Controllers
 
                 try
                 {
-                    _context.Update(plan);
+                    var planBd= await _context.Planes.FindAsync(plan.Id);
+
+                    _planFactoria.ActualizarDatosPlan(plan, planBd);
+
+                    //Para añadir la imagen
+                    if (Request.Form.Files.Count > 0)
+                    {
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        planBd.Foto = await Utilerias.LeerImagen(archivo);
+
+
+                    }
+
+                    _context.Update(planBd);
                     //Si no hay errores, la clase es actualizada correctamente
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
