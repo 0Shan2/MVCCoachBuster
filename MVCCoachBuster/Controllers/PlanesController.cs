@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -80,7 +81,7 @@ namespace MVCCoachBuster.Controllers
         
         public IActionResult Create()
         {
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre");
+            ViewData["EntrenadoresId"] = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2), "Id", "Nombre");
             return View();
         }
 
@@ -93,7 +94,8 @@ namespace MVCCoachBuster.Controllers
         {
             if (ModelState.IsValid)
             {
-                // 2º)Validamos si ya hay un rol con el mismo nombre
+              
+                // 2º)Validamos si ya hay un plan con el mismo nombre
                 var existeElemtnoBd = _context.Roles
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim());
                 if (existeElemtnoBd)
@@ -118,7 +120,9 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
+
+            //ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
+            ViewData["EntrenadoresId"] = new SelectList(_context.Usuarios.Where(u=> u.Rol.Id == 2), "Id", "Nombre", plan.UsuarioId);
             return View(plan);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -235,10 +239,11 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         //Método para sacar las lista de entrenadores
+        /*
         public IActionResult ListaEntrenadores()
         {
             //Filtra los usuarios con el rol "entrenador"
-            var entrenadores = _context.Usuarios.Where( u => u.Rol.Nombre == "Entrenador").ToList();
+            var entrenadores = _context.Usuarios.Where( u => u.Rol.Id == 2).ToList();
 
             // Crear una lista de SelectListItem a partir de los entrenadores
             var listaEntrenadores = entrenadores.Select(u => new SelectListItem
@@ -252,6 +257,6 @@ namespace MVCCoachBuster.Controllers
 
             return View();
         }
-
+        */
     }
 }

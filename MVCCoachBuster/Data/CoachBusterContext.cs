@@ -24,5 +24,7 @@ namespace MVCCoachBuster.Data
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<MVCCoachBuster.Models.Suscripcion> Suscripcion { get; set; }
     }
 }

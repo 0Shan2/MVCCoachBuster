@@ -30,18 +30,20 @@
             </div>
 
             <!--Seleccionar entrenador-->
+           
             <div class="form-group mt-3">
                 <label asp-for="UsuarioId" class="control-label"></label>
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01">
                         <i class="fa-solid fa-users"></i>
                     </label>
-                    <select asp-for="UsuarioId" class="form-select" asp-items="ViewBag.UsuarioId">
+                    <select asp-for="UsuarioId" class="form-select" asp-items="ViewBag.EntrenadoresId">
                         <option value="">---Seleccionar Entrenador---</option>
                     </select>
                 </div>
                 <span asp-validation-for="UsuarioId" class="text-danger"></span>
             </div>
+        
 
             <div class="form-group">
                 <partial name="Acciones/_Create" />
