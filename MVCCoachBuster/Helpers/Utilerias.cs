@@ -23,12 +23,12 @@
             return null;
         }
 
-        public static async Task<byte[]> ConvertirImagenABytes(string imagen)
+        public static async Task<byte[]> ConvertirImagenABytes(string foto)
         {
             var rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + "\\archivos\\");
             bool existeRutaDirectorioArchivos = System.IO.Directory.Exists(rutaDirectorioArchivos);
             if (!existeRutaDirectorioArchivos) Directory.CreateDirectory(rutaDirectorioArchivos);
-            var rutaArchivo = Path.Combine(rutaDirectorioArchivos, imagen);
+            var rutaArchivo = Path.Combine(rutaDirectorioArchivos, foto);
             if (System.IO.File.Exists(rutaArchivo))
             {
                 return await System.IO.File.ReadAllBytesAsync(rutaArchivo);

@@ -35,7 +35,7 @@
                     <label class="input-group-text" for="inputGroupSelect01">
                         <i class="fa-solid fa-users"></i>
                     </label>
-                    <select asp-for="Plan.UsuarioId" class="form-select" asp-items="ViewBag.UsuarioId">
+                    <select asp-for="Plan.UsuarioId" class="form-select" asp-items="Model.ListadoEntrenadores">
                         <option value="">---Seleccionar Entrenador---</option>
                     </select>
                 </div>

@@ -72,6 +72,7 @@ namespace MVCCoachBuster.Controllers
 
             var plan = await _context.Planes
                 .Include(p => p.Entrenador)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (plan == null)
             {
@@ -86,7 +87,7 @@ namespace MVCCoachBuster.Controllers
         public IActionResult Create()
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre");
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre");
             return View("Plan", viewModel);
         }
 
@@ -98,19 +99,23 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan)
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2). AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
             if (ModelState.IsValid)
             {
                 
+
+
 
                 // 2º)Validamos si ya hay un rol con el mismo nombre
                 var existeElemtnoBd = _context.Roles
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim());
                 if (existeElemtnoBd)
                 {
+                    ModelState.AddModelError("Plan.Nombre", "Lo sentimos, ya existe un elemento con el nombre indicado.");
                     _servicioNotificacion.Warning("El plan que esta intentado crear, ya existe.");
                     //ModelState.AddModelError("", "El plan que esta intentado crear, ya existe.");
-                    return View(plan);
+                    return View("Plan", viewModel);
                 }
 
                 try
@@ -138,7 +143,7 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
+       
             return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -157,8 +162,8 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
             AgregarEditarPlanViewModel viewModel= new AgregarEditarPlanViewModel();
- 
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+            //ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = _planFactoria.CrearPlan(plan);
             if (!String.IsNullOrEmpty(plan.Foto))
             {
@@ -175,6 +180,8 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan)
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+       
             viewModel.Plan = plan;
             if (id != plan.Id)
             {
@@ -184,6 +191,7 @@ namespace MVCCoachBuster.Controllers
 
             if (ModelState.IsValid)
             {
+
                 // 2º)Validamos que no existe otra marca con el mismo nombre
                 var existeElemtnoBd = _context.Roles
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim()
@@ -192,7 +200,7 @@ namespace MVCCoachBuster.Controllers
                 {
                     _servicioNotificacion.Warning("Ya existe un rol con este nombre.");
                     //ModelState.AddModelError("", "Ya existe un rol con este nombre.");
-                    return View(plan);
+                    return View("Plan", viewModel);
                 }
 
                 try
@@ -228,8 +236,8 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
-            return View(plan);
+            //ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
+            return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Delete/5
