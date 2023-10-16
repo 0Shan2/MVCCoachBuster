@@ -89,7 +89,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,Suscrito,UsuarioId")] Plan plan)
+        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId")] Plan plan)
         {
             if (ModelState.IsValid)
             {
@@ -145,7 +145,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,Suscrito,UsuarioId")] Plan plan)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId")] Plan plan)
         {
             if (id != plan.Id)
             {
@@ -171,7 +171,7 @@ namespace MVCCoachBuster.Controllers
                     _context.Update(plan);
                     //Si no hay errores, la clase es actualizada correctamente
                     await _context.SaveChangesAsync();
-                    _servicioNotificacion.Success($"ÉXITO al actualziar el rol {plan.Nombre}");
+                    _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
                 }
                 catch (DbUpdateConcurrencyException)
                 {

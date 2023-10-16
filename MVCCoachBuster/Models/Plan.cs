@@ -20,8 +20,6 @@ namespace MVCCoachBuster.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Precio { get; set; }
 
-        public bool Suscrito { get; set; }
-
         [Display(Name ="Entrenador")]
         public int UsuarioId { get; set; }
         public virtual Usuario Entrenador { get; set; }
