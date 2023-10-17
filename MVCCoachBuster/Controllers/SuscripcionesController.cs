@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
 using MVCCoachBuster.Models;
 using MVCCoachBuster.ViewModels;
+using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
@@ -27,7 +28,16 @@ namespace MVCCoachBuster.Controllers
         // GET: Suscripciones
         public async Task<IActionResult> Index(ListadoViewModel<Suscripcion> viewModel)
         {
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+            var consulta = _context.Suscripcion
+                .OrderBy(m => m.Id)
+                .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
+            viewModel.Total = consulta.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
+            // código asíncrono
             return View(viewModel);
         }
 
@@ -60,7 +70,7 @@ namespace MVCCoachBuster.Controllers
             _context.Add(suscripcion);
             await _context.SaveChangesAsync();
 
-            return View(suscripcion);
+            return View("SuscripcionExitosa");
         }
 
 

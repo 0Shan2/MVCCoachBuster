@@ -30,9 +30,21 @@
                   </div>
                   <div class="postcard__bar"></div>
                   <div class="postcard__preview-txt">@item.Precio</div>
+
+
+                        <form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
+                            <input type="hidden" name="idPlan" value="@item.Id" />
+                            <button type="submit" class="btn btn-light">
+                                <a class="nav-link text-grey fw-bold">Suscribirse</a>
+                            </button>
+                        </form>
+
+                        @*
                   <button type="button" class="btn btn-light">
                     <a class="nav-link text-grey fw-bold" id="login" asp-controller="Account" asp-action="Login">Suscribirse</a>
                   </button>
+                  *@
+
                </div>
              </article>
           }

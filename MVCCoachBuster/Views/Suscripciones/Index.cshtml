@@ -1,4 +1,6 @@
 ﻿@using MVCCoachBuster.ViewModels
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
 @model ListadoViewModel<Suscripcion>
 
 @{
@@ -40,3 +42,12 @@
 }
     </tbody>
 </table>
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("Index", new {
+    Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda
+}),
+new PagedListRenderOptions {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})
