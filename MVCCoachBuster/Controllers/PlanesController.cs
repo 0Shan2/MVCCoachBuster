@@ -168,9 +168,13 @@ namespace MVCCoachBuster.Controllers
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
            
             viewModel.Plan = _planFactoria.CrearPlan(plan);
-     
-       
-            return View( viewModel);
+            /*
+            if (!String.IsNullOrEmpty(plan.Foto))
+            {
+                viewModel.Plan.Foto = await Utilerias.ConvertirImagenABytes(plan.Foto);
+            }
+            */
+            return View("Plan", viewModel);
            
         }
 
@@ -228,7 +232,7 @@ namespace MVCCoachBuster.Controllers
                 return RedirectToAction(nameof(Index));
             }
           
-            return View(viewModel);
+            return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Delete/5
