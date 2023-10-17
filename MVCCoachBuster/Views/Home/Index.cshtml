@@ -1,48 +1,51 @@
-﻿@model Index
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<Plan>
+
 @{
+
     ViewData["Title"] = "Planes";
 }
 
-<section >
-	<div class="container py-2">
-		<div class="h1 text-center text-dark" id="pageHeaderTitle">Entrenamientos</div>
-		<h3>Busca lo que necesitas y lo encontrarás.</h3>
 
-		<article class="postcard light yellow">
-			<a class="postcard__img_link" href="#">
-				<img class="postcard__img" src="https://media.istockphoto.com/id/1331153435/es/foto/mujer-en-un-gimnasio-de-entrenamiento-cruzado.jpg?s=2048x2048&w=is&k=20&c=OljEdVgMUeUqqgbURJ4XunYUsNvP3OcACBQUa9Hvuns=" alt="Image Title" />
-			</a>
-			<div class="postcard__text t-dark">
-				<h1 class="postcard__title yellow"><a href="#">Gluteos</a></h1>
-				<div class="postcard__subtitle small">
-					<p>jsjs</p>
-				</div>
-				<div class="postcard__bar"></div>
-				<div class="postcard__preview-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, fugiat asperiores inventore beatae accusamus odit minima enim, commodi quia, doloribus eius! Ducimus nemo accusantium maiores velit corrupti tempora reiciendis molestiae repellat vero. Eveniet ipsam adipisci illo iusto quibusdam, sunt neque nulla unde ipsum dolores nobis enim quidem excepturi, illum quos!</div>
-				<button type="button" class="btn btn-light">
-					<a class="nav-link text-grey fw-bold" id="login" asp-controller="Account" asp-action="Login">Suscribirse</a>
-			    </button>
-			</div>
-		</article>
-		<article class="postcard light yellow">
-			<a class="postcard__img_link" href="#">
-				<img class="postcard__img" src="https://cdn.pixabay.com/photo/2017/11/18/05/02/yoga-2959226_1280.jpg" alt="Image Title" />
-			</a>
-			<div class="postcard__text t-dark">
-				<h1 class="postcard__title yellow"><a href="#">Yoga</a></h1>
-				<div class="postcard__subtitle small">
-				
-				</div>
-				<div class="postcard__bar"></div>
-				<div class="postcard__preview-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, fugiat asperiores inventore beatae accusamus odit minima enim, commodi quia, doloribus eius! Ducimus nemo accusantium maiores velit corrupti tempora reiciendis molestiae repellat vero. Eveniet ipsam adipisci illo iusto quibusdam, sunt neque nulla unde ipsum dolores nobis enim quidem excepturi, illum quos!</div>
-				<form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
-					<input type="hidden" name="idPlan" value="@Model.Value" />
-					<button type="submit" class="btn btn-light">
-						<a class="nav-link text-grey fw-bold">Suscribirse</a>
-					</button>
-				</form>
-			
-			</div>
-		</article>
-	</div>
+<section>
+    <div class="container py-2">
+      <div class="h1 text-center text-dark" id="pageHeaderTitle">Entrenamientos</div>
+        <div class="postcard-list">
+          @foreach (var item in Model.Registros)
+          {
+             <article class="postcard light yellow">
+                 <a class="postcard__img_link" href="#">
+                        @if (item.Foto != null)
+                        {
+                            <img class="postcard__img" src="data:image/*;base64,@(Convert.ToBase64String(item.Foto))" alt="Foto del Plan" />
+                        }
+          
+                 </a>
+              <div class="postcard__text t-dark">
+                  <h1 class="postcard__title yellow"><a href="#">@item.Nombre</a></h1>
+                  <div class="postcard__subtitle small">
+                    <p>@item.Descripcion</p>
+                  </div>
+                  <div class="postcard__bar"></div>
+                  <div class="postcard__preview-txt">@item.Precio</div>
+                  <button type="button" class="btn btn-light">
+                    <a class="nav-link text-grey fw-bold" id="login" asp-controller="Account" asp-action="Login">Suscribirse</a>
+                  </button>
+               </div>
+             </article>
+          }
+        </div>
+    </div>
+    
 </section>
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("Index", new {
+    Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda
+}),
+new PagedListRenderOptions {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

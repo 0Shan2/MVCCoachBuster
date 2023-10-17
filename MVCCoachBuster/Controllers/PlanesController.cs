@@ -166,9 +166,8 @@ namespace MVCCoachBuster.Controllers
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
            
             viewModel.Plan = _planFactoria.CrearPlan(plan);
-     
-       
-            return View( viewModel);
+          
+            return View("Plan", viewModel);
            
         }
 
@@ -236,7 +235,7 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
+          
             return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
