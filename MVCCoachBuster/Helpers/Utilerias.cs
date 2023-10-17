@@ -25,6 +25,8 @@
 
         public static async Task<byte[]> ConvertirImagenABytes(string foto)
         {
+
+            
             var rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + "\\archivos\\");
             bool existeRutaDirectorioArchivos = System.IO.Directory.Exists(rutaDirectorioArchivos);
             if (!existeRutaDirectorioArchivos) Directory.CreateDirectory(rutaDirectorioArchivos);
@@ -34,6 +36,7 @@
                 return await System.IO.File.ReadAllBytesAsync(rutaArchivo);
             }
             return null;
+           
         }
     }
 }

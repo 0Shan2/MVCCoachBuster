@@ -124,7 +124,12 @@ namespace MVCCoachBuster.Controllers
                     if (Request.Form.Files.Count > 0)
                     {
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        nuevoPlan.Foto = await Utilerias.LeerImagen(archivo);
+                        using var dataStream = new MemoryStream();
+                        await archivo.CopyToAsync(dataStream);
+                        nuevoPlan.Foto = dataStream.ToArray();
+                        //nuevoPlan.Foto = await Utilerias.LeerImagen(archivo);
+
+
                     }
 
                     _context.Add(nuevoPlan);
@@ -140,7 +145,7 @@ namespace MVCCoachBuster.Controllers
                 return RedirectToAction(nameof(Index));
             }
        
-            return View("Plan", viewModel);
+            return View("Plan",viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Edit/5
@@ -159,13 +164,12 @@ namespace MVCCoachBuster.Controllers
             }
             AgregarEditarPlanViewModel viewModel= new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
-            //ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
+           
             viewModel.Plan = _planFactoria.CrearPlan(plan);
-            if (!String.IsNullOrEmpty(plan.Foto))
-            {
-                viewModel.Plan.Foto = await Utilerias.ConvertirImagenABytes(plan.Foto);
-            }
-            return View("Plan", viewModel);
+     
+       
+            return View( viewModel);
+           
         }
 
         // POST: Planes/Edit/5
@@ -202,19 +206,19 @@ namespace MVCCoachBuster.Controllers
                 try
                 {
                     var planBd= await _context.Planes.FindAsync(plan.Id);
-
                     _planFactoria.ActualizarDatosPlan(plan, planBd);
 
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        planBd.Foto = await Utilerias.LeerImagen(archivo);
-
+                        using var dataStream = new MemoryStream();
+                        await archivo.CopyToAsync(dataStream);
+                        planBd.Foto = dataStream.ToArray();
 
                     }
 
-                    _context.Update(planBd);
+                   // _context.Update(planBd);
                     //Si no hay errores, la clase es actualizada correctamente
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
@@ -232,6 +236,7 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -278,26 +283,5 @@ namespace MVCCoachBuster.Controllers
           return _context.Planes.Any(e => e.Id == id);
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------------
-        //Método para sacar las lista de entrenadores
-        /*
-        public IActionResult ListaEntrenadores()
-        {
-            //Filtra los usuarios con el rol "entrenador"
-            var entrenadores = _context.Usuarios.Where( u => u.Rol.Id == 2).ToList();
-
-            // Crear una lista de SelectListItem a partir de los entrenadores
-            var listaEntrenadores = entrenadores.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(), // Supongo que el Id es un entero
-                Text = u.Nombre
-            }).ToList();
-
-            // Agregar la lista de entrenadores a ViewBag.UsuarioId
-            ViewBag.UsuarioId = listaEntrenadores;
-
-            return View();
-        }
-        */
     }
 }
