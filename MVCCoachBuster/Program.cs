@@ -28,7 +28,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
         options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/AccesoDenegado";
         options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;

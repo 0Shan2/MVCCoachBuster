@@ -1,0 +1,13 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+
+<div class="container">
+    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+    {
+        <div class="nav-item">
+            <span class="nav-link text-light fw-bold">¡Hola @HttpContextAccessor.HttpContext.User.Identity.Name!</span>
+            <div class="container">
+                <h1>Te has suscrito éxitosamente</h1>
+            </div>
+        </div>
+    }
+</div>

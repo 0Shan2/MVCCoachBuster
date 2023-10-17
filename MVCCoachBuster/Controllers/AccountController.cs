@@ -71,6 +71,8 @@ namespace MVCCoachBuster.Controllers
 					//agregamos su correo y el rol.
 					var claims = new List<Claim>
 					{
+                       new Claim(ClaimTypes.NameIdentifier, usuarioBd.Id.ToString()),
+                       // new Claim(ClaimTypes.Name, usuarioBd.Nombre),
 						new Claim(ClaimTypes.Email, usuarioBd.Correo),
 						new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
 					};
