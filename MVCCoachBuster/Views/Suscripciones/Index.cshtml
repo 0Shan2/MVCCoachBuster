@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MVCCoachBuster.Models.Suscripcion>
+﻿@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<Suscripcion>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +14,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
+                @Html.DisplayNameFor(model => model.Registros[0].IdUsuario)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdPlan)
+                @Html.DisplayNameFor(model => model.Registros[0].IdPlan)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Registros) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.IdUsuario)

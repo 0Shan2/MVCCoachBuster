@@ -101,14 +101,12 @@ namespace MVCCoachBuster.Controllers
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2). AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
+
             if (ModelState.IsValid)
             {
-                
 
-
-
-                // 2º)Validamos si ya hay un rol con el mismo nombre
-                var existeElemtnoBd = _context.Roles
+                // 2º)Validamos si ya hay un plan con el mismo nombre
+                var existeElemtnoBd = _context.Planes
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim());
                 if (existeElemtnoBd)
                 {
@@ -127,8 +125,6 @@ namespace MVCCoachBuster.Controllers
                     {
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         nuevoPlan.Foto = await Utilerias.LeerImagen(archivo);
-
-
                     }
 
                     _context.Add(nuevoPlan);
@@ -181,8 +177,8 @@ namespace MVCCoachBuster.Controllers
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
-       
             viewModel.Plan = plan;
+           
             if (id != plan.Id)
             {
                 return NotFound();
@@ -193,7 +189,7 @@ namespace MVCCoachBuster.Controllers
             {
 
                 // 2º)Validamos que no existe otra marca con el mismo nombre
-                var existeElemtnoBd = _context.Roles
+                var existeElemtnoBd = _context.Planes
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim()
                     && u.Id != plan.Id);
                 if (existeElemtnoBd)
@@ -236,7 +232,6 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Nombre", plan.UsuarioId);
             return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
