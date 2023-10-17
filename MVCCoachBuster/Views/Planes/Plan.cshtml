@@ -60,9 +60,9 @@
 
         </div>
 
-        @* Implementación Imagen *@
+        <!-- Implementación Imagen -->
         <div class="col-md-6">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Plan.Foto" style="width: 100%;"></label>
                 @if (Model.Plan.Foto != null)
@@ -81,7 +81,7 @@
                 <span asp-validation-for="Plan.Foto" class="text-danger"></span>
             </div>
         </div>
-        @* Implementación Imagen *@
+
     </div>
 
 </form>
