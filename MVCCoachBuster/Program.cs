@@ -24,6 +24,7 @@ builder.Services.AddDbContext<CoachBusterContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
 //Autorizacion con esquemas especificos
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {

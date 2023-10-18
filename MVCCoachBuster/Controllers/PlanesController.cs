@@ -19,6 +19,8 @@ namespace MVCCoachBuster.Controllers
     [Authorize(Policy = "Gestión")]
     public class PlanesController : Controller
     {
+        const string path = @"C:\CoachBuster\Images\";
+
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
         private readonly INotyfService _servicioNotificacion;
@@ -83,7 +85,7 @@ namespace MVCCoachBuster.Controllers
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Create
-        
+
         public IActionResult Create()
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
@@ -99,7 +101,7 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan)
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
-            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2). AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
 
             if (ModelState.IsValid)
@@ -118,15 +120,22 @@ namespace MVCCoachBuster.Controllers
 
                 try
                 {
-                    var nuevoPlan=_planFactoria.CrearPlan(plan);
+                    var nuevoPlan = _planFactoria.CrearPlan(plan);
 
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        using var dataStream = new MemoryStream();
-                        await archivo.CopyToAsync(dataStream);
-                        nuevoPlan.Foto = dataStream.ToArray();
+                        Guid giud = Guid.NewGuid();
+                        string extension = System.IO.Path.GetExtension(archivo.FileName);
+                        using (var dataStream = new MemoryStream())
+                        {
+                            await archivo.CopyToAsync(dataStream);
+                            System.IO.File.WriteAllBytes(path + giud + extension, dataStream.ToArray());
+                            nuevoPlan.Foto = giud.ToString() + extension;
+                        }
+
+
                         //nuevoPlan.Foto = await Utilerias.LeerImagen(archivo);
 
 
@@ -144,12 +153,12 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-       
-            return View("Plan",viewModel);
+
+            return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Edit/5
-        
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Planes == null)
@@ -162,13 +171,13 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-            AgregarEditarPlanViewModel viewModel= new AgregarEditarPlanViewModel();
+            AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
-           
+
             viewModel.Plan = _planFactoria.CrearPlan(plan);
-          
+
             return View("Plan", viewModel);
-           
+
         }
 
         // POST: Planes/Edit/5
@@ -181,7 +190,7 @@ namespace MVCCoachBuster.Controllers
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
-           
+
             if (id != plan.Id)
             {
                 return NotFound();
@@ -204,22 +213,38 @@ namespace MVCCoachBuster.Controllers
 
                 try
                 {
-                    var planBd= await _context.Planes.FindAsync(plan.Id);
+                    var planBd = await _context.Planes.FindAsync(plan.Id);
                     _planFactoria.ActualizarDatosPlan(plan, planBd);
+
+                    ////Para añadir la imagen
+                    //if (Request.Form.Files.Count > 0)
+                    //{
+                    //    IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                    //    using var dataStream = new MemoryStream();
+                    //    await archivo.CopyToAsync(dataStream);
+                    //    planBd.Foto = dataStream.ToArray();
+
+                    //}
 
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        using var dataStream = new MemoryStream();
-                        await archivo.CopyToAsync(dataStream);
-                        planBd.Foto = dataStream.ToArray();
-
+                        Guid giud = Guid.NewGuid();
+                        string extension = System.IO.Path.GetExtension(archivo.FileName);
+                        using (var dataStream = new MemoryStream())
+                        {
+                            await archivo.CopyToAsync(dataStream);
+                            System.IO.File.WriteAllBytes(path + giud + extension, dataStream.ToArray());
+                            planBd.Foto = giud.ToString() + extension;
+                        }
                     }
 
-                   // _context.Update(planBd);
-                    //Si no hay errores, la clase es actualizada correctamente
-                    await _context.SaveChangesAsync();
+                         _context.Update(planBd);
+                        //Si no hay errores, la clase es actualizada correctamente
+
+
+                        await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
                 }
                 catch (DbUpdateConcurrencyException)
@@ -235,7 +260,7 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-          
+
             return View("Plan", viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -272,14 +297,14 @@ namespace MVCCoachBuster.Controllers
             {
                 _context.Planes.Remove(plan);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PlanExists(int id)
         {
-          return _context.Planes.Any(e => e.Id == id);
+            return _context.Planes.Any(e => e.Id == id);
         }
 
     }
