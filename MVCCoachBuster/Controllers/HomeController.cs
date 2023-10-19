@@ -33,7 +33,7 @@ namespace MVCCoachBuster.Controllers
 
 		public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
 		{
-            ViewData["DirectorioImagenes"] = _configuration["RutasImagenes:DirectorioImagenes"];
+           
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
 			var consulta = _context.Planes
 				.OrderBy(m => m.Nombre)
@@ -41,8 +41,8 @@ namespace MVCCoachBuster.Controllers
 				.AsQueryable(); //AsQueryable para poder hacer la busqueda
 
 
-			//2º) Para buscar un plan
-			if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
+            //2º) Para buscar un plan
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
 			{
 				consulta = consulta.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda));
 			}
@@ -51,8 +51,23 @@ namespace MVCCoachBuster.Controllers
 			var numeroPagina = viewModel.Pagina ?? 1;
 			viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
 
-			// código asíncrono
-			return View(viewModel);
+          
+
+            // Crea una lista de tareas asincrónicas para cargar las imágenes
+            var tasks = viewModel.Registros.Select(plan => Utilerias.ConvertirImagenABytes(plan.Foto, _configuration));
+
+            // Espera hasta que todas las tareas se completen en paralelo
+            var imagenesEnBytes = await Task.WhenAll(tasks);
+
+            // Asigna las imágenes en bytes a los planes
+            for (var i = 0; i < viewModel.Registros.Count; i++)
+            {
+                viewModel.Registros[i].FotoBytes = imagenesEnBytes[i];
+            }
+
+
+            // código asíncrono
+            return View(viewModel);
 		}
 
 		public IActionResult Privacy()

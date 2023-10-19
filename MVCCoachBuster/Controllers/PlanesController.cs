@@ -43,15 +43,11 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
         {
 
-
-        
-
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Planes
                 .OrderBy(m => m.Nombre)
                 .Include(m => m.Entrenador)
                 .AsQueryable(); //AsQueryable para poder hacer la busqueda
-
 
             //2º) Para buscar un plan
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
@@ -62,6 +58,8 @@ namespace MVCCoachBuster.Controllers
             viewModel.Total = consulta.Count();
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
+          
 
             // código asíncrono
             return View(viewModel);
@@ -83,6 +81,7 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
+
             plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
 
 
