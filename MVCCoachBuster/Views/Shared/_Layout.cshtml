@@ -14,7 +14,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-success bg-gradient border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-gradient border-bottom box-shadow mb-3" style="background-color: #092327;">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="fa-solid fa-dumbbell fa-2x"></i>
@@ -34,7 +34,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Usuarios" asp-action="Index">Suscripciones</a>
+                        </li>
                         <!--Solo los administradores podran ver el link de Rol, que nos lleva a su Index -->
                         @{
                             if (User.IsInRole("Administrador"))

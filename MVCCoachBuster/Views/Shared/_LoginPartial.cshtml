@@ -8,18 +8,56 @@
            
         </li>
         <li class="nav-item">
+            <!--
             <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index","Home")">
                 <button id="logout" type="submit" class="nav-link btn btn-link text-light fw-bold">Salir</button>
             </form>
+            -->
+            <!-- Avatar -->
+            <div class="dropdown">
+                <a class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                   href="#"
+                   id="navbarDropdownMenuAvatar"
+                   role="button"
+                   data-mdb-toggle="dropdown"
+                   aria-expanded="false">
+                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                         class="rounded-circle"
+                         height="30"
+                         alt="Black and White Portrait of a Man"
+                         loading="lazy" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="navbarDropdownMenuAvatar">
+                    <li>
+                        <a class="dropdown-item" href="#">My profile</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Settings</a>
+                    </li>
+                    <li>
+                        <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index","Home")">
+                            <button id="logout" type="submit" class="dropdown-item">Salir</button>
+                        </form>
+                          
+                    </li>
+                </ul>
+            </div>
+          
         </li>
     }
     else
     {
+
         <li class="nav-item">
-            <a class="nav-link text-light fw-bold" id="login" asp-controller="Account" asp-action="Registro">Register</a>
+            <form asp-controller="Account" asp-action="Login" method="get">
+                <button type="submit" class="btn btn-link px-3 me-2 text-light fw-bold" id="login">Login</button>
+            </form>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-light fw-bold" id="login" asp-controller="Account" asp-action="Login">Login</a>
+            <form asp-controller="Account" asp-action="Registro" method="get">
+                <button type="submit" class="btn btn-light me-3 text-dark fw-bold">Empieza ya</button>
+            </form>
         </li>
     }
 </ul>
