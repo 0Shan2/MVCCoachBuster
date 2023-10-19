@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MVCCoachBuster.Models
 {
@@ -23,6 +24,10 @@ namespace MVCCoachBuster.Models
 
         //Añadir imagen
         public string Foto { get; set; }
+
+        [NotMapped]
+        public byte[] FotoBytes { get; set; }
+        
 
 
     }

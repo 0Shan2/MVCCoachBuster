@@ -75,6 +75,9 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
+            //Convertirmos la cadaena de foto a un arrible de bytes
+            usuario.FotoBytes = await Utilerias.ConvertirImagenABytes(usuario.Foto, _configuration);
+
             return View(usuario);
         }
 
@@ -118,7 +121,15 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if(Request.Form.Files.Count > 0)
                     {
-              
+                        /*
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        using var dataStream = new MemoryStream();
+                        await archivo.CopyToAsync(dataStream);
+                        usuarioAgregar.Foto = dataStream.ToArray();
+                        */
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        usuarioAgregar.Foto = await Utilerias.LeerImagen(archivo, _configuration);
+
                     }
                     
                     _context.Usuarios.Add(usuarioAgregar);
@@ -152,6 +163,13 @@ namespace MVCCoachBuster.Controllers
             EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
             viewModel.Usuario = _usuarioFactoria.CrearUsuarioEdicion(usuario);
+
+            //Mostrar la imagen 
+            if (!String.IsNullOrEmpty(usuario.Foto))
+            {
+                viewModel.Usuario.Foto = await Utilerias.ConvertirImagenABytes(usuario.Foto, _configuration);
+            }
+
             return View(viewModel);
         }
 
@@ -181,9 +199,17 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
-                   
+                        /*
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        using var dataStream = new MemoryStream();
+                        await archivo.CopyToAsync(dataStream);
+                        usuarioBd.Foto = dataStream.ToArray();
+                        */
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        usuarioBd.Foto = await Utilerias.LeerImagen(archivo, _configuration);
                     }
 
+                    _context.Update(usuarioBd);
                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el usuario cuyo correo es: {usuario.Correo}");
                 }

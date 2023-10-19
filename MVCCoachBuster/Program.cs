@@ -6,8 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 using MVCCoachBuster.Data;
 using MVCCoachBuster.Helpers;
 using MVCCoachBuster.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Agregamos Serilog a los servicios, además de leer información del archivo de configuración
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Logging.AddSerilog(logger);
 
 //Vamos añadir nuestra base de datos
 /*

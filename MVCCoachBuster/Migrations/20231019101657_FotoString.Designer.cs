@@ -3,6 +3,7 @@ using MVCCoachBuster.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCCoachBuster.Migrations
 {
     [DbContext(typeof(CoachBusterContext))]
-    partial class CoachBusterContextModelSnapshot : ModelSnapshot
+    [Migration("20231019101657_FotoString")]
+    partial class FotoString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +37,6 @@ namespace MVCCoachBuster.Migrations
 
                     b.Property<string>("Foto")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("FotoBytes")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
                         .HasMaxLength(50)
