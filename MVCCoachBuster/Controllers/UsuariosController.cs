@@ -118,10 +118,7 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if(Request.Form.Files.Count > 0)
                     {
-                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        using var dataStream = new MemoryStream();
-                        await archivo.CopyToAsync(dataStream);
-                        usuarioAgregar.Foto = dataStream.ToArray();
+              
                     }
                     
                     _context.Usuarios.Add(usuarioAgregar);
@@ -184,10 +181,7 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
-                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        using var dataStream = new MemoryStream();
-                        await archivo.CopyToAsync(dataStream);
-                        usuarioBd.Foto = dataStream.ToArray();
+                   
                     }
 
                     await _context.SaveChangesAsync();

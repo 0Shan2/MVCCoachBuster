@@ -42,8 +42,9 @@ namespace MVCCoachBuster.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
         {
-            ViewData["DirectorioImagenes"] = _configuration["RutasImagenes:DirectorioImagenes"];
 
+
+        
 
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Planes
@@ -82,8 +83,12 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
+            plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
+
 
             return View(plan);
+
+          
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Create
@@ -91,6 +96,7 @@ namespace MVCCoachBuster.Controllers
         public IActionResult Create()
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
+
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre");
             return View("Plan", viewModel);
         }
@@ -123,29 +129,7 @@ namespace MVCCoachBuster.Controllers
                 try
                 {
                     var nuevoPlan = _planFactoria.CrearPlan(plan);
-                    /*
-
-          
-                    if (Request.Form.Files.Count > 0)
-                    {
-                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        Guid giud = Guid.NewGuid();
-                        string extension = System.IO.Path.GetExtension(archivo.FileName);
-                        // Obtiene la configuración del directorio de imágenes desde appsettings.json
-                        string directorioImagenes = _configuration["RutasImagenes:DirectorioImagenes"];
-                        // Combina la ruta completa donde se guardará la imagen
-                        string rutaCompleta = Path.Combine(directorioImagenes, giud + extension);
-
-                        using (var dataStream = new MemoryStream())
-                        {
-                            await archivo.CopyToAsync(dataStream);
-                            System.IO.File.WriteAllBytes(rutaCompleta, dataStream.ToArray());
-                            nuevoPlan.Foto = giud.ToString() + extension;
-                        }
-
-
-                    }
-                    */
+    
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
@@ -191,6 +175,10 @@ namespace MVCCoachBuster.Controllers
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
 
             viewModel.Plan = _planFactoria.CrearPlan(plan);
+            if (!String.IsNullOrEmpty(plan.Foto))
+            {
+                viewModel.Plan.Foto = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
+            }
 
             return View("Plan", viewModel);
 
@@ -241,6 +229,8 @@ namespace MVCCoachBuster.Controllers
 
 
                     }
+                 
+           
 
                     _context.Update(planBd);
                      //Si no hay errores, la clase es actualizada correctamente

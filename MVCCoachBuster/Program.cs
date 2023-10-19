@@ -19,9 +19,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<CoachBusterContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Obtener la configuración de la ruta de las imágenes desde appsettings.json
-var rutaImagenes = builder.Configuration.GetSection("RutasImagenes:DirectorioImagenes").Value;
-
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

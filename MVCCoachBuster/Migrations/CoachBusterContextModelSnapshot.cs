@@ -37,6 +37,9 @@ namespace MVCCoachBuster.Migrations
                     b.Property<string>("Foto")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("FotoBytes")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Nombre")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -106,8 +109,8 @@ namespace MVCCoachBuster.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Foto")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

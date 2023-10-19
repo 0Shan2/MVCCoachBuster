@@ -41,7 +41,7 @@ namespace MVCCoachBuster.Helpers
                 Correo = usuario.Correo,
                 Telefono = usuario.Telefono,
                 RolId = usuario.RolId,
-                Foto = usuario.Foto
+         
             };
         }
 
@@ -54,7 +54,7 @@ namespace MVCCoachBuster.Helpers
                 Correo = usuario.Correo,
                 Telefono = usuario.Telefono,
                 RolId = usuario.RolId,
-                Foto = usuario.Foto
+             
            };
         }
 
