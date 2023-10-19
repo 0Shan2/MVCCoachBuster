@@ -19,15 +19,17 @@ namespace MVCCoachBuster.Controllers
         private readonly CoachBusterContext _context;
         private readonly IPasswordHasher<Usuario> _passwordHasher;
         private readonly INotyfService _servicioNotificacion;
+        private readonly ILogger<AccountController> _logger;
 
         //1º)Obtenemos acceso a IConfiguration 
         //
         public AccountController(CoachBusterContext context, IPasswordHasher<Usuario> passwordHasher,
-            INotyfService servicioNotificacion)
+            INotyfService servicioNotificacion, ILogger<AccountController> logger)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _servicioNotificacion = servicioNotificacion;
+            _logger = logger;
         }
         public IActionResult Index()
         {
@@ -94,6 +96,8 @@ namespace MVCCoachBuster.Controllers
 						new ClaimsPrincipal(claimsIdentity),
 						authProperties);
 
+                    _logger.LogWarning("El usuario " + usuarioBd.Nombre + " ha accedido al sistema" +DateTime.Now.ToLongDateString());
+
 					return LocalRedirect(viewModel.ReturnUrl);
 				}
                 else
@@ -111,6 +115,7 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _logger.LogWarning("El usuario ha cerrado sesión " + DateTime.Now.ToLongDateString());
             return RedirectToAction("Index", "Home");
         }
 

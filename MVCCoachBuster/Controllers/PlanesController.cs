@@ -245,7 +245,7 @@ namespace MVCCoachBuster.Controllers
 
 
                         await _context.SaveChangesAsync();
-                    _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
+                    _servicioNotificacion.Success($"ÉXITO al actualizar el plan {plan.Nombre}");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
