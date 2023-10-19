@@ -11,8 +11,12 @@ namespace MVCCoachBuster.Data
     {
 		
 	
-		public static void Initialize(CoachBusterContext context)
+		public static void Initialize(CoachBusterContext context, IWebHostEnvironment environment)
         {
+            if (environment.IsDevelopment())
+            {
+
+            
 
             if (context.Roles.Any())
             {
@@ -63,6 +67,7 @@ namespace MVCCoachBuster.Data
 
             context.Planes.AddRange(planes);
             context.SaveChanges();
+        }
         }
     }
 }

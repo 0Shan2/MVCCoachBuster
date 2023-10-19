@@ -85,7 +85,7 @@ using(var scope = app.Services.CreateScope())
     //Llamamos a DBInitializer
     // 1º) Como ya teniamos la bdd creada, tenemo que eliminarla
     // 2º) Herramientas -> Adm,instrador paque NuGets -> Consola : Drop-Database -confirm
-    DbInitializer.Initialize(context); 
+    DbInitializer.Initialize(context, app.Environment); 
 }
 
 app.UseHttpsRedirection();
