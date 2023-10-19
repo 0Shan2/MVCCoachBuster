@@ -1,11 +1,16 @@
 ﻿@using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 @using MVCCoachBuster.ViewModels
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
 @model ListadoViewModel<Plan>
 
 @{
-
+    
     ViewData["Title"] = "Planes";
+    var directorioImagenes =  Configuration["RutasImagenes:DirectorioImagenes"];
+
 }
 
 
@@ -17,11 +22,11 @@
           {
              <article class="postcard light yellow">
                  <a class="postcard__img_link" href="#">
-                        @if (item.Foto != null)
+                        @if (!string.IsNullOrEmpty(item.Foto))
                         {
-                            <img class="postcard__img" src="data:image/*;base64,@("~/CoachBuster/images/"+item.Foto)" alt="Foto del Plan" />
+                            <img class="postcard__img" src="@directorioImagenes/@item.Foto" alt="Foto del Plan" />
                         }
-          
+                        
                  </a>
               <div class="postcard__text t-dark">
                   <h1 class="postcard__title yellow"><a href="#">@item.Nombre</a></h1>

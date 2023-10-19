@@ -1,16 +1,34 @@
-﻿namespace MVCCoachBuster.Helpers
+﻿using System;
+
+namespace MVCCoachBuster.Helpers
 {
-    public class Utilerias
+    public static class Utilerias
     {
-        public static async Task<string> LeerImagen(IFormFile archivo)
+
+        public static async Task<string> LeerImagen(IFormFile archivo, IConfiguration configuration)
         {
-            var rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + "\\archivos\\");
+            var esImagenRutaRelativa = false;
+            var rutaDirectorioArchivos = string.Empty;
+
+            bool.TryParse(configuration["rutaRelativaArchivo"], out esImagenRutaRelativa);
+
+            if (esImagenRutaRelativa)
+            {
+                rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + configuration["rutaArchivos"]);
+
+            }
+            else
+            {
+                rutaDirectorioArchivos = configuration["rutaArchivos"];
+            }
+
             bool existeRutaDirectorioArchivos = System.IO.Directory.Exists(rutaDirectorioArchivos);
             if (!existeRutaDirectorioArchivos) Directory.CreateDirectory(rutaDirectorioArchivos);
 
             var extension = Path.GetExtension(archivo.FileName);
             var nombreArchivo = Path.GetFileNameWithoutExtension(archivo.FileName.Trim());
-            nombreArchivo = $"{nombreArchivo}_{DateTime.Now:yyyy_MM_dd}_{DateTime.Now:HHmmss}{extension}";
+            var guid = Guid.NewGuid().ToString();
+            nombreArchivo = $"{nombreArchivo}_{guid}{extension}";
             var rutaArchivo = Path.Combine(rutaDirectorioArchivos, nombreArchivo);
             if (!System.IO.File.Exists(rutaArchivo))
             {
@@ -23,19 +41,32 @@
             return null;
         }
 
-        public static async Task<byte[]> ConvertirImagenABytes(string foto)
+        public static async Task<byte[]> ConvertirImagenABytes(string imagen, IConfiguration configuration)
         {
-            
-            var rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + "\\archivos\\");
+
+            var esImagenRutaRelativa = false;
+            var rutaDirectorioArchivos = string.Empty;
+
+            bool.TryParse(configuration["rutaRelativaArchivo"], out esImagenRutaRelativa);
+
+            if (esImagenRutaRelativa)
+            {
+                rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + configuration["rutaArchivos"]);
+
+            }
+            else
+            {
+                rutaDirectorioArchivos = configuration["rutaArchivos"];
+            }
+
             bool existeRutaDirectorioArchivos = System.IO.Directory.Exists(rutaDirectorioArchivos);
             if (!existeRutaDirectorioArchivos) Directory.CreateDirectory(rutaDirectorioArchivos);
-            var rutaArchivo = Path.Combine(rutaDirectorioArchivos, foto);
+            var rutaArchivo = Path.Combine(rutaDirectorioArchivos, imagen);
             if (System.IO.File.Exists(rutaArchivo))
             {
                 return await System.IO.File.ReadAllBytesAsync(rutaArchivo);
             }
             return null;
-           
         }
     }
 }

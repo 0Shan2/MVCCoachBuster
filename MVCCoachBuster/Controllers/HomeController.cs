@@ -33,8 +33,8 @@ namespace MVCCoachBuster.Controllers
 
 		public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
 		{
-
-			var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+            ViewData["DirectorioImagenes"] = _configuration["RutasImagenes:DirectorioImagenes"];
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
 			var consulta = _context.Planes
 				.OrderBy(m => m.Nombre)
 				.Include(m => m.Entrenador)

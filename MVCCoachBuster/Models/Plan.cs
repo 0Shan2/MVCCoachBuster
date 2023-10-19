@@ -26,7 +26,5 @@ namespace MVCCoachBuster.Models
         public string Foto { get; set; }
 
 
-
-
     }
 }

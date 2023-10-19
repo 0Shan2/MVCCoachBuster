@@ -19,7 +19,7 @@ namespace MVCCoachBuster.Controllers
     [Authorize(Policy = "Gestión")]
     public class PlanesController : Controller
     {
-        const string path = @"C:\CoachBuster\Images\";
+      
 
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
@@ -42,6 +42,8 @@ namespace MVCCoachBuster.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
         {
+            ViewData["DirectorioImagenes"] = _configuration["RutasImagenes:DirectorioImagenes"];
+
 
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Planes
@@ -121,23 +123,37 @@ namespace MVCCoachBuster.Controllers
                 try
                 {
                     var nuevoPlan = _planFactoria.CrearPlan(plan);
+                    /*
 
-                    //Para añadir la imagen
+          
                     if (Request.Form.Files.Count > 0)
                     {
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         Guid giud = Guid.NewGuid();
                         string extension = System.IO.Path.GetExtension(archivo.FileName);
+                        // Obtiene la configuración del directorio de imágenes desde appsettings.json
+                        string directorioImagenes = _configuration["RutasImagenes:DirectorioImagenes"];
+                        // Combina la ruta completa donde se guardará la imagen
+                        string rutaCompleta = Path.Combine(directorioImagenes, giud + extension);
+
                         using (var dataStream = new MemoryStream())
                         {
                             await archivo.CopyToAsync(dataStream);
-                            System.IO.File.WriteAllBytes(path + giud + extension, dataStream.ToArray());
+                            System.IO.File.WriteAllBytes(rutaCompleta, dataStream.ToArray());
                             nuevoPlan.Foto = giud.ToString() + extension;
                         }
 
 
-                        //nuevoPlan.Foto = await Utilerias.LeerImagen(archivo);
-
+                    }
+                    */
+                    //Para añadir la imagen
+                    if (Request.Form.Files.Count > 0)
+                    {
+                       
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        nuevoPlan.Foto = await Utilerias.LeerImagen(archivo,_configuration);
+                        // Agrega registros de depuración para verificar el valor de nuevoPlan.Foto
+                        Console.WriteLine($"Valor de nuevoPlan.Foto después de cargar la imagen: {nuevoPlan.Foto}");
 
                     }
 
@@ -216,35 +232,19 @@ namespace MVCCoachBuster.Controllers
                     var planBd = await _context.Planes.FindAsync(plan.Id);
                     _planFactoria.ActualizarDatosPlan(plan, planBd);
 
-                    ////Para añadir la imagen
-                    //if (Request.Form.Files.Count > 0)
-                    //{
-                    //    IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                    //    using var dataStream = new MemoryStream();
-                    //    await archivo.CopyToAsync(dataStream);
-                    //    planBd.Foto = dataStream.ToArray();
-
-                    //}
-
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
+
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        Guid giud = Guid.NewGuid();
-                        string extension = System.IO.Path.GetExtension(archivo.FileName);
-                        using (var dataStream = new MemoryStream())
-                        {
-                            await archivo.CopyToAsync(dataStream);
-                            System.IO.File.WriteAllBytes(path + giud + extension, dataStream.ToArray());
-                            planBd.Foto = giud.ToString() + extension;
-                        }
+                        planBd.Foto = await Utilerias.LeerImagen(archivo, _configuration);
+
+
                     }
 
-                         _context.Update(planBd);
-                        //Si no hay errores, la clase es actualizada correctamente
-
-
-                        await _context.SaveChangesAsync();
+                    _context.Update(planBd);
+                     //Si no hay errores, la clase es actualizada correctamente
+                     await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
                 }
                 catch (DbUpdateConcurrencyException)
