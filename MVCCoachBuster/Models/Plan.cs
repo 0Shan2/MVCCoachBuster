@@ -25,8 +25,7 @@ namespace MVCCoachBuster.Models
         public virtual Usuario Entrenador { get; set; }
         public string Foto { get; set; }
 
-        [NotMapped]
-        public byte[] FotoBytes { get; set; } // Propiedad para los datos binarios de la imagen
+      
 
 
     }

@@ -6,6 +6,8 @@
     {
         public int Id { get; set; }
         public int IdUsuario { get; set; }
+        public Usuario usuario { get; set; }
         public int IdPlan { get; set; }
+        public Plan plan { get; set; }
     }
 }

@@ -53,17 +53,17 @@ namespace MVCCoachBuster.Controllers
 
           
 
-            // Crea una lista de tareas asincrónicas para cargar las imágenes
-            var tasks = viewModel.Registros.Select(plan => Utilerias.ConvertirImagenABytes(plan.Foto, _configuration));
+            //// Crea una lista de tareas asincrónicas para cargar las imágenes
+            //var tasks = viewModel.Registros.Select(plan => Utilerias.ConvertirImagenABytes(plan.Foto, _configuration));
 
-            // Espera hasta que todas las tareas se completen en paralelo
-            var imagenesEnBytes = await Task.WhenAll(tasks);
+            //// Espera hasta que todas las tareas se completen en paralelo
+            //var imagenesEnBytes = await Task.WhenAll(tasks);
 
-            // Asigna las imágenes en bytes a los planes
-            for (var i = 0; i < viewModel.Registros.Count; i++)
-            {
-                viewModel.Registros[i].FotoBytes = imagenesEnBytes[i];
-            }
+            //// Asigna las imágenes en bytes a los planes
+            //for (var i = 0; i < viewModel.Registros.Count; i++)
+            //{
+            //    viewModel.Registros[i].FotoBytes = imagenesEnBytes[i];
+            //}
 
 
             // código asíncrono

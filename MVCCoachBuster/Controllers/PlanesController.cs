@@ -82,7 +82,7 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-            plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
+           // plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
 
 
             return View(plan);
