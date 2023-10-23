@@ -293,5 +293,27 @@ namespace MVCCoachBuster.Controllers
             return _context.Planes.Any(e => e.Id == id);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------
+        //Listado de planes del entrenador, que nos muestra sus creaciones de planes 
+        [Authorize]
+        public async Task<IActionResult> ListaPlanesCreados()
+        {
+            // Cogemos el usuario logueado, en la vista nos aseguramos de que sea entrenador 
+            string coachId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int idCoach = int.Parse(coachId);
+
+            //Recuperamos la lista de coach con sus entrenamientos
+            List<Plan> planesCreados = _context.Planes
+                .Where(p => p.UsuarioId == idCoach)
+                .ToList();
+
+            var viewModel = new ListaPlanesCreadosViewModel
+            {
+                PlanesCreados = planesCreados
+            };
+
+            return View(viewModel);
+        }
+
     }
 }
