@@ -36,6 +36,6 @@ namespace MVCCoachBuster.ViewModels
         public int RolId { get; set; }
 
         //Añadir imagen
-        public byte[] Foto { get; set; }
+        public string Foto { get; set; }
     }
 }

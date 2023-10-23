@@ -47,11 +47,11 @@
                 <label asp-for="Plan.Foto" style="width: 100%;"></label>
                 @if (Model.Plan.Foto != null)
                 {
-                    <img id="foto" class="img-fluid" src="/images/,@(Model.Plan.Foto)">
+                    <img id="foto" class="img-fluid" src="/images/@(Model.Plan.Foto)">
                 }
                 else
                 {
-                    <img id="foto" class="img-fluid" src="">
+                    <img id="foto" class="img-fluid" src="/images/@(Model.Plan.Foto)">
                 }
                 <input type="file"
                        accept=".png,.jpg,.jpeg,.gif,.tif"

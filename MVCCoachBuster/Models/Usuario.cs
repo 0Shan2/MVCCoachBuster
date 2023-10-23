@@ -24,11 +24,11 @@ namespace MVCCoachBuster.Models
 
         //Añadir imagen
         public string Foto { get; set; }
-
+        /*
         [NotMapped]
         public byte[] FotoBytes { get; set; }
         
-
+        */
 
     }
 }

@@ -25,7 +25,7 @@ namespace MVCCoachBuster.ViewModels
         [Display(Name = "Entrenador")]
         public int UsuarioId { get; set; }
         public virtual Usuario Entrenador { get; set; }
-        public byte[] Foto { get; set; }
+        public string Foto { get; set; }
 
     }
 }

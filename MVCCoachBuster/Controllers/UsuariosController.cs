@@ -76,7 +76,7 @@ namespace MVCCoachBuster.Controllers
             }
 
             //Convertirmos la cadaena de foto a un arrible de bytes
-            usuario.FotoBytes = await Utilerias.ConvertirImagenABytes(usuario.Foto, _configuration);
+            //usuario.FotoBytes = await Utilerias.ConvertirImagenABytes(usuario.Foto, _configuration);
 
             return View(usuario);
         }
@@ -163,12 +163,7 @@ namespace MVCCoachBuster.Controllers
             EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
             viewModel.Usuario = _usuarioFactoria.CrearUsuarioEdicion(usuario);
-
-            //Mostrar la imagen 
-            if (!String.IsNullOrEmpty(usuario.Foto))
-            {
-                viewModel.Usuario.Foto = await Utilerias.ConvertirImagenABytes(usuario.Foto, _configuration);
-            }
+            viewModel.Usuario.Foto = usuario.Foto; // Supongamos que la propiedad FotoPath contiene la ruta de la imagen
 
             return View(viewModel);
         }

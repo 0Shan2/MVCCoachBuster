@@ -20,7 +20,7 @@ namespace MVCCoachBuster.ViewModels
 
         //Agregamos la imagen
         [Display(Name = "Foto")]
-        public byte[] Foto { get; set; }
+        public string Foto { get; set; }
     }
 }
 
