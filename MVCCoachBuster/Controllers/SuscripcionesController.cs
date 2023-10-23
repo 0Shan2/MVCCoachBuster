@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
+using MVCCoachBuster.Helpers;
 using MVCCoachBuster.Models;
 using MVCCoachBuster.ViewModels;
 using X.PagedList;
@@ -71,6 +72,34 @@ namespace MVCCoachBuster.Controllers
             await _context.SaveChangesAsync();
 
             return View("SuscripcionExitosa");
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        [Authorize]
+        public async Task<IActionResult> ListaPlanesSuscritos()
+        {
+
+            //Obtenemos el id del usuario
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int idUsu = int.Parse(userId);
+
+            //Recuperamos los IDs de los planes a los que esta inscrito el usuario
+            List<int> idsPlanesInsc = _context.Suscripcion
+                .Where(s => s.IdUsuario == idUsu)
+                .Select(s => s.IdPlan)
+                .ToList();
+
+            //Recuperamos los objetos Plan a partir de los IDs
+            List<Plan> planesInscritos = _context.Planes
+                .Where(p => idsPlanesInsc.Contains(p.Id)).ToList();
+
+            //Creamos el ViewModel
+            var viewModel = new ListaPlanesSuscritosViewModel
+            {
+                PlanesInscritos = planesInscritos
+            };
+
+            return View(viewModel);
         }
 
 
