@@ -1,5 +1,10 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 
+@{
+    var fotoClaim = User.Claims.FirstOrDefault(c => c.Type == "Foto");
+    string fotoUrl = fotoClaim != null ? fotoClaim.Value : null;
+}
+
 <ul class="navbar-nav">
     @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
     {
@@ -21,19 +26,21 @@
                    role="button"
                    data-mdb-toggle="dropdown"
                    aria-expanded="false">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                    <img src="/images/@fotoUrl"
                          class="rounded-circle"
                          height="30"
-                         alt="Black and White Portrait of a Man"
+                         alt="Foto de perfil"
                          loading="lazy" />
+              
+
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end"
                     aria-labelledby="navbarDropdownMenuAvatar">
                     <li>
-                        <a class="dropdown-item" href="#">My profile</a>
+                        <a class="dropdown-item" href="#">Mi perfil</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">Settings</a>
+                        <a class="dropdown-item" href="#">Ajustes</a>
                     </li>
                     <li>
                         <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index","Home")">

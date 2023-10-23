@@ -33,6 +33,7 @@ namespace MVCCoachBuster.Controllers
         }
         public IActionResult Index()
         {
+
             return View();
         }
 
@@ -75,8 +76,9 @@ namespace MVCCoachBuster.Controllers
 					{
                        new Claim(ClaimTypes.NameIdentifier, usuarioBd.Id.ToString()),
                        new Claim(ClaimTypes.Name, usuarioBd.Nombre),
-						new Claim(ClaimTypes.Email, usuarioBd.Correo),
-						new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
+					   new Claim(ClaimTypes.Email, usuarioBd.Correo),
+                       new Claim("Foto", usuarioBd.Foto),
+                       new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
 					};
 
 					//El ClaimIdentity es el contenedor de todos los claims del usuario.
