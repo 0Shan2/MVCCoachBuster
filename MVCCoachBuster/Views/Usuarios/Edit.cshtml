@@ -58,15 +58,12 @@
         <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+
                 <label asp-for="Usuario.Foto" style="width: 100%;"></label>
-                @if (Model.Usuario.Foto != null)
-                {
-                    <img id="foto" class="img-fluid" src="/images/,@(Model.Usuario.Foto)">
-                }
-                else
-                {
-                    <img id="foto" class="img-fluid" src="">
-                }
+
+            
+                  <img id="foto" class="img-fluid" src="/images/@(Model.Usuario.Foto)">
+
                 <input type="file"
                        accept=".png,.jpg,.jpeg,.gif,.tif"
                        asp-for="Usuario.Foto"

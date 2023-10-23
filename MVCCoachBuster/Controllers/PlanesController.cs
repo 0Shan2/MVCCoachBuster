@@ -174,10 +174,7 @@ namespace MVCCoachBuster.Controllers
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
 
             viewModel.Plan = _planFactoria.CrearPlan(plan);
-            if (!String.IsNullOrEmpty(plan.Foto))
-            {
-                viewModel.Plan.Foto = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
-            }
+
 
             return View("Plan", viewModel);
 
