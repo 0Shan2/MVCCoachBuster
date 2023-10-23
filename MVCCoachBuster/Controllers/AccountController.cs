@@ -68,21 +68,28 @@ namespace MVCCoachBuster.Controllers
 
 				if (result == PasswordVerificationResult.Success)
 				{
-					//La contraseña es correcta
+                    //La contraseña es correcta
 
-					//Claim es un fragmento de información del usuario, en este caso
-					//agregamos su correo y el rol.
-					var claims = new List<Claim>
+                    //Claim es un fragmento de información del usuario, en este caso
+                    //agregamos su correo y el rol.
+                
+                    var claims = new List<Claim>
 					{
                        new Claim(ClaimTypes.NameIdentifier, usuarioBd.Id.ToString()),
                        new Claim(ClaimTypes.Name, usuarioBd.Nombre),
 					   new Claim(ClaimTypes.Email, usuarioBd.Correo),
-                       new Claim("Foto", usuarioBd.Foto),
+
+                       
                        new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
 					};
+                    if (!string.IsNullOrEmpty(usuarioBd.Foto))
+                    {
+                        claims.Add(new Claim("Foto", usuarioBd.Foto));
+                    }
 
-					//El ClaimIdentity es el contenedor de todos los claims del usuario.
-					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    //El ClaimIdentity es el contenedor de todos los claims del usuario.
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
 					//AuthenticacionPropertyes es un diccionario de datos utilizado
 					//para almacenar valores relacionados con la sesión de autenticación.
