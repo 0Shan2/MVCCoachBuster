@@ -174,7 +174,7 @@ namespace MVCCoachBuster.Controllers
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
 
             viewModel.Plan = _planFactoria.CrearPlan(plan);
-
+            viewModel.Plan.Foto = plan.Foto;
 
             return View("Plan", viewModel);
 
