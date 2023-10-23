@@ -12,7 +12,8 @@ public static class Utilerias
         // Si ImagenRutaRelativa significa que esta en desarrollo
         if (esImagenRutaRelativa)
         {
-            rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + configuration["rutaArchivos"]);
+            // rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + configuration["rutaArchivos"]);
+            rutaDirectorioArchivos = configuration["rutaArchivos"];
 
         }
         else
@@ -49,7 +50,8 @@ public static class Utilerias
 
         if (esImagenRutaRelativa)
         {
-            rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + configuration["rutaArchivos"]);
+            //rutaDirectorioArchivos = Path.Combine(Directory.GetCurrentDirectory() + configuration["rutaArchivos"]);
+            rutaDirectorioArchivos = configuration["rutaArchivos"];
 
         }
         else
