@@ -1,0 +1,90 @@
+﻿@using MVCCoachBuster.ViewModels
+@model EditarUsuarioViewModel
+
+@{
+    ViewData["Title"] = "Mis datos";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<form asp-action="Perfil" asp-route-id="@Model.Usuario.Id" method="post" asp-controller="Usuarios" enctype="multipart/form-data">
+    <div class="row">
+        <!-- Implementación Imagen -->
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+         
+
+
+                <img id="foto" class="img-fluid " src="/images/@(Model.Usuario.Foto)" style="width: 300px; height: 200px;">
+
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="Usuario.Foto"
+                       class="form-control"
+                       onchange="document.getElementById('foto').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="Usuario.Foto" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Usuario.Id" />
+            <div class="form-group">
+                <label asp-for="Usuario.Nombre" class="control-label"></label>
+                <input asp-for="Usuario.Nombre" class="form-control" />
+                <span asp-validation-for="Usuario.Nombre" class="text-danger"></span>
+            </div>
+
+            <!--El rol de usuario solo debería poder ser editado por los admin-->
+            @{
+                if (User.IsInRole("Administrador"))
+                {
+
+
+                    <div class="form-group mt-3">
+                        <label asp-for="Usuario.RolId" class="control-label"></label>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">
+                                <i class="fa-solid fa-users"></i>
+                            </label>
+                            <select asp-for="Usuario.RolId" class="form-select" asp-items="Model.ListadoRoles">
+                                <option value="">---Seleccionar Rol---</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Usuario.RolId" class="text-danger"></span>
+                    </div>
+                }
+            }
+            <div class="form-group">
+                <label asp-for="Usuario.Correo" class="control-label"></label>
+                <input asp-for="Usuario.Correo" class="form-control" />
+                <span asp-validation-for="Usuario.Correo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Usuario.Telefono" class="control-label"></label>
+                <input asp-for="Usuario.Telefono" class="form-control" />
+                <span asp-validation-for="Usuario.Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <button class="btn btn-primary me-3" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;Guardar cambios
+                </button>
+        
+
+            </div>
+        </div>
+
+    
+
+    </div>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

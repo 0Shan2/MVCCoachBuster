@@ -1,8 +1,16 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@using System.Security.Claims;
 
 @{
     var fotoClaim = User.Claims.FirstOrDefault(c => c.Type == "Foto");
+
+
     string fotoUrl = fotoClaim != null ? fotoClaim.Value : null;
+
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+    var userId = userIdClaim?.Value;
+   
+
 }
 
 <ul class="navbar-nav">
@@ -56,10 +64,16 @@
                 <ul class="dropdown-menu dropdown-menu-end"
                     aria-labelledby="navbarDropdownMenuAvatar">
                     <li>
-                        <form asp-action="Edit" id="logoutForm" class="form-inline" asp-controller="Usuarios">
-                            <button id="logout" type="submit" class="dropdown-item">Mi perfil</button>
+                        @{
+                            var usuarioid = int.Parse(userId);
+                        }
+
+
+                        <form asp-action="Perfil" asp-route-id="@usuarioid" class="form-inline" asp-controller="Usuarios">
+
+                            <button id="editarPerfil" type="submit" class="dropdown-item">Mi perfil</button>
                         </form>
-                        <!--<a class="dropdown-item" href="">Mi perfil</a>-->
+                        
                     </li>
                     <li>
                         <a class="dropdown-item" href="#">Ajustes</a>
@@ -68,7 +82,6 @@
                         <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index","Home")">
                             <button id="logout" type="submit" class="dropdown-item">Salir</button>
                         </form>
-                          
                     </li>
                 </ul>
             </div>

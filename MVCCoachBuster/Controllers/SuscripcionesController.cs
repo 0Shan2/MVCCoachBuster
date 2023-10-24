@@ -32,6 +32,8 @@ namespace MVCCoachBuster.Controllers
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Suscripcion
                 .OrderBy(m => m.Id)
+                .Include(m => m.usuario)
+                .Include(m => m.plan)
                 .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
             viewModel.Total = consulta.Count();
