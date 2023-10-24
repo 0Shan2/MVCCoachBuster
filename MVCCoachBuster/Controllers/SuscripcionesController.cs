@@ -63,8 +63,8 @@ namespace MVCCoachBuster.Controllers
             //Creamos la entrada en la tabla de suscripciones
             var suscripcion = new Suscripcion
             {
-                IdPlan = idPlan,
-                IdUsuario = idUsu
+                planId = idPlan,
+                usuarioId = idUsu
             };
 
             //Guardamos la suscripcion en nuestra base
@@ -85,8 +85,8 @@ namespace MVCCoachBuster.Controllers
 
             //Recuperamos los IDs de los planes a los que esta inscrito el usuario
             List<int> idsPlanesInsc = _context.Suscripcion
-                .Where(s => s.IdUsuario == idUsu)
-                .Select(s => s.IdPlan)
+                .Where(s => s.usuarioId == idUsu)
+                .Select(s => s.planId)
                 .ToList();
 
             //Recuperamos los objetos Plan a partir de los IDs

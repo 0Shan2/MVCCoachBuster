@@ -245,6 +245,7 @@ namespace MVCCoachBuster.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+                
             }
 
             return View("Plan", viewModel);

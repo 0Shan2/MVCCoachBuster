@@ -5,9 +5,9 @@
     public class Suscripcion
     {
         public int Id { get; set; }
-        public int IdUsuario { get; set; }
+        public int usuarioId { get; set; }
         public Usuario usuario { get; set; }
-        public int IdPlan { get; set; }
+        public int planId { get; set; }
         public Plan plan { get; set; }
     }
 }
