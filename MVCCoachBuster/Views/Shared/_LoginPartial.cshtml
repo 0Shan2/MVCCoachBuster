@@ -64,16 +64,9 @@
                 <ul class="dropdown-menu dropdown-menu-end"
                     aria-labelledby="navbarDropdownMenuAvatar">
                     <li>
-                        @{
-                            var usuarioid = int.Parse(userId);
-                        }
 
 
-                        <form asp-action="Perfil" asp-route-id="@usuarioid" class="form-inline" asp-controller="Usuarios">
-
-                            <button id="editarPerfil" type="submit" class="dropdown-item">Mi perfil</button>
-                        </form>
-                        
+                        <a asp-action="Perfil" asp-route-id="@userId" asp-controller="Usuarios" class="dropdown-item">Mi perfil</a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="#">Ajustes</a>

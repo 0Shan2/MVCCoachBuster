@@ -15,7 +15,7 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
-    [Authorize(Policy = "Gestión")]
+  
     public class UsuariosController : Controller
     {
         private readonly CoachBusterContext _context;
@@ -177,6 +177,93 @@ namespace MVCCoachBuster.Controllers
 
             return View(viewModel);
         }
+        
+        // GET: Usuarios/Edit/5
+        public async Task<IActionResult> Perfil(int? id)
+        {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
+            if (id == null || _context.Usuarios == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
+            viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
+            viewModel.Usuario = _usuarioFactoria.CrearUsuarioEdicion(usuario);
+            viewModel.Usuario.RolId = usuario.RolId;
+            viewModel.Usuario.Foto = usuario.Foto;
+            
+            return View("Perfil",viewModel);
+        }
+        
+        // POST: Usuarios/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Perfil(int id, [Bind("Id,Nombre,Correo,Telefono,RolId, Foto")] UsuarioEdicionDto usuario)
+        {
+            EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
+            viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
+            viewModel.Usuario = usuario;
+
+            if (id != usuario.Id)
+            {
+                return NotFound();
+            }
+        
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var usuarioBd = await _context.Usuarios.FindAsync(usuario.Id);
+
+                    _usuarioFactoria.ActualizarDatosUsuario(usuario, usuarioBd);
+
+                    //Para añadir la imagen
+                    if (Request.Form.Files.Count > 0)
+                    {
+                
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        usuarioBd.Foto = await Utilerias.LeerImagen(archivo, _configuration);
+                    }
+          
+                    _context.Update(usuarioBd);
+                    await _context.SaveChangesAsync();
+                    _servicioNotificacion.Success($"ÉXITO al actualizar el usuario cuyo correo es: {usuario.Correo}");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UsuarioExists(usuario.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
+                return RedirectToAction("Perfil");
+            }
+
+            return View("Perfil");
+        }
+
 
         // POST: Usuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -241,6 +328,8 @@ namespace MVCCoachBuster.Controllers
             
             return View(viewModel);
         }
+
+  
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Usuarios/Delete/5
