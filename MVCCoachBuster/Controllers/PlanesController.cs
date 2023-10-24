@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,6 @@ namespace MVCCoachBuster.Controllers
             _planFactoria = planFactoria;
 
         }
-
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes
         [AllowAnonymous]
@@ -94,6 +94,8 @@ namespace MVCCoachBuster.Controllers
 
         public IActionResult Create()
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
 
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre");
@@ -107,6 +109,7 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan)
         {
+           
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
@@ -150,7 +153,14 @@ namespace MVCCoachBuster.Controllers
                     //ModelState.AddModelError("", "Lo sentimos, ha ocurrido un error. Intente de nuevo.");
                     return View("Plan", viewModel);
                 }
-                return RedirectToAction(nameof(Index));
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
+
+                return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
             }
 
             return View("Plan", viewModel);
@@ -160,6 +170,8 @@ namespace MVCCoachBuster.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Planes == null)
             {
                 return NotFound();
@@ -187,6 +199,7 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan)
         {
+
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
@@ -196,10 +209,8 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-
             if (ModelState.IsValid)
             {
-
                 // 2º)Validamos que no existe otra marca con el mismo nombre
                 var existeElemtnoBd = _context.Planes
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim()
@@ -219,14 +230,9 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
-
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         planBd.Foto = await Utilerias.LeerImagen(archivo, _configuration);
-
-
                     }
-                 
-           
 
                     _context.Update(planBd);
                      //Si no hay errores, la clase es actualizada correctamente
@@ -244,8 +250,14 @@ namespace MVCCoachBuster.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-                
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
+
+                return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
             }
 
             return View("Plan", viewModel);
@@ -254,6 +266,8 @@ namespace MVCCoachBuster.Controllers
         // GET: Planes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Planes == null)
             {
                 return NotFound();
@@ -286,6 +300,13 @@ namespace MVCCoachBuster.Controllers
             }
 
             await _context.SaveChangesAsync();
+            // Redirige al usuario a la URL de referencia almacenada en TempData
+            if (TempData.ContainsKey("UrlReferencia"))
+            {
+                string urlReferencia = TempData["UrlReferencia"].ToString();
+                return Redirect(urlReferencia);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -297,21 +318,31 @@ namespace MVCCoachBuster.Controllers
         //---------------------------------------------------------------------------------------------------------------------------------
         //Listado de planes del entrenador, que nos muestra sus creaciones de planes 
         [Authorize]
-        public async Task<IActionResult> ListaPlanesCreados()
+        public async Task<IActionResult> ListaPlanesCreados(ListadoViewModel<Plan> viewModel)
         {
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+
             // Cogemos el usuario logueado, en la vista nos aseguramos de que sea entrenador 
             string coachId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int idCoach = int.Parse(coachId);
 
             //Recuperamos la lista de coach con sus entrenamientos
-            List<Plan> planesCreados = _context.Planes
+            var planesCreados = _context.Planes
                 .Where(p => p.UsuarioId == idCoach)
-                .ToList();
+                .OrderBy(m => m.Nombre)
+                .AsNoTracking();
 
-            var viewModel = new ListaPlanesCreadosViewModel
+
+            //2º) Para buscar un plan
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
-                PlanesCreados = planesCreados
-            };
+                planesCreados = planesCreados.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda));
+            }
+
+            viewModel.Total = planesCreados.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await planesCreados.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
 
             return View(viewModel);
         }

@@ -76,8 +76,9 @@ namespace MVCCoachBuster.Controllers
 
         //---------------------------------------------------------------------------------------------------------------------------------------
         [Authorize]
-        public async Task<IActionResult> ListaPlanesSuscritos()
+        public async Task<IActionResult> ListaPlanesSuscritos(ListadoViewModel<Plan> viewModel)
         {
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
 
             //Obtenemos el id del usuario
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -90,14 +91,21 @@ namespace MVCCoachBuster.Controllers
                 .ToList();
 
             //Recuperamos los objetos Plan a partir de los IDs
-            List<Plan> planesInscritos = _context.Planes
-                .Where(p => idsPlanesInsc.Contains(p.Id)).ToList();
+            var planesInscritos = _context.Planes
+                .Where(p => idsPlanesInsc.Contains(p.Id))
+                .OrderBy(m => m.Nombre)
+                .AsNoTracking();
 
             //Creamos el ViewModel
-            var viewModel = new ListaPlanesSuscritosViewModel
+            //2º) Para buscar un plan
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
-                PlanesInscritos = planesInscritos
-            };
+                planesInscritos = planesInscritos.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda));
+            }
+
+            viewModel.Total = planesInscritos.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await planesInscritos.ToPagedListAsync(numeroPagina, registrosPorPagina);
 
             return View(viewModel);
         }

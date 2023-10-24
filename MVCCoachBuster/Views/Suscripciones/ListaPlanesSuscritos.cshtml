@@ -1,5 +1,7 @@
-﻿@using MVCCoachBuster.ViewModels
-@model ListaPlanesSuscritosViewModel
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<Plan>
 
 @{
     ViewData["Title"] = "Mi listado";
@@ -7,14 +9,14 @@
 
 <h1>@ViewData["Title"]</h1>
 
-@if(Model.PlanesInscritos.Count == 0)
+@if(Model.Registros.Count == 0)
 {
     <p>No estás inscrito en ningún plan.</p>
 }
 else
 {
     <div class="row">
-        @foreach (var plan in Model.PlanesInscritos)
+        @foreach (var plan in Model.Registros)
         {
             <div class="col-xl-6 mb-4">
                 <div class="card">
@@ -38,3 +40,12 @@ else
         }
     </div>
 }
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("ListaPlanesSuscritos", new {
+    Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda
+}),
+new PagedListRenderOptions {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

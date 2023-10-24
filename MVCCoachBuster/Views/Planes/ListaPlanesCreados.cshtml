@@ -1,5 +1,7 @@
-﻿@using MVCCoachBuster.ViewModels
-@model ListaPlanesCreadosViewModel
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<Plan>
 
 @{
     ViewData["Title"] = "Mi listado";
@@ -7,14 +9,21 @@
 
 <h1>@ViewData["Title"]</h1>
 
-@if (Model.PlanesCreados.Count == 0)
+@await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
+    TerminoBusqueda = Model.TerminoBusqueda,
+    TituloCrear = "Crear plan",
+    Total = Model.Total
+})
+
+
+@if (Model.Registros.Count == 0)
 {
     <p>No has creado ningún plan.</p>
 }
 else
 {
     <div class="row">
-        @foreach (var plan in Model.PlanesCreados)
+        @foreach (var plan in Model.Registros)
         {
             <div class="col-xl-6 mb-4">
                 <div class="card">
@@ -38,13 +47,13 @@ else
         }
     </div>
 
-    <div class="col-md-6">
-        <a class="btn btn-primary" asp-action="Create">
-            <i class="fa-solid fa-add"></i>&nbsp;Crear plan de entrenamiento
-        </a>
-    </div>
-    
-
-
-
 }
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("ListaPlanesCreados", new {
+    Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda
+}),
+new PagedListRenderOptions {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

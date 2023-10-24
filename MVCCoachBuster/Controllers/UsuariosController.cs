@@ -86,6 +86,8 @@ namespace MVCCoachBuster.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult Create()
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             AgregarUsuarioViewModel viewModel = new AgregarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
             return View(viewModel);
@@ -141,6 +143,12 @@ namespace MVCCoachBuster.Controllers
                     _servicioNotificacion.Warning("Lo sentimos, ha ocurrido un error. Intente nuevamente.");
                     return View(viewModel);
                 }
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
@@ -150,6 +158,8 @@ namespace MVCCoachBuster.Controllers
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Usuarios == null)
             {
                 return NotFound();
@@ -219,6 +229,13 @@ namespace MVCCoachBuster.Controllers
                         throw;
                     }
                 }
+
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
                 return RedirectToAction(nameof(Index));
             }
             
@@ -230,6 +247,8 @@ namespace MVCCoachBuster.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Usuarios == null)
             {
                 return NotFound();
@@ -262,6 +281,12 @@ namespace MVCCoachBuster.Controllers
             }
             
             await _context.SaveChangesAsync();
+            // Redirige al usuario a la URL de referencia almacenada en TempData
+            if (TempData.ContainsKey("UrlReferencia"))
+            {
+                string urlReferencia = TempData["UrlReferencia"].ToString();
+                return Redirect(urlReferencia);
+            }
             return RedirectToAction(nameof(Index));
         }
 

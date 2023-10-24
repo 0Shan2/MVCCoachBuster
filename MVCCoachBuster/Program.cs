@@ -63,6 +63,8 @@ builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>
 builder.Services.AddSingleton<UsuarioFactoria>();
 builder.Services.AddSingleton<PlanFactoria>();
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
