@@ -28,9 +28,18 @@
                 <input asp-for="Plan.Precio" class="form-control" />
                 <span asp-validation-for="Plan.Precio" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!--Seleccionar entrenador-->
+            <div class="form-group mt-3">
                 <label asp-for="Plan.UsuarioId" class="control-label"></label>
-                <select asp-for="Plan.UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">
+                        <i class="fa-solid fa-users"></i>
+                    </label>
+                    <select asp-for="Plan.UsuarioId" class="form-select" asp-items="Model.ListadoEntrenadores" disabled>
+                        <option value="">---Seleccionar Entrenador---</option>
+                    </select>
+                </div>
                 <span asp-validation-for="Plan.UsuarioId" class="text-danger"></span>
             </div>
     

@@ -183,10 +183,12 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
-            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
-
+            
             viewModel.Plan = _planFactoria.CrearPlan(plan);
             viewModel.Plan.Foto = plan.Foto;
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios
+                .Where(u => u.Rol.Id == 2)
+                .AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
 
             return View("Plan", viewModel);
 
