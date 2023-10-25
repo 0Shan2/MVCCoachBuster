@@ -58,15 +58,11 @@
                             }
                         }
 
-                        <!-- Links que son solo para los usuarios -->
-                        @{
-                            if (User.IsInRole("Usuario"))
-                            {
+                   
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Suscripciones" asp-action="ListaPlanesSuscritos">Lista Suscripciones</a>
                                 </li>
-                            }
-                        }
+                    
 
                     </ul>
                 </div>

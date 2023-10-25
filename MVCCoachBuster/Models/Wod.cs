@@ -1,12 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
-
-namespace MVCCoachBuster.Models
+﻿namespace MVCCoachBuster.Models
 {
     public class Wod
     {
         public int Id { get; set; }
-        public int PlanId { get; set; }
-        public Plan Plan { get; set; }
-        public int Dia { get; set; }
+        public string Nombre { get; set; }
+        public int DiaId { get; set; }
+        public Dia wodDia { get; set; }
+
+
     }
 }
