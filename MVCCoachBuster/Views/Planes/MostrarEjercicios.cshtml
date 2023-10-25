@@ -1,0 +1,23 @@
+﻿@model MVCCoachBuster.Models.Plan
+<h2>Ejercicios del Plan: @Model.Nombre</h2>
+
+@if (Model.Wod != null)
+{
+    <h3>Días del Plan:</h3>
+    @foreach (var dia in Model.Wod.Dia)
+    {
+        <h4>Día: @dia.Id</h4>
+        <ul>
+            @foreach (var ejercicio in dia.WodXEjercicios)
+            {
+                <li>@ejercicio.Ejercicio.Nombre</li>
+            }
+        </ul>
+    }
+}
+else
+{
+    <p>No se encontraron ejercicios para este plan.</p>
+}
+
+<a asp-action="Index">Volver a la lista de planes</a>
