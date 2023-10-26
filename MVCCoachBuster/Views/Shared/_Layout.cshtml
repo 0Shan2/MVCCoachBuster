@@ -52,23 +52,27 @@
                         @{
                             if (User.IsInRole("Entrenador"))
                             {
-                                 <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Planes" asp-action="ListaPlanesCreados">Lista de Planes creados</a>
-                        </li>
-                            }
-                        }
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Planes" asp-action="ListaPlanesCreados">Lista de Planes creados</a>
+                                </li>
 
-                   
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Suscripciones" asp-action="ListaPlanesSuscritos">Lista Suscripciones</a>
                                 </li>
-                    
+                            }
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="GrupoEjercicios" asp-action="Index">Ejercicios</a>
+                        </li>
+
+
 
                     </ul>
                 </div>
                 <div class="d-flex">
-               
-                  <partial name="_LoginPartial" />
+
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
