@@ -7,6 +7,6 @@
         public int DiaId { get; set; }
         public Dia Dia { get; set; }
 
-        public List<WodXEjercicio> WodXEjercicios { get; set; }
+        public ICollection<WodXEjercicio> WodXEjercicio { get; set; }
     }
 }

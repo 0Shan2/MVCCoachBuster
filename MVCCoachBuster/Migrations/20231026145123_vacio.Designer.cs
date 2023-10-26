@@ -4,6 +4,7 @@ using MVCCoachBuster.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCCoachBuster.Migrations
 {
     [DbContext(typeof(CoachBusterContext))]
-    partial class CoachBusterContextModelSnapshot : ModelSnapshot
+    [Migration("20231026145123_vacio")]
+    partial class vacio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace MVCCoachBuster.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("Dia", (string)null);
+                    b.ToTable("Dia");
                 });
 
             modelBuilder.Entity("MVCCoachBuster.Models.GrupoEjercicios", b =>
@@ -192,7 +194,7 @@ namespace MVCCoachBuster.Migrations
 
                     b.HasIndex("DiaId");
 
-                    b.ToTable("Wod", (string)null);
+                    b.ToTable("Wod");
                 });
 
             modelBuilder.Entity("MVCCoachBuster.Models.WodXEjercicio", b =>
@@ -218,7 +220,7 @@ namespace MVCCoachBuster.Migrations
 
                     b.HasIndex("WodId");
 
-                    b.ToTable("WodXEjercicio", (string)null);
+                    b.ToTable("WodXEjercicio");
                 });
 
             modelBuilder.Entity("MVCCoachBuster.Models.Dia", b =>

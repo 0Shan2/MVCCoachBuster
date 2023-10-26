@@ -1,17 +1,17 @@
 ﻿@using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 @using MVCCoachBuster.ViewModels
-@model ListadoViewModel<GrupoEjercicios>
+@model ListadoViewModel<Wod>
 
 @{
-    ViewData["Title"] = "Ejercicios";
+    ViewData["Title"] = "Wods";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 @await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
     TerminoBusqueda = Model.TerminoBusqueda,
-    TituloCrear = "Crear Ejercicio",
+    TituloCrear = "Crear Wod",
     Total = Model.Total
 })
 
@@ -22,13 +22,7 @@
                 @Html.DisplayNameFor(model => model.Registros[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Registros[0].Puntuacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Registros[0].URLVideo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Registros[0].Instrucciones)
+                @Html.DisplayNameFor(model => model.Registros[0].Dia)
             </th>
             <th></th>
         </tr>
@@ -40,13 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Puntuacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.URLVideo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Instrucciones)
+                @Html.DisplayFor(modelItem => item.DiaId)
             </td>
             <td>
                     <partial name="Acciones/_Crud" model="@item.Id" />
@@ -55,3 +43,13 @@
 }
     </tbody>
 </table>
+<!--Elemento de paginación-->
+@Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
+    Pagina=page,
+    TerminoBusqueda=Model.TerminoBusqueda
+}),
+    new PagedListRenderOptions{
+        LiElementClasses = new string[]{"page-item"},
+        PageClasses = new string[]{"page-link"}
+    }
+)
