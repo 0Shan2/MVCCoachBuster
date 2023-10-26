@@ -1,7 +1,10 @@
-﻿@model IEnumerable<MVCCoachBuster.Models.GrupoEjercicios>
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<GrupoEjercicios>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Ejercicios";
 }
 
 <h1>Index</h1>
@@ -9,26 +12,27 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-hover table-bordered table-striped">
+    <thead class="bg-secondary text-white">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Registros[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Puntuacion)
+                @Html.DisplayNameFor(model => model.Registros[0].Puntuacion)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.URLVideo)
+                @Html.DisplayNameFor(model => model.Registros[0].URLVideo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Instrucciones)
+                @Html.DisplayNameFor(model => model.Registros[0].Instrucciones)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Registros) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
@@ -43,11 +47,20 @@
                 @Html.DisplayFor(modelItem => item.Instrucciones)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <partial name="Acciones/_Crud" model="@item.Id" />
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<!--Elemento de paginación-->
+@Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
+    Pagina=page,
+    TerminoBusqueda=Model.TerminoBusqueda
+}),
+    new PagedListRenderOptions{
+        LiElementClasses = new string[]{"page-item"},
+        PageClasses = new string[]{"page-link"}
+    }
+)

@@ -2,29 +2,55 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCCoachBuster.Data;
 using MVCCoachBuster.Models;
+using MVCCoachBuster.ViewModels;
+using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
     public class GrupoEjerciciosController : Controller
     {
         private readonly CoachBusterContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly INotyfService _servicioNotificacion;
 
-        public GrupoEjerciciosController(CoachBusterContext context)
+        public GrupoEjerciciosController(CoachBusterContext context, IConfiguration configuration,
+            INotyfService servicioNotificacion)
         {
             _context = context;
+            _configuration = configuration;
+            _servicioNotificacion = servicioNotificacion;
         }
 
+        //---------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ListadoViewModel<GrupoEjercicios> viewModel)
         {
-              return View(await _context.GrupoEjercicios.ToListAsync());
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+            var consulta = _context.GrupoEjercicios
+                .OrderBy(m => m.Nombre)
+                .AsQueryable(); //AsQueryable para poder hacer la busqueda
+
+            //2º) Para buscar un plan
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
+            {
+                consulta = consulta.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda));
+            }
+
+            viewModel.Total = consulta.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
+
+            return View(viewModel);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -43,6 +69,7 @@ namespace MVCCoachBuster.Controllers
             return View(grupoEjercicios);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios/Create
         public IActionResult Create()
         {
@@ -65,6 +92,7 @@ namespace MVCCoachBuster.Controllers
             return View(grupoEjercicios);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -116,6 +144,7 @@ namespace MVCCoachBuster.Controllers
             return View(grupoEjercicios);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
