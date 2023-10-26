@@ -349,25 +349,7 @@ namespace MVCCoachBuster.Controllers
             return View(viewModel);
         }
         
-        public async Task<IActionResult> MostrarEjercicios(int planId)
-        {
-            var plan = await _context.Planes
-                .Include(p => p.Dia) // Incluir la relación con Dia
-                .ThenInclude(d => d.Wod) // Luego, incluir la relación con Wod
-                .ThenInclude(w => w.WodXEjercicios) // Finalmente, incluir la relación con WodXEjercicios
-                .ThenInclude(we => we.GrupoEjercicios) // Incluir la relación con Ejercicio
-                .FirstOrDefaultAsync(p => p.Id == planId);
-
-            if (plan == null)
-            {
-                return NotFound();
-            }
-
-            return View(plan);
-        }
-        
-
-
+        //-----------------------------------------------------------
 
     }
 }

@@ -10,8 +10,8 @@ namespace MVCCoachBuster.Models
 
         public Plan Plan { get; set; }
 
-        public int WodId { get; set; }
-        public Wod Wod { get; set; }
+        public List<Wod> Wods { get; set; } //Para la navegación
+
 
     }
 }

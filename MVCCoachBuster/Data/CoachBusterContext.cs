@@ -18,13 +18,18 @@ namespace MVCCoachBuster.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Plan> Planes { get; set; }
 
+        public DbSet<MVCCoachBuster.Models.Suscripcion> Suscripcion { get; set; }
+        public DbSet<GrupoEjercicios> GrupoEjercicios { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Rol>().ToTable("Rol");
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
+            modelBuilder.Entity<Plan>().ToTable("Planes");
+            modelBuilder.Entity<Suscripcion>().ToTable("Suscripcion");
+            modelBuilder.Entity<GrupoEjercicios>().ToTable("GrupoEjercicios");
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<MVCCoachBuster.Models.Suscripcion> Suscripcion { get; set; }
+        
     }
 }

@@ -51,7 +51,7 @@ namespace MVCCoachBuster.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Planes");
+                    b.ToTable("Planes", (string)null);
                 });
 
             modelBuilder.Entity("MVCCoachBuster.Models.Rol", b =>
@@ -98,7 +98,7 @@ namespace MVCCoachBuster.Migrations
 
                     b.HasIndex("usuarioId");
 
-                    b.ToTable("Suscripcion");
+                    b.ToTable("Suscripcion", (string)null);
                 });
 
             modelBuilder.Entity("MVCCoachBuster.Models.Usuario", b =>
