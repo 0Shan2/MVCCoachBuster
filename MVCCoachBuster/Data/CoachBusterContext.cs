@@ -30,6 +30,7 @@ namespace MVCCoachBuster.Data
             modelBuilder.Entity<Suscripcion>().ToTable("Suscripcion");
             modelBuilder.Entity<GrupoEjercicios>().ToTable("GrupoEjercicios");
             base.OnModelCreating(modelBuilder);
+             
         }
         
 

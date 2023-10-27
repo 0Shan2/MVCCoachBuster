@@ -46,9 +46,17 @@ namespace MVCCoachBuster.Controllers
         }
 
         // GET: Dias/Create
-        public IActionResult Create()
+        public IActionResult Create(int planId)
         {
-        
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
+            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
+            // Asigna el valor de planId a ViewBag para que se use en la vista
+            ViewBag.PlanId = planId;
+            // Recupera la lista de días asociados a un plan específico
+            var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
+            ViewBag.Dias = dias;
+
             return View();
         }
 
@@ -57,22 +65,33 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PlanId,NumDias")] Dia dia)
+        public async Task<IActionResult> Create(int planId, [Bind("PlanId,NumDias")] Dia dia)
         {
+
             if (ModelState.IsValid)
             {
+                // Crea un nuevo día y asócialo al plan con el planId
                 var nuevoDia = new Dia
                 {
-                    PlanId = dia.PlanId, // Establece el PlanId desde la URL
+                    PlanId = planId, // Asigna el PlanId que recibes como parámetro
                     NumDias = dia.NumDias,
                     // Otras propiedades del día
                 };
+
                 _context.Add(nuevoDia);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                //return RedirectToAction("Index"); // Redirige a la vista de detalles del plan u otra página deseada
+                // Redirige al mismo método Create con el parámetro planId
+                return RedirectToAction("Create", new { planId = planId });
+
             }
-            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id", dia.PlanId);
+
+
+            // Si hay un error de validación, puedes manejarlo aquí
             return View(dia);
+
+
         }
 
         // GET: Dias/Edit/5
@@ -161,14 +180,14 @@ namespace MVCCoachBuster.Controllers
             {
                 _context.Dia.Remove(dia);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DiaExists(int id)
         {
-          return _context.Dia.Any(e => e.Id == id);
+            return _context.Dia.Any(e => e.Id == id);
         }
     }
 }

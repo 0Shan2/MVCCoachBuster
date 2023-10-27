@@ -68,6 +68,7 @@ namespace MVCCoachBuster.Controllers
         // GET: Planes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+       
             if (id == null || _context.Planes == null)
             {
                 return NotFound();
@@ -75,6 +76,7 @@ namespace MVCCoachBuster.Controllers
 
             var plan = await _context.Planes
                 .Include(p => p.Entrenador)
+                .Include(p=> p.Dia)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (plan == null)
@@ -135,6 +137,25 @@ namespace MVCCoachBuster.Controllers
                 try
                 {
                     var nuevoPlan = _planFactoria.CrearPlan(plan);
+
+
+          
+
+                    //Para añadir la imagen
+                    if (Request.Form.Files.Count > 0)
+                    {
+                       
+                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
+                        nuevoPlan.Foto = await Utilerias.LeerImagen(archivo,_configuration);
+                        // Agrega registros de depuración para verificar el valor de nuevoPlan.Foto
+                        Console.WriteLine($"Valor de nuevoPlan.Foto después de cargar la imagen: {nuevoPlan.Foto}");
+
+                    }
+         
+                    _context.Add(nuevoPlan);
+      
+                    await _context.SaveChangesAsync();
+                    
                     // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
                     if (siguiente == "true")
                     {
@@ -146,20 +167,8 @@ namespace MVCCoachBuster.Controllers
                         // Redirige al usuario a la vista de "Planes" o a otra vista de tu elección
                         return RedirectToAction("Index");
                     }
-                    //Para añadir la imagen
-                    if (Request.Form.Files.Count > 0)
-                    {
-                       
-                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        nuevoPlan.Foto = await Utilerias.LeerImagen(archivo,_configuration);
-                        // Agrega registros de depuración para verificar el valor de nuevoPlan.Foto
-                        Console.WriteLine($"Valor de nuevoPlan.Foto después de cargar la imagen: {nuevoPlan.Foto}");
+                  
 
-                    }
-            
-                    _context.Add(nuevoPlan);
-                    await _context.SaveChangesAsync();
-      
                     _servicioNotificacion.Success($"ÉXITO al crear el plan {plan.Nombre}");
                 }
                 catch (DbUpdateException) // Exceptción causa por eventos externos
@@ -168,14 +177,16 @@ namespace MVCCoachBuster.Controllers
                     //ModelState.AddModelError("", "Lo sentimos, ha ocurrido un error. Intente de nuevo.");
                     return View("Plan", viewModel);
                 }
+                /*
                 // Redirige al usuario a la URL de referencia almacenada en TempData
                 if (TempData.ContainsKey("UrlReferencia"))
                 {
                     string urlReferencia = TempData["UrlReferencia"].ToString();
                     return Redirect(urlReferencia);
                 }
-
-                return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
+                */
+                //return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
+               // return RedirectToAction("Create", "Dias", new { planId = plan.Id });
             }
 
             return View("Plan", viewModel);
@@ -363,29 +374,8 @@ namespace MVCCoachBuster.Controllers
 
             return View(viewModel);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ListadoDias(ListadoViewModel<Dia> viewModel)
-        {
-            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
-            var consulta = _context.Dia
-                .OrderBy(d => d.NumDias)
-                .AsQueryable(); // AsQueryable para poder hacer la búsqueda
-
-            // Puedes agregar filtros o búsquedas similares a las que tienes en la acción para los planes.
-
-            viewModel.Total = consulta.Count();
-            var numeroPagina = viewModel.Pagina ?? 1;
-            viewModel.Registros = consulta.ToPagedList(numeroPagina, registrosPorPagina);
-
-            return View(viewModel);
-        }
-        public IActionResult RedirigirADias()
-        {
-            // Puedes redirigir a la acción "Index" en el controlador "Dias"
-            return RedirectToAction("Index", "Dias");
-        }
-
+  
+  
 
 
     }
