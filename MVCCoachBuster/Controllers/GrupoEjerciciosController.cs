@@ -29,8 +29,9 @@ namespace MVCCoachBuster.Controllers
 
         //---------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios
-        public async Task<IActionResult> Index(ListadoViewModel<GrupoEjercicios> viewModel)
+        public async Task<IActionResult> Index()
         {
+            ListadoViewModel<GrupoEjercicios> viewModel = new ListadoViewModel<GrupoEjercicios>();
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.GrupoEjercicios
                 .OrderBy(m => m.Nombre)
