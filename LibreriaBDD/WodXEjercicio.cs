@@ -16,7 +16,7 @@ namespace LibreriaBDD
     {
         public int Id { get; set; }
         public Nullable<int> WodId { get; set; }
-        public Nullable<int> GrupoEjercicioId { get; set; }
+        public Nullable<int> GrupoEjerciciosId { get; set; }
     
         public virtual GrupoEjercicios GrupoEjercicios { get; set; }
         public virtual Wod Wod { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
@@ -13,13 +14,13 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
-    public class GrupoEjerciciosController : Controller
+    public class WodsController : Controller
     {
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
         private readonly INotyfService _servicioNotificacion;
 
-        public GrupoEjerciciosController(CoachBusterContext context, IConfiguration configuration,
+        public WodsController(CoachBusterContext context, IConfiguration configuration,
             INotyfService servicioNotificacion)
         {
             _context = context;
@@ -27,15 +28,15 @@ namespace MVCCoachBuster.Controllers
             _servicioNotificacion = servicioNotificacion;
         }
 
-        //---------------------------------------------------------------------------------------------------------------------
-        // GET: GrupoEjercicios
-        public async Task<IActionResult> Index()
+        //------------------------------------------------------------------------------------------------------------------------------------------------
+        // GET: Wods
+        public async Task<IActionResult> Index(ListadoViewModel<Wod>viewModel)
         {
-            ListadoViewModel<GrupoEjercicios> viewModel = new ListadoViewModel<GrupoEjercicios>();
-            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
-            var consulta = _context.GrupoEjercicios
-                .OrderBy(m => m.Nombre)
-                .AsQueryable(); //AsQueryable para poder hacer la busqueda
+            var registrosPorPagina = _configuration.GetValue("registrosPorPagina", 5);
+            var consulta = _context.Wod
+                .OrderBy(x => x.Nombre)
+                .Include(w => w.Dia)
+                .AsNoTracking();
 
             //2º) Para buscar un plan
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
@@ -47,77 +48,80 @@ namespace MVCCoachBuster.Controllers
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
 
-
-            return View(viewModel);
-        }
-
-        //---------------------------------------------------------------------------------------------------------------------
-        // GET: GrupoEjercicios/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.GrupoEjercicios == null)
-            {
-                return NotFound();
-            }
-
-            var grupoEjercicios = await _context.GrupoEjercicios
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (grupoEjercicios == null)
-            {
-                return NotFound();
-            }
-
-            return View(grupoEjercicios);
+            return View(viewModel); 
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
-        // GET: GrupoEjercicios/Create
+        // GET: Wods/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Wod == null)
+            {
+                return NotFound();
+            }
+
+            var wod = await _context.Wod
+                .Include(w => w.Dia)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (wod == null)
+            {
+                return NotFound();
+            }
+
+            return View(wod);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------------
+        // GET: Wods/Create
         public IActionResult Create()
         {
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
             return View();
         }
 
-        // POST: GrupoEjercicios/Create
+        // POST: Wods/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Puntuacion,URLVideo,Instrucciones")] GrupoEjercicios grupoEjercicios)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,DiaId")] Wod wod)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(grupoEjercicios);
+                _context.Add(wod);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(grupoEjercicios);
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            return View(wod);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
-        // GET: GrupoEjercicios/Edit/5
+        // GET: Wods/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.GrupoEjercicios == null)
+            if (id == null || _context.Wod == null)
             {
                 return NotFound();
             }
 
-            var grupoEjercicios = await _context.GrupoEjercicios.FindAsync(id);
-            if (grupoEjercicios == null)
+            var wod = await _context.Wod.FindAsync(id);
+            if (wod == null)
             {
                 return NotFound();
             }
-            return View(grupoEjercicios);
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            return View(wod);
         }
 
-        // POST: GrupoEjercicios/Edit/5
+        // POST: Wods/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Puntuacion,URLVideo,Instrucciones")] GrupoEjercicios grupoEjercicios)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,DiaId")] Wod wod)
         {
-            if (id != grupoEjercicios.Id)
+            if (id != wod.Id)
             {
                 return NotFound();
             }
@@ -126,12 +130,12 @@ namespace MVCCoachBuster.Controllers
             {
                 try
                 {
-                    _context.Update(grupoEjercicios);
+                    _context.Update(wod);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GrupoEjerciciosExists(grupoEjercicios.Id))
+                    if (!WodExists(wod.Id))
                     {
                         return NotFound();
                     }
@@ -142,50 +146,52 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(grupoEjercicios);
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            return View(wod);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
-        // GET: GrupoEjercicios/Delete/5
+        // GET: Wods/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.GrupoEjercicios == null)
+            if (id == null || _context.Wod == null)
             {
                 return NotFound();
             }
 
-            var grupoEjercicios = await _context.GrupoEjercicios
+            var wod = await _context.Wod
+                .Include(w => w.Dia)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (grupoEjercicios == null)
+            if (wod == null)
             {
                 return NotFound();
             }
 
-            return View(grupoEjercicios);
+            return View(wod);
         }
 
-        // POST: GrupoEjercicios/Delete/5
+        // POST: Wods/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.GrupoEjercicios == null)
+            if (_context.Wod == null)
             {
-                return Problem("Entity set 'CoachBusterContext.GrupoEjercicios'  is null.");
+                return Problem("Entity set 'CoachBusterContext.Wod'  is null.");
             }
-            var grupoEjercicios = await _context.GrupoEjercicios.FindAsync(id);
-            if (grupoEjercicios != null)
+            var wod = await _context.Wod.FindAsync(id);
+            if (wod != null)
             {
-                _context.GrupoEjercicios.Remove(grupoEjercicios);
+                _context.Wod.Remove(wod);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GrupoEjerciciosExists(int id)
+        private bool WodExists(int id)
         {
-          return _context.GrupoEjercicios.Any(e => e.Id == id);
+          return _context.Wod.Any(e => e.Id == id);
         }
     }
 }

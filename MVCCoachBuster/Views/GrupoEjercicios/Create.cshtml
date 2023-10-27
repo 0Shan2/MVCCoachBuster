@@ -4,13 +4,11 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>GrupoEjercicios</h4>
+<h4>@ViewData["Title"] Grupo Ejercicios</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
@@ -29,17 +27,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="Instrucciones" class="control-label"></label>
-                <input asp-for="Instrucciones" class="form-control" />
+                <textarea asp-for="Instrucciones" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Instrucciones" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <partial name="Acciones/_Create" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
