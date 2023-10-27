@@ -24,7 +24,9 @@ namespace MVCCoachBuster.Models
         public int UsuarioId { get; set; }
         public virtual Usuario Entrenador { get; set; }
         public string Foto { get; set; }
-        public List<Dia> Dias { get; set; } //lista y propiedad de navegación
+
+        public  ICollection<Dia> Dia { get; set; }
+        
 
     }
 }

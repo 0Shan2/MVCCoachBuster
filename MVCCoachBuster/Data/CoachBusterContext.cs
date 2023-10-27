@@ -17,7 +17,7 @@ namespace MVCCoachBuster.Data
         public DbSet<Rol> Roles { get; set; } 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Plan> Planes { get; set; }
-
+        public DbSet<Dia> Dia { get; set; }
         public DbSet<MVCCoachBuster.Models.Suscripcion> Suscripcion { get; set; }
         public DbSet<GrupoEjercicios> GrupoEjercicios { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

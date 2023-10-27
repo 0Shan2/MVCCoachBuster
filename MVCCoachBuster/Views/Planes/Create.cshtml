@@ -1,6 +1,6 @@
 ﻿@model MVCCoachBuster.ViewModels.AgregarEditarPlanViewModel
 @{
-    ViewData["Title"] = "Crear Plan";
+    ViewData["Title"] = "Estoy creando Planssssss";
 }
 <h4>@ViewData["Title"]</h4>
 
@@ -28,7 +28,7 @@
             </div>
 
             <!--Seleccionar entrenador-->
-           
+        
             <div class="form-group mt-3">
                 <label asp-for="Plan.UsuarioId" class="control-label"></label>
                 <div class="input-group mb-3">
@@ -42,11 +42,14 @@
                 <span asp-validation-for="Plan.UsuarioId" class="text-danger"></span>
             </div>
 
-
+   
        
 
             <div class="form-group">
                 <partial name="Acciones/_Create" />
+                <button id="redireccionarBtn" class="btn btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;Siguiente
+                </button>
             </div>
          
     </div>
@@ -58,4 +61,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }

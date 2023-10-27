@@ -27,5 +27,6 @@ namespace MVCCoachBuster.ViewModels
         public virtual Usuario Entrenador { get; set; }
         public string Foto { get; set; }
 
+
     }
 }

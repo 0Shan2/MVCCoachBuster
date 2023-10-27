@@ -99,6 +99,7 @@ namespace MVCCoachBuster.Controllers
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
 
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre");
+                                                                                                              
             return View("Plan", viewModel);
         }
 
@@ -107,12 +108,15 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan)
+        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
            
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+   
+
             viewModel.Plan = plan;
+
 
             if (ModelState.IsValid)
             {
@@ -131,7 +135,17 @@ namespace MVCCoachBuster.Controllers
                 try
                 {
                     var nuevoPlan = _planFactoria.CrearPlan(plan);
-    
+                    // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
+                    if (siguiente == "true")
+                    {
+                        // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
+                        return RedirectToAction("Create", "Dias", new { planId = nuevoPlan.Id });
+                    }
+                    else
+                    {
+                        // Redirige al usuario a la vista de "Planes" o a otra vista de tu elección
+                        return RedirectToAction("Index");
+                    }
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
@@ -142,9 +156,10 @@ namespace MVCCoachBuster.Controllers
                         Console.WriteLine($"Valor de nuevoPlan.Foto después de cargar la imagen: {nuevoPlan.Foto}");
 
                     }
-
+            
                     _context.Add(nuevoPlan);
                     await _context.SaveChangesAsync();
+      
                     _servicioNotificacion.Success($"ÉXITO al crear el plan {plan.Nombre}");
                 }
                 catch (DbUpdateException) // Exceptción causa por eventos externos
@@ -348,8 +363,30 @@ namespace MVCCoachBuster.Controllers
 
             return View(viewModel);
         }
-        
-        //-----------------------------------------------------------
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ListadoDias(ListadoViewModel<Dia> viewModel)
+        {
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+            var consulta = _context.Dia
+                .OrderBy(d => d.NumDias)
+                .AsQueryable(); // AsQueryable para poder hacer la búsqueda
+
+            // Puedes agregar filtros o búsquedas similares a las que tienes en la acción para los planes.
+
+            viewModel.Total = consulta.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = consulta.ToPagedList(numeroPagina, registrosPorPagina);
+
+            return View(viewModel);
+        }
+        public IActionResult RedirigirADias()
+        {
+            // Puedes redirigir a la acción "Index" en el controlador "Dias"
+            return RedirectToAction("Index", "Dias");
+        }
+
+
 
     }
 }
