@@ -11,41 +11,36 @@
 <h1>@ViewData["Title"]</h1>
 <hr>
 
-
 @foreach (var grupo in Model.Registros.GroupBy(item => item.Wod.Nombre))
 {
     <div class="card">
-        <div class="card-header" id="heading@grupo.Key">
+        <div class="card-header">
             <h4 class="mb-0">
-                <button class="btn btn-link" type="button" >
-                    @grupo.Key
-                </button>
+                @grupo.Key
             </h4>
         </div>
-        <div id="collapse@grupo.Key" style="display: none;">
-            <div class="card-body">
-                <table class="table table-hover">
-                    <thead>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Grupo de Ejercicios</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in grupo)
+                    {
                         <tr>
-                            <th>Grupo de Ejercicios</th>
-                            <th></th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GrupoEjercicios.Nombre)
+                            </td>
+                            <td>
+                                <partial name="Acciones/_Crud" model="@item.Id" />
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in grupo)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.GrupoEjercicios.Nombre)
-                                </td>
-                                <td>
-                                    <partial name="Acciones/_Crud" model="@item.Id" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 }
@@ -61,15 +56,3 @@
         PageClasses = new string[]{"page-link"}
     }
 )
-<!--
-<script>
-    function toggleCollapse(collapseId) {
-        var collapse = document.getElementById(collapseId);
-        if (collapse.style.display === "none") {
-            collapse.style.display = "block";
-        } else {
-            collapse.style.display = "none";
-        }
-    }
-</script>
--->
