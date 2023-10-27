@@ -70,15 +70,28 @@ namespace MVCCoachBuster.Controllers
 
             if (ModelState.IsValid)
             {
-                // Crea un nuevo día y asócialo al plan con el planId
-                var nuevoDia = new Dia
-                {
-                    PlanId = planId, // Asigna el PlanId que recibes como parámetro
-                    NumDias = dia.NumDias,
-                    // Otras propiedades del día
-                };
+                // Determina cuántos días ya existen para el plan
+                int numDiasExistentes = _context.Dia.Count(d => d.PlanId == planId);
 
-                _context.Add(nuevoDia);
+                // Calcula cuántas semanas completas ya se han creado
+                int semanasCompletas = numDiasExistentes / 7;
+
+                // Calcula el número de días para la próxima semana
+                int diasParaProximaSemana = (semanasCompletas + 1) * 7;
+                // Crea automáticamente 7 días asociados al plan
+                for (int i = numDiasExistentes + 1; i <= diasParaProximaSemana; i++)
+                {
+                    // Crea un nuevo día y asócialo al plan con el planId
+                    var nuevoDia = new Dia
+                    {
+                        PlanId = planId, // Asigna el PlanId que recibes como parámetro
+                        NumDias = "Día " + i, // Formatea el número de día
+                                              //NumDias = dia.NumDias,
+                                              // Otras propiedades del día
+                    };
+
+                    _context.Add(nuevoDia);
+                }
                 await _context.SaveChangesAsync();
 
                 //return RedirectToAction("Index"); // Redirige a la vista de detalles del plan u otra página deseada
