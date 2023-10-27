@@ -15,9 +15,6 @@ namespace MVCCoachBuster.Models
         public string NumDias { get; set; }
 
         public Plan Plan { get; set; }
-
- 
-
         public ICollection<Wod> Wod { get; set; }
 
     }

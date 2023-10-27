@@ -88,6 +88,9 @@ namespace MVCCoachBuster.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                //Creamos un nuevo Grupo de Ejercicios
+
                 _context.Add(wod);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

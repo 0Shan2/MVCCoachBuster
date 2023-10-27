@@ -49,6 +49,7 @@ namespace MVCCoachBuster.Controllers
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
 
+            
             return View(viewModel);
         }
 

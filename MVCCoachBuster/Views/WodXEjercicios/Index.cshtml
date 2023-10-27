@@ -8,39 +8,49 @@
     ViewData["Title"] = "Listado Wod x Ejercicio";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
+<hr>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Registros[0].Wod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Registros[0].GrupoEjercicios)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Registros) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.WodId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GrupoEjerciciosId)
-            </td>
-            <td>
-                    <partial name="Acciones/_Crud" model="@item.Id" />
-            </td>
-        </tr>
+
+@foreach (var grupo in Model.Registros.GroupBy(item => item.Wod.Nombre))
+{
+    <div class="card">
+        <div class="card-header" id="heading@grupo.Key">
+            <h4 class="mb-0">
+                <button class="btn btn-link" type="button" onclick="toggleCollapse('collapse@grupo.Key')">
+                    @grupo.Key
+                </button>
+            </h4>
+        </div>
+        <div id="collapse@grupo.Key" style="display: none;">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Grupo de Ejercicios</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in grupo)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.GrupoEjercicios.Nombre)
+                                </td>
+                                <td>
+                                    <partial name="Acciones/_Crud" model="@item.Id" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+
+
 <!--Elemento de paginación-->
 @Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
     Pagina=page,
@@ -51,3 +61,14 @@
         PageClasses = new string[]{"page-link"}
     }
 )
+
+<script>
+    function toggleCollapse(collapseId) {
+        var collapse = document.getElementById(collapseId);
+        if (collapse.style.display === "none") {
+            collapse.style.display = "block";
+        } else {
+            collapse.style.display = "none";
+        }
+    }
+</script>
