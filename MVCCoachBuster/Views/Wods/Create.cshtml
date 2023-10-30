@@ -10,20 +10,39 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" asp-controller="Wods">
+        <form asp-action="Create" asp-controller="Dias" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
                 <label asp-for="Nombre">Nombre del Wod</label>
                 <input asp-for="Nombre" class="form-control" />
             </div>
-            <input type="hidden" name="diaId" value="@ViewData["DiaId"]" />
+            <div class="form-group">
+                <label asp-for="DiaId" class="control-label"></label>
+                <input asp-for="DiaId" class="form-control" readonly /> <!-- Mostrar el valor de DiaId como solo lectura -->
+            </div>
 
+            <!-- Agregar selección de ejercicios -->
+            <div class="form-group">
+                <label>Selecciona los ejercicios:</label>
 
-     
+                <a class="btn btn-primary" asp-action="Create" asp-controller="GrupoEjercicios">
+                    <i class="fa-solid fa-add"></i>&nbsp;Añadir Ejercicio
+                </a>
 
+                @foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
+                {
+                    <div class="list-group">
+                        <div class="list-group-item">
+                        <input type="checkbox" name="selectedGrupoEjercicios" value="@grupoEjercicio.Id" />
+                        @grupoEjercicio.Nombre
+                        </div>
+                    </div>
+                }
+                
+            </div>
 
-            
+            <hr />
 
             <button type="submit" class="btn btn-primary">Crear Wod con GrupoEjercicios</button>
         </form>
@@ -33,4 +52,5 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
 

@@ -138,9 +138,6 @@ namespace MVCCoachBuster.Controllers
                 {
                     var nuevoPlan = _planFactoria.CrearPlan(plan);
 
-
-          
-
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
@@ -153,7 +150,6 @@ namespace MVCCoachBuster.Controllers
                     }
          
                     _context.Add(nuevoPlan);
-      
                     await _context.SaveChangesAsync();
                     
                     // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
@@ -167,9 +163,6 @@ namespace MVCCoachBuster.Controllers
                         // Redirige al usuario a la vista de "Planes" o a otra vista de tu elección
                         return RedirectToAction("Index");
                     }
-                  
-
-                    _servicioNotificacion.Success($"ÉXITO al crear el plan {plan.Nombre}");
                 }
                 catch (DbUpdateException) // Exceptción causa por eventos externos
                 {

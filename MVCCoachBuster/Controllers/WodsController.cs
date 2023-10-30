@@ -75,15 +75,14 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Create
-    
-        public IActionResult Create(int diaId, int planId)
+        public IActionResult Create(int diaId)
         {
-            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
-            // Crear un nuevo Wod con el DiaId
-            var wod = new Wod { DiaId = diaId };
-            //Para la selección de los ejercicios
-            ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
-            ViewData["DiaId"] = diaId; // Añade esta línea para que DiaId esté disponible en la vista
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
+            ViewBag.DiaId = diaId; //Asignamos diaId a ViewBag para que se use en la vista
+            //Para la selección de los ejercicos
+           // ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
+            var grupoEjerciciosList = _context.Set<GrupoEjercicios>().ToList();
+            ViewBag.GrupoEjercicios = grupoEjerciciosList;
             return View();
         }
 
@@ -94,27 +93,37 @@ namespace MVCCoachBuster.Controllers
         // POST: Wods/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int diaId, [Bind("Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
+        public async Task<IActionResult> Create(int diaId, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (ModelState.IsValid)
             {
-                // Asigna el valor del día obtenido desde el enlace al objeto Wod
-                wod.DiaId = diaId;
-                // Aquí puedes realizar validaciones y guardar el nuevo Wod en la base de datos
+                wod.DiaId = diaId; //Asignamos el valor de diaId al nuevo Wod
                 _context.Add(wod);
                 await _context.SaveChangesAsync();
-                // Obtén el nombre del Wod recién creado
-                string nombreWod = wod.Nombre;
 
-                return RedirectToAction("Create", "Dias", new { diaId = wod.DiaId });
+                int wodId = wod.Id; //Obtenermos la Id de nuevo Wod
+
+                //Recogemos un listado de GrupoEjercicios
+                if(selectedGrupoEjercicios != null)
+                {
+                    foreach(int grupoEjercicioId in selectedGrupoEjercicios)
+                    {
+                        var wodxEjercicio = new WodXEjercicio
+                        {
+                            WodId = wod.Id,
+                            GrupoEjerciciosId = grupoEjercicioId,
+                        };
+                        _context.Add(wodxEjercicio);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-
-            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();
             return View(wod);
         }
-
-
+        
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -212,5 +221,8 @@ namespace MVCCoachBuster.Controllers
         {
           return _context.Wod.Any(e => e.Id == id);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------------
+      
     }
 }
