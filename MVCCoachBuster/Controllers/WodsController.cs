@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,7 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Details/5
+       
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Wod == null)
@@ -73,46 +75,45 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Create
-        public IActionResult Create()
+    
+        public IActionResult Create(int diaId, int planId)
         {
-            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
-            //Para la selección de los ejercicos
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+            // Crear un nuevo Wod con el DiaId
+            var wod = new Wod { DiaId = diaId };
+            //Para la selección de los ejercicios
             ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
+            ViewData["DiaId"] = diaId; // Añade esta línea para que DiaId esté disponible en la vista
             return View();
         }
+
 
         // POST: Wods/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Wods/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
+        public async Task<IActionResult> Create(int diaId, [Bind("Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (ModelState.IsValid)
             {
+                // Asigna el valor del día obtenido desde el enlace al objeto Wod
+                wod.DiaId = diaId;
+                // Aquí puedes realizar validaciones y guardar el nuevo Wod en la base de datos
                 _context.Add(wod);
-
-                //Recogemos un listado de GrupoEjercicios
-                if(selectedGrupoEjercicios != null)
-                {
-                    foreach(int grupoEjercicioId in selectedGrupoEjercicios)
-                    {
-                        var wodxEjercicio = new WodXEjercicio
-                        {
-                            WodId = wod.Id,
-                            GrupoEjerciciosId = grupoEjercicioId,
-                        };
-                        _context.Add(wodxEjercicio);
-                    }
-                }
-
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Obtén el nombre del Wod recién creado
+                string nombreWod = wod.Nombre;
+
+                return RedirectToAction("Create", "Dias", new { diaId = wod.DiaId });
             }
+
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();
             return View(wod);
         }
+
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Edit/5

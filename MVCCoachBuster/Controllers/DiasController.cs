@@ -46,7 +46,7 @@ namespace MVCCoachBuster.Controllers
         }
 
         // GET: Dias/Create
-        public IActionResult Create(int planId)
+        public IActionResult Create(int planId, string nombreWod)
         {
             TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
 
@@ -55,6 +55,13 @@ namespace MVCCoachBuster.Controllers
             ViewBag.PlanId = planId;
             // Recupera la lista de días asociados a un plan específico
             var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
+
+
+            // Accede al valor TempData del nombre del Wod
+           // TempData["NombreWod"] = nombreWod;
+
+            // Carga los días y los Wods asociados al día
+          //  var diass = _context.Dia.Include(d => d.Wod).ToList();
             ViewBag.Dias = dias;
 
             return View();
@@ -101,7 +108,7 @@ namespace MVCCoachBuster.Controllers
             }
 
 
-            // Si hay un error de validación, puedes manejarlo aquí
+            // Si hay un error de validación
             return View(dia);
 
 
