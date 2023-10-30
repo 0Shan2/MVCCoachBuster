@@ -11,8 +11,7 @@
 <h1>@ViewData["Title"]</h1>
 <hr>
 
-
-
+@*
 @foreach (var grupo in Model.Registros.GroupBy(item => item.Wod.Nombre))
 {
     <div class="card">
@@ -46,8 +45,42 @@
         </div>
     </div>
 }
+*@
 
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Registros[0].Wod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registros[0].GrupoEjercicios)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Registros)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WodId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GrupoEjerciciosId)
+                </td>
+                <td>
+                    <partial name="Acciones/_Crud" model="@item.Id" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@*
 <!--Elemento de paginación-->
 @Html.PagedListPager(Model.Registros,page=>Url.Action("Index", new {
     Pagina=page,
@@ -58,3 +91,4 @@
         PageClasses = new string[]{"page-link"}
     }
 )
+*@
