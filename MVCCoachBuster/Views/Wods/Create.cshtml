@@ -10,14 +10,19 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" asp-controller="Día" method="post">
+        <form asp-action="Create" asp-controller="Dias" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Nombre">Nombre del Wod</label>
                 <input asp-for="Nombre" class="form-control" />
             </div>
 
-            <!-- Agregar selección de ejercicios -->
+            <div class="form-group">
+                <label asp-for="DiaId">Día</label>
+                <input asp-for="DiaId" class="form-control" disabled />
+            </div>
+
             <h4>Seleccione los Ejercicios</h4>
             <div class="form-group">
                 <label asp-for="WodXEjercicio">Ejercicios</label>
@@ -28,6 +33,9 @@
 
             <button type="submit" class="btn btn-primary">Crear Wod con GrupoEjercicios</button>
         </form>
+    </div>
+</div>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

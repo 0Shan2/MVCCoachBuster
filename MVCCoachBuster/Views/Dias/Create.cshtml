@@ -4,9 +4,8 @@
     ViewData["Title"] = "Create";
 }
 
+<h1>Calendario Días</h1>
 
-<h4>Agregar Dia</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -15,7 +14,7 @@
             <input type="hidden" asp-for="PlanId" value="@ViewBag.PlanId" />
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Añadir" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -24,7 +23,7 @@
 
 <div>
     <div class="container">
-        <h1>Calendario Dias</h1>
+
        
         <div class="row">
             @foreach (var dia in ViewBag.Dias)
@@ -34,31 +33,26 @@
                     <div class="card-body">
 
                         <h5 class="card-title">
-
-                          
-                       
                                    @dia.NumDias 
-                        
-                         
-
                         </h5>
                         <p class="card-text">
-                            <a asp-action="Edit" asp-route-id="@dia.Id">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@dia.Id">Delete</a>
-                            <button class="btn btn-primary me-3" type="submit">
-                                <i class="fa-solid fa-floppy-disk"></i>&nbsp;Añadir Wod
-                            </button>
+                                <a asp-action="Delete" asp-route-id="@dia.Id">
+                                    <i class="fas fa-trash-alt"></i> 
+                                </a>
+                                <a class="btn btn-primary me-3" asp-controller="Wods" asp-action="Create">
+                                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;Añadir Wod
+                                </a>
                         </p>
                     </div>
                 </div>
             </div>
             }
-            <!-- Repite esto para los otros días de la semana -->
+        
         </div>
        
     </div>
 
-    <a asp-action="Index">Back to List</a>
+
 </div>
 
 @section Scripts {

@@ -195,7 +195,7 @@ namespace MVCCoachBuster.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Create", new { planId = dia.PlanId });
         }
 
         private bool DiaExists(int id)
