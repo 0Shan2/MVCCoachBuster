@@ -73,11 +73,14 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Create
-        public IActionResult Create()
+        public IActionResult Create(int diaId)
         {
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
+            ViewBag.DiaId = diaId; //Asignamos diaId a ViewBag para que se use en la vista
             //Para la selección de los ejercicos
-            ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
+           // ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
+            var grupoEjerciciosList = _context.Set<GrupoEjercicios>().ToList();
+            ViewBag.GrupoEjercicios = grupoEjerciciosList;
             return View();
         }
 
@@ -86,11 +89,15 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
+        public async Task<IActionResult> Create(int diaId, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (ModelState.IsValid)
             {
+                wod.DiaId = diaId; //Asignamos el valor de diaId al nuevo Wod
                 _context.Add(wod);
+                await _context.SaveChangesAsync();
+
+                int wodId = wod.Id; //Obtenermos la Id de nuevo Wod
 
                 //Recogemos un listado de GrupoEjercicios
                 if(selectedGrupoEjercicios != null)
@@ -104,16 +111,15 @@ namespace MVCCoachBuster.Controllers
                         };
                         _context.Add(wodxEjercicio);
                     }
+                    await _context.SaveChangesAsync();
                 }
 
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();
             return View(wod);
         }
-
+        
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Edit/5
         public async Task<IActionResult> Edit(int? id)

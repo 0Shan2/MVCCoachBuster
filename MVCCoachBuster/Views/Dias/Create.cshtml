@@ -39,7 +39,7 @@
                                 <a asp-action="Delete" asp-route-id="@dia.Id">
                                     <i class="fas fa-trash-alt"></i> 
                                 </a>
-                                <a class="btn btn-primary me-3" asp-controller="Wods" asp-action="Create">
+                                <a class="btn btn-primary me-3" asp-controller="Wods" asp-action="Create" asp-route-diaId="@dia.Id">
                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp;Añadir Wod
                                 </a>
                         </p>
