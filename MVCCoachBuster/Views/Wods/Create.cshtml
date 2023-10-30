@@ -10,21 +10,29 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" asp-controller="Día" method="post">
+        <form asp-action="Create" asp-controller="Dias" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre">Nombre del Wod</label>
                 <input asp-for="Nombre" class="form-control" />
             </div>
-
-            <!-- Agregar selección de ejercicios -->
-            <h4>Seleccione los Ejercicios</h4>
             <div class="form-group">
-                <label asp-for="WodXEjercicio">Ejercicios</label>
-                <select asp-for="WodXEjercicio" asp-items="ViewBag.EjercicioItems" class="form-control" multiple></select>
+                <label asp-for="DiaId" class="control-label"></label>
+                <select asp-for="DiaId" class="form-control" asp-items="ViewBag.DiaId"></select>
+            </div>
+            <!-- Agregar selección de ejercicios -->
+            <div class="form-group">
+                <label>Seleccion de ejercicios</label>
+                @foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
+                {
+                    <div>
+                        <input type="checkbox" name="selectedGrupoEjercicios" value="@grupoEjercicio.Value" />
+                        @grupoEjercicio.Text
+                    </div>
+                }
             </div>
 
-            <!-- Otros campos del Wod si es necesario -->
+            
 
             <button type="submit" class="btn btn-primary">Crear Wod con GrupoEjercicios</button>
         </form>

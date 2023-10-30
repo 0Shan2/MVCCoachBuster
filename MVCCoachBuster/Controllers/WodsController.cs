@@ -76,6 +76,8 @@ namespace MVCCoachBuster.Controllers
         public IActionResult Create()
         {
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
+            //Para la selección de los ejercicos
+            ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
             return View();
         }
 
@@ -84,18 +86,31 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,DiaId")] Wod wod)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (ModelState.IsValid)
             {
-
-                //Creamos un nuevo Grupo de Ejercicios
-
                 _context.Add(wod);
+
+                //Recogemos un listado de GrupoEjercicios
+                if(selectedGrupoEjercicios != null)
+                {
+                    foreach(int grupoEjercicioId in selectedGrupoEjercicios)
+                    {
+                        var wodxEjercicio = new WodXEjercicio
+                        {
+                            WodId = wod.Id,
+                            GrupoEjerciciosId = grupoEjercicioId,
+                        };
+                        _context.Add(wodxEjercicio);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();
             return View(wod);
         }
 
