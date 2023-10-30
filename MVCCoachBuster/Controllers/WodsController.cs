@@ -77,6 +77,7 @@ namespace MVCCoachBuster.Controllers
         // GET: Wods/Create
         public IActionResult Create(int diaId)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
             ViewBag.DiaId = diaId; //Asignamos diaId a ViewBag para que se use en la vista
             //Para la selección de los ejercicos
@@ -93,7 +94,7 @@ namespace MVCCoachBuster.Controllers
         // POST: Wods/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int diaId, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
+        public async Task<IActionResult> Create(int diaId,int planId, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (ModelState.IsValid)
             {
@@ -116,9 +117,16 @@ namespace MVCCoachBuster.Controllers
                         _context.Add(wodxEjercicio);
                     }
                     await _context.SaveChangesAsync();
-                }
 
-                return RedirectToAction(nameof(Index));
+                }
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
+                return RedirectToAction("Create", "Dias", new { planId = planId, diaId = diaId });
+
             }
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();
             return View(wod);

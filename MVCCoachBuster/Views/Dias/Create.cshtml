@@ -43,7 +43,20 @@
                                 <a class="btn btn-primary me-3" asp-controller="Wods" asp-action="Create" asp-route-diaId="@dia.Id">
                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp;Añadir Wod
                                 </a>
-                     
+
+                                <ul>
+                                    @if (dia != null && dia.Wod != null)
+                                    {
+                                        @foreach (var wod in dia.Wod)
+                                        {
+                                            <li>@wod.Nombre</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>No hay Wods disponibles.</li>
+                                    }
+                                </ul>
                         </p>
                     </div>
                 </div>
