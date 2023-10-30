@@ -38,12 +38,18 @@ namespace MVCCoachBuster.Controllers
                 .Include(w => w.GrupoEjercicios)
                 .Include(w => w.Wod)
                 .AsNoTracking();
-           
+
             //2º) Para buscar un plan
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
-                consulta = consulta.Where(u => u.Wod.Nombre.Contains(viewModel.TerminoBusqueda));
+                consulta = consulta.Where(u => u.Wod.Nombre.Contains(viewModel.TerminoBusqueda) ||
+                                                (u.Wod.DiaId != null && u.Wod.DiaId.ToString().Contains(viewModel.TerminoBusqueda)));
             }
+            else
+            {
+                // No se aplica ningún filtro y se muestran todos los registros.
+            }
+
 
             viewModel.Total = consulta.Count();
             var numeroPagina = viewModel.Pagina ?? 1;
@@ -157,7 +163,7 @@ namespace MVCCoachBuster.Controllers
             return View(wodXEjercicio);
         }
 
-
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: WodXEjercicios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

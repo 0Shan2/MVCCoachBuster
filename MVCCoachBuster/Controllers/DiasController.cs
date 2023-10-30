@@ -114,8 +114,6 @@ namespace MVCCoachBuster.Controllers
 
             // Si hay un error de validación, puedes manejarlo aquí
             return View(dia);
-
-
         }
 
         // GET: Dias/Edit/5
