@@ -46,7 +46,7 @@ namespace MVCCoachBuster.Controllers
 
         private bool SuscripcionExists(int id)
         {
-          return _context.Suscripcion.Any(e => e.Id == id);
+            return _context.Suscripcion.Any(e => e.Id == id);
         }
 
         //--------------------------------------------------------------------------------------------------------------------------
@@ -112,6 +112,44 @@ namespace MVCCoachBuster.Controllers
             return View(viewModel);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        // GET: Suscripcion/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
+            if (id == null || _context.Suscripcion == null)
+            {
+                return NotFound();
+            }
+
+            var suscrito = await _context.Suscripcion
+              .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (suscrito == null)
+            {
+                return NotFound();
+            }
+
+            return View(suscrito);
+        }
+
+        // POST: Suscripcion/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var suscripciones = await _context.Suscripcion.FindAsync(id);
+            _context.Suscripcion.Remove(suscripciones);
+            await _context.SaveChangesAsync();
+            // Redirige al usuario a la URL de referencia almacenada en TempData
+            if (TempData.ContainsKey("UrlReferencia"))
+            {
+                string urlReferencia = TempData["UrlReferencia"].ToString();
+                return Redirect(urlReferencia);
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
     }
 }

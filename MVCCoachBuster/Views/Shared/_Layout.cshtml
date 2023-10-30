@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="~/lib/mdb-ui-kit/css/mdb.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MVCCoachBuster.styles.css" asp-append-version="true" />
 </head>
@@ -27,6 +27,9 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Suscripciones" asp-action="ListaPlanesSuscritos">Lista Suscripciones</a>
                         </li>
 
                         <!--Solo los administradores podran ver el link de Rol, que nos lleva a su Index -->
@@ -56,9 +59,6 @@
                                     <a class="nav-link text-light" asp-area="" asp-controller="Planes" asp-action="ListaPlanesCreados">Lista de Planes creados</a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-area="" asp-controller="Suscripciones" asp-action="ListaPlanesSuscritos">Lista Suscripciones</a>
-                                </li>
                             }
                         }
 

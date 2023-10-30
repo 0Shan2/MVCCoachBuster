@@ -31,8 +31,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.plan.Nombre)
             </td>
-
-
+            <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                        <i class="fa-solid fa-trash"></i>&nbsp;Abandonar
+                    </a>
+            </td>
         </tr>
 }
     </tbody>
