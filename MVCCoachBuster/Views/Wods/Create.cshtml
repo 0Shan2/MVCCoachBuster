@@ -23,17 +23,25 @@
             </div>
             <!-- Agregar selección de ejercicios -->
             <div class="form-group">
-                <label>Seleccion de ejercicios</label>
+                <label>Selecciona los ejercicios:</label>
+
+                <a class="btn btn-primary" asp-action="Create" asp-controller="GrupoEjercicios">
+                    <i class="fa-solid fa-add"></i>&nbsp;Añadir Ejercicio
+                </a>
+
                 @foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
                 {
-                    <div>
+                    <div class="list-group">
+                        <div class="list-group-item">
                         <input type="checkbox" name="selectedGrupoEjercicios" value="@grupoEjercicio.Value" />
                         @grupoEjercicio.Text
+                        </div>
                     </div>
                 }
+                
             </div>
 
-            
+            <hr />
 
             <button type="submit" class="btn btn-primary">Crear Wod con GrupoEjercicios</button>
         </form>
@@ -43,4 +51,5 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
 
