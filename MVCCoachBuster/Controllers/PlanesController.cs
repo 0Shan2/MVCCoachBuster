@@ -82,12 +82,14 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-           // plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
+            // plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
 
 
-            return View(plan);
+            // Redirige al usuario a la vista de "Create" en el controlador "Dias" y pasa el ID del plan como parámetro
+            return RedirectToAction("Create", "Dias", new { planId = id });
 
-          
+
+
         }
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Create
