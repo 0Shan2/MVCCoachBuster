@@ -34,6 +34,7 @@ namespace MVCCoachBuster.Controllers
             _servicioNotificacion = servicioNotificacion;
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Suscripciones
         public async Task<IActionResult> Index(ListadoViewModel<Suscripcion> viewModel)
         {
@@ -171,7 +172,6 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-
             return View(suscrito);
         }
 
@@ -211,6 +211,8 @@ namespace MVCCoachBuster.Controllers
 
             return View(viewModel);
         }
+
+        //---------------------------------------------------------------------------------------------------------------------------------
 
     }
 }

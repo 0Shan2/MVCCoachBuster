@@ -32,7 +32,6 @@ namespace MVCCoachBuster.Controllers
         // GET: WodXEjercicios
         public async Task<IActionResult> Index(ListadoViewModel<WodXEjercicio> viewModel)
         {
-           
             var registrosPorPagina = _configuration.GetValue("registrosPorPagina", 5);
             var consulta = _context.WodXEjercicio
                 .Include(w => w.GrupoEjercicios)
@@ -40,7 +39,6 @@ namespace MVCCoachBuster.Controllers
                 .AsNoTracking();
 
             //2º) Para buscar un plan
-            
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
                 consulta = consulta.Where(u => u.Wod.Nombre.Contains(viewModel.TerminoBusqueda));
@@ -197,9 +195,12 @@ namespace MVCCoachBuster.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         private bool WodXEjercicioExists(int id)
         {
           return _context.WodXEjercicio.Any(e => e.Id == id);
         }
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     }
 }

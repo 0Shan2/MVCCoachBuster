@@ -15,7 +15,6 @@ using X.PagedList;
 
 namespace MVCCoachBuster.Controllers
 {
-  
     public class UsuariosController : Controller
     {
         private readonly CoachBusterContext _context;
@@ -75,9 +74,6 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-            //Convertirmos la cadaena de foto a un arrible de bytes
-            //usuario.FotoBytes = await Utilerias.ConvertirImagenABytes(usuario.Foto, _configuration);
-
             return View(usuario);
         }
 
@@ -123,15 +119,8 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if(Request.Form.Files.Count > 0)
                     {
-                        /*
-                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        using var dataStream = new MemoryStream();
-                        await archivo.CopyToAsync(dataStream);
-                        usuarioAgregar.Foto = dataStream.ToArray();
-                        */
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         usuarioAgregar.Foto = await Utilerias.LeerImagen(archivo, _configuration);
-
                     }
                     
                     _context.Usuarios.Add(usuarioAgregar);
@@ -218,8 +207,6 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
         
-
-
             if (ModelState.IsValid)
             {
                 try
@@ -231,7 +218,6 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
-                
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         usuarioBd.Foto = await Utilerias.LeerImagen(archivo, _configuration);
                     }
@@ -260,7 +246,6 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction("Perfil");
             }
-
             return View("Perfil");
         }
 
@@ -291,12 +276,6 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
-                        /*
-                        IFormFile archivo = Request.Form.Files.FirstOrDefault();
-                        using var dataStream = new MemoryStream();
-                        await archivo.CopyToAsync(dataStream);
-                        usuarioBd.Foto = dataStream.ToArray();
-                        */
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         usuarioBd.Foto = await Utilerias.LeerImagen(archivo, _configuration);
                     }
@@ -405,13 +384,10 @@ namespace MVCCoachBuster.Controllers
             return View(viewModel);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarContrasena(int id, [Bind("Id,Correo,Contrasena,ConfirmarContrasena")] CambiarContrasenaViewModel viewModel)
         {
-
             if (ModelState.IsValid)
             {
                 try

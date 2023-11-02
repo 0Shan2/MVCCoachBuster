@@ -20,8 +20,6 @@ namespace MVCCoachBuster.Controllers
     [Authorize(Policy = "Gestión")]
     public class PlanesController : Controller
     {
-      
-
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
         private readonly INotyfService _servicioNotificacion;
@@ -35,14 +33,13 @@ namespace MVCCoachBuster.Controllers
             _configuration = configuration;
             _servicioNotificacion = servicioNotificacion;
             _planFactoria = planFactoria;
-
         }
+
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes
         [AllowAnonymous]
         public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
         {
-
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Planes
                 .OrderBy(m => m.Nombre)
@@ -66,7 +63,6 @@ namespace MVCCoachBuster.Controllers
         // GET: Planes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-       
             if (id == null || _context.Planes == null)
             {
                 return NotFound();
@@ -82,13 +78,9 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-           // plan.FotoBytes = await Utilerias.ConvertirImagenABytes(plan.Foto, _configuration);
-
-
             return View(plan);
-
-          
         }
+
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Create
 
@@ -110,7 +102,6 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
-           
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
    
@@ -136,7 +127,6 @@ namespace MVCCoachBuster.Controllers
                     //Para añadir la imagen
                     if (Request.Form.Files.Count > 0)
                     {
-                       
                         IFormFile archivo = Request.Form.Files.FirstOrDefault();
                         nuevoPlan.Foto = await Utilerias.LeerImagen(archivo,_configuration);
                         // Agrega registros de depuración para verificar el valor de nuevoPlan.Foto
@@ -165,9 +155,9 @@ namespace MVCCoachBuster.Controllers
                     return View("Plan", viewModel);
                 }
             }
-
             return View("Plan", viewModel);
         }
+
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Edit/5
 
@@ -194,7 +184,6 @@ namespace MVCCoachBuster.Controllers
                 .AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
 
             return View("Plan", viewModel);
-
         }
 
         // POST: Planes/Edit/5
@@ -204,7 +193,6 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
-
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
             viewModel.Plan = plan;
@@ -255,7 +243,6 @@ namespace MVCCoachBuster.Controllers
                         // Redirige al usuario a la vista de "Planes" o a otra vista de tu elección
                         return RedirectToAction("Index");
                     }
-
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -263,9 +250,9 @@ namespace MVCCoachBuster.Controllers
                     return NotFound();
                 }
             }
-
             return View("Plan", viewModel);
         }
+
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Planes/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -284,7 +271,6 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-
             return View(plan);
         }
 
@@ -295,7 +281,6 @@ namespace MVCCoachBuster.Controllers
         {
             try
             {
-
                 if (_context.Planes == null)
                 {
                     return Problem("Entity set 'CoachBusterContext.Planes'  is null.");
@@ -319,7 +304,6 @@ namespace MVCCoachBuster.Controllers
                 _servicioNotificacion.Warning("Ha ocurrido un error. Compruebe que no haya usuarios suscritos al plan.");
                 return RedirectToAction("UsuariosSuscritosAlPlan", "Suscripciones", new { planId = id });
             }
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -345,7 +329,6 @@ namespace MVCCoachBuster.Controllers
                 .OrderBy(m => m.Nombre)
                 .AsNoTracking();
 
-
             //2º) Para buscar un plan
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
@@ -356,12 +339,9 @@ namespace MVCCoachBuster.Controllers
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await planesCreados.ToPagedListAsync(numeroPagina, registrosPorPagina);
 
-
             return View(viewModel);
         }
-  
-  
 
-
+        //---------------------------------------------------------------------------------------------------------------------------------
     }
 }

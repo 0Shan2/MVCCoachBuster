@@ -25,7 +25,7 @@ namespace MVCCoachBuster.Controllers
             _servicioNotificacion = servicioNotificacion;
         }
 
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Roles
         //1º) Pasamos el modelo Listado
         public async Task<IActionResult> Index(ListadoViewModel<Rol> viewModel)
@@ -35,7 +35,6 @@ namespace MVCCoachBuster.Controllers
                 .OrderBy(m=>m.Nombre)
                 .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
-            
             //2º) Para buscar un rol
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
@@ -50,6 +49,7 @@ namespace MVCCoachBuster.Controllers
               return View(viewModel);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Roles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -64,10 +64,10 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-
             return View(rol);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Roles/Create
         public IActionResult Create()
         {
@@ -111,6 +111,7 @@ namespace MVCCoachBuster.Controllers
             return View(rol);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -175,6 +176,7 @@ namespace MVCCoachBuster.Controllers
             return View(rol);
         }
 
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -209,5 +211,7 @@ namespace MVCCoachBuster.Controllers
         {
           return (_context.Roles?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        //---------------------------------------------------------------------------------------------------------------------------------
     }
 }

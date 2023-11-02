@@ -77,12 +77,12 @@ namespace MVCCoachBuster.Controllers
         {
             TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
             ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
-            // Asigna el valor de planId a ViewBag para que se use en la vista
-            ViewBag.PlanId = planId;
+            ViewBag.PlanId = planId; // Asigna el valor de planId a ViewBag para que se use en la vista
+
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
             ViewBag.DiaId = diaId; //Asignamos diaId a ViewBag para que se use en la vista
+
             //Para la selección de los ejercicos
-           // ViewData["GrupoEjercicios"] = new MultiSelectList(_context.Set<GrupoEjercicios>(), "Id", "Nombre");
             var grupoEjerciciosList = _context.Set<GrupoEjercicios>().ToList();
             ViewBag.GrupoEjercicios = grupoEjerciciosList;
             return View();
@@ -97,11 +97,7 @@ namespace MVCCoachBuster.Controllers
         {
             if (ModelState.IsValid)
             {
-              
                 wod.DiaId = diaId; //Asignamos el valor de diaId al nuevo Wod
-               
-
-         // Obtén planId desde el objeto Dia
                 _context.Add(wod);
               
                 await _context.SaveChangesAsync();
@@ -124,17 +120,8 @@ namespace MVCCoachBuster.Controllers
                     await _context.SaveChangesAsync();
 
                 }
-                /*
-                // Redirige al usuario a la URL de referencia almacenada en TempData
-                if (TempData.ContainsKey("UrlReferencia"))
-                {
-                    string urlReferencia = TempData["UrlReferencia"].ToString();
-                    return Redirect(urlReferencia);
-                }
-                */
 
                 return RedirectToAction("Create", "Dias", new { planId = planId, diaId = diaId,  wodId = wodId });
-
             }
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();
             return View(wod);
