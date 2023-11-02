@@ -9,11 +9,13 @@
 
 <h1>@ViewData["Title"]</h1>
 
+
 @await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
     TerminoBusqueda = Model.TerminoBusqueda,
     TituloCrear = "Crear Ejercicio",
     Total = Model.Total
 })
+
 
 <table class="table table-hover table-bordered table-striped">
     <thead class="bg-secondary text-white">

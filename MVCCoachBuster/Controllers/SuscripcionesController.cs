@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using MVCCoachBuster.Data;
 using MVCCoachBuster.Helpers;
 using MVCCoachBuster.Models;
@@ -86,11 +90,19 @@ namespace MVCCoachBuster.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int idUsu = int.Parse(userId);
 
-            //Recuperamos los IDs de los planes a los que esta inscrito el usuario
-            List<int> idsPlanesInsc = _context.Suscripcion
-                .Where(s => s.usuarioId == idUsu)
-                .Select(s => s.planId)
-                .ToList();
+            // Recuperamos las suscripciones del usuario
+            var suscripciones = ObtenerSuscripciones(idUsu);
+
+            // Creamos un Dictionary para mapear los Ids de las suscripciones a los planes
+            var suscripcionesPorPlan = new Dictionary<int, int>();
+
+            foreach (var suscripcion in suscripciones)
+            {
+                suscripcionesPorPlan[suscripcion.planId] = suscripcion.Id;
+            }
+
+            // Recuperamos los IDs de los planes a los que está inscrito el usuario
+            List<int> idsPlanesInsc = suscripciones.Select(s => s.planId).ToList();
 
             //Recuperamos los objetos Plan a partir de los IDs
             var planesInscritos = _context.Planes
@@ -108,9 +120,21 @@ namespace MVCCoachBuster.Controllers
             viewModel.Total = planesInscritos.Count();
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await planesInscritos.ToPagedListAsync(numeroPagina, registrosPorPagina);
+            // Pasamos el Dictionary de suscripcionesPorPlan al ViewModel
+            viewModel.SuscripcionesPorPlan = suscripcionesPorPlan;
 
             return View(viewModel);
         }
+
+        public List<Suscripcion> ObtenerSuscripciones(int usuarioId)
+        {
+            // Aquí suponemos que tienes un DbSet<Suscripcion> en tu contexto de Entity Framework
+            // y que la entidad Suscripcion tiene una propiedad PlanId para relacionar con los planes
+            return _context.Suscripcion
+            .Where(s => s.usuarioId == usuarioId)
+                .ToList();
+        }
+        
 
         //---------------------------------------------------------------------------------------------------------------------------------------
         // GET: Suscripcion/Delete/5

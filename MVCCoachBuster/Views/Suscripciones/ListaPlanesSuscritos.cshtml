@@ -18,6 +18,8 @@ else
     <div class="row">
         @foreach (var plan in Model.Registros)
         {
+            var suscripcionId = Model.SuscripcionesPorPlan[plan.Id];
+
             <div class="col-xl-6 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -34,7 +36,7 @@ else
                     </div>
                     <div class="card-footer border-0 bg-light p-2 d-flex justify-content-around">
                         <a class="btn btn-link m-0 text-reset" href="#" role="button" data-ripple-color="primary">@plan.Entrenador<i class="fa-solid fa-user-tie ms-2"></i></a>
-                        <a asp-action="Delete" asp-route-id="@plan.Id" class="btn btn-danger">
+                        <a asp-action="Delete" asp-route-id="@suscripcionId" class="btn btn-danger">
                             <i class="fa-solid fa-trash"></i>&nbsp;Abandonar
                         </a>
                     </div>
@@ -44,6 +46,7 @@ else
     </div>
 }
 
+@*
 @Html.PagedListPager(Model.Registros, page => Url.Action("ListaPlanesSuscritos", new {
     Pagina = page,
     TerminoBusqueda = Model.TerminoBusqueda
@@ -52,3 +55,4 @@ new PagedListRenderOptions {
     LiElementClasses = new string[] { "page-item" },
     PageClasses = new string[] { "page-link" }
 })
+*@
