@@ -1,0 +1,49 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@model ListadoViewModel<Suscripcion>
+
+<h2>Personas Inscritas en el Plan</h2>
+
+@{
+    var suscripciones = Model.Registros;
+    var coachTeam = suscripciones.Where(s => s.usuario.RolId == 2).ToList();
+    var userTeam = suscripciones.Where(s => s.usuario.RolId == 3).ToList();
+}
+
+<h6 class="bg-light p-2 border-top border-bottom">Coach team</h6>
+<ul class="list-group list-group-light mb-4">
+    @foreach (var suscripcion in coachTeam)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="/images/@(suscripcion.usuario.Foto)" alt="Foto de perfil" style="width: 45px; height: 45px" class="rounded-circle" />
+                <div class="ms-3">
+                    <p class="fw-bold mb-1">@suscripcion.usuario.Nombre</p>
+                    <p class="text-muted mb-0">@suscripcion.usuario.Correo</p>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+<h6 class="bg-light p-2 border-top border-bottom">Usuarios</h6>
+<ul class="list-group list-group-light">
+    @foreach (var suscripcion in userTeam)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="/images/@(suscripcion.usuario.Foto)" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                <div class="ms-3">
+                    <p class="fw-bold mb-1">@suscripcion.usuario.Nombre</p>
+                    <p class="text-muted mb-0">@suscripcion.usuario.Correo</p>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+
+<a onclick="window.history.back();" class="btn btn-secondary">
+    <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Regresar
+</a>

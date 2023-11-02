@@ -293,22 +293,31 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Planes == null)
+            try
             {
-                return Problem("Entity set 'CoachBusterContext.Planes'  is null.");
-            }
-            var plan = await _context.Planes.FindAsync(id);
-            if (plan != null)
-            {
-                _context.Planes.Remove(plan);
-            }
 
-            await _context.SaveChangesAsync();
-            // Redirige al usuario a la URL de referencia almacenada en TempData
-            if (TempData.ContainsKey("UrlReferencia"))
+                if (_context.Planes == null)
+                {
+                    return Problem("Entity set 'CoachBusterContext.Planes'  is null.");
+                }
+                var plan = await _context.Planes.FindAsync(id);
+                if (plan != null)
+                {
+                    _context.Planes.Remove(plan);
+                }
+
+                await _context.SaveChangesAsync();
+                // Redirige al usuario a la URL de referencia almacenada en TempData
+                if (TempData.ContainsKey("UrlReferencia"))
+                {
+                    string urlReferencia = TempData["UrlReferencia"].ToString();
+                    return Redirect(urlReferencia);
+                }
+            }
+            catch (DbUpdateException)
             {
-                string urlReferencia = TempData["UrlReferencia"].ToString();
-                return Redirect(urlReferencia);
+                _servicioNotificacion.Warning("Ha ocurrido un error. Compruebe que no haya usuarios suscritos al plan.");
+                return RedirectToAction("UsuariosSuscritosAlPlan", "Suscripciones", new { planId = id });
             }
 
             return RedirectToAction(nameof(Index));

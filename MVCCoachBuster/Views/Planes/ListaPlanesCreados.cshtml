@@ -41,6 +41,9 @@ else
                     </div>
                     <div class="card-footer border-0 bg-light p-2 d-flex justify-content-around">
                         <partial name ="Acciones/_Crud" model="@plan.Id">
+                         <a asp-action="UsuariosSuscritosAlPlan" asp-controller="Suscripciones" asp-route-planId="@plan.Id" class="btn btn-primary">
+                                <i class="fa-solid fa-users-rectangle"></i>&nbsp;Usuarios
+                         </a>
                     </div>
                 </div>
             </div>

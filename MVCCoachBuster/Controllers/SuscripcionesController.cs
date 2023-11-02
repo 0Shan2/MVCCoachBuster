@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,14 @@ namespace MVCCoachBuster.Controllers
     {
         private readonly CoachBusterContext _context;
         private readonly IConfiguration _configuration;
+        private readonly INotyfService _servicioNotificacion;
 
-        public SuscripcionesController(CoachBusterContext context, IConfiguration configuration)
+        public SuscripcionesController(CoachBusterContext context, IConfiguration configuration,
+            INotyfService servicioNotificacion)
         {
             _context = context;
             _configuration = configuration;
+            _servicioNotificacion = servicioNotificacion;
         }
 
         // GET: Suscripciones
@@ -66,6 +70,18 @@ namespace MVCCoachBuster.Controllers
                 return RedirectToAction("Registro", "Account");
             }
             int idUsu = int.Parse(userId);
+
+            // Verificar si el usuario ya está suscrito al plan
+            var existingSuscripcion = _context.Suscripcion
+                .FirstOrDefault(s => s.usuarioId == idUsu && s.planId == idPlan);
+
+            if (existingSuscripcion != null)
+            {
+                _servicioNotificacion.Warning($"Ya estas suscrito a este plan.");
+                // El usuario ya está suscrito a este plan, puedes redirigirlo a una página de error o mostrar un mensaje.
+                return RedirectToAction("Index", "Home");
+            }
+
             //Creamos la entrada en la tabla de suscripciones
             var suscripcion = new Suscripcion
             {
@@ -107,6 +123,7 @@ namespace MVCCoachBuster.Controllers
             //Recuperamos los objetos Plan a partir de los IDs
             var planesInscritos = _context.Planes
                 .Where(p => idsPlanesInsc.Contains(p.Id))
+                .Include(m => m.Entrenador)
                 .OrderBy(m => m.Nombre)
                 .AsNoTracking();
 
@@ -173,6 +190,26 @@ namespace MVCCoachBuster.Controllers
                 return Redirect(urlReferencia);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        [Authorize]
+        public async Task<IActionResult> UsuariosSuscritosAlPlan(int planId, ListadoViewModel<Suscripcion> viewModel)
+        {
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+
+            //Recuperamos las suscripciones para el plan
+            var suscripciones = _context.Suscripcion
+                .Where(s => s.planId == planId)
+                 .Include(m => m.plan)
+                .Include(u => u.usuario) // Para incluir la información del usuario
+                .AsNoTracking();
+
+            viewModel.Total = suscripciones.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await suscripciones.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
+            return View(viewModel);
         }
 
     }
