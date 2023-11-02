@@ -4,7 +4,7 @@
 @model ListadoViewModel<Plan>
 
 @{
-    ViewData["Title"] = "Mi listado";
+    ViewData["Title"] = "Mi listado de Planes";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -14,7 +14,6 @@
     TituloCrear = "Crear plan",
     Total = Model.Total
 })
-
 
 @if (Model.Registros.Count == 0)
 {
@@ -49,7 +48,6 @@ else
             </div>
         }
     </div>
-
 }
 
 @Html.PagedListPager(Model.Registros, page => Url.Action("ListaPlanesCreados", new {

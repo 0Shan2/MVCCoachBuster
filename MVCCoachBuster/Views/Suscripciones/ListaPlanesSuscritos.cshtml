@@ -4,10 +4,11 @@
 @model ListadoViewModel<Plan>
 
 @{
-    ViewData["Title"] = "Mi listado";
+    ViewData["Title"] = "Mi listado de suscripciones";
 }
 
 <h1>@ViewData["Title"]</h1>
+<br />
 
 @if(Model.Registros.Count == 0)
 {

@@ -1,14 +1,11 @@
 ﻿@model MVCCoachBuster.Models.Dia
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "eliminar: " +Model.NumDias;
 }
 
-
-
-<h3>Esta seguro que quieres eliminar el día?</h3>
+<h3>¿Estás seguro de @ViewData["Title"]?</h3>
 <div>
-    <h4>Dia</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">

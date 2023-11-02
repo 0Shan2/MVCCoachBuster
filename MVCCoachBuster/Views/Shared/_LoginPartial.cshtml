@@ -3,14 +3,9 @@
 
 @{
     var fotoClaim = User.Claims.FirstOrDefault(c => c.Type == "Foto");
-
-
     string fotoUrl = fotoClaim != null ? fotoClaim.Value : null;
-
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
     var userId = userIdClaim?.Value;
-   
-
 }
 
 <ul class="navbar-nav">
@@ -18,14 +13,8 @@
     {
         <li class="nav-item">
             <span class="nav-link text-light fw-bold">¡Hola @HttpContextAccessor.HttpContext.User.Identity.Name!</span>
-           
         </li>
         <li class="nav-item">
-            <!--
-            <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index","Home")">
-                <button id="logout" type="submit" class="nav-link btn btn-link text-light fw-bold">Salir</button>
-            </form>
-            -->
             <!-- Avatar -->
             <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow"
@@ -64,8 +53,6 @@
                 <ul class="dropdown-menu dropdown-menu-end"
                     aria-labelledby="navbarDropdownMenuAvatar">
                     <li>
-
-
                         <a asp-action="Perfil" asp-route-id="@userId" asp-controller="Usuarios" class="dropdown-item">Mi perfil</a>
                     </li>
                     <li>
@@ -78,12 +65,10 @@
                     </li>
                 </ul>
             </div>
-          
         </li>
     }
     else
     {
-
         <li class="nav-item">
             <form asp-controller="Account" asp-action="Login" method="get">
                 <button type="submit" class="btn btn-link px-3 me-2 text-light fw-bold" id="login">Login</button>
