@@ -30,9 +30,9 @@ namespace MVCCoachBuster.Controllers
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: WodXEjercicios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ListadoViewModel<WodXEjercicio> viewModel)
         {
-            ListadoViewModel<WodXEjercicio> viewModel = new ListadoViewModel<WodXEjercicio>();
+           
             var registrosPorPagina = _configuration.GetValue("registrosPorPagina", 5);
             var consulta = _context.WodXEjercicio
                 .Include(w => w.GrupoEjercicios)
@@ -40,22 +40,16 @@ namespace MVCCoachBuster.Controllers
                 .AsNoTracking();
 
             //2º) Para buscar un plan
+            
             if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
             {
-                consulta = consulta.Where(u => u.Wod.Nombre.Contains(viewModel.TerminoBusqueda) ||
-                                                (u.Wod.DiaId != null && u.Wod.DiaId.ToString().Contains(viewModel.TerminoBusqueda)));
+                consulta = consulta.Where(u => u.Wod.Nombre.Contains(viewModel.TerminoBusqueda));
             }
-            else
-            {
-                // No se aplica ningún filtro y se muestran todos los registros.
-            }
-
-
+            
             viewModel.Total = consulta.Count();
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
-
-            
+           
             return View(viewModel);
         }
 

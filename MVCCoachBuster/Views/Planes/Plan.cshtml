@@ -49,7 +49,9 @@
             <div class="form-group mt-3">
                 @if (Model.Plan.Id > 0)
                 {
-                    <partial name="Acciones/_Edit" />
+                    <a onclick="window.history.back();" class="btn btn-secondary">
+                        <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Regresar
+                    </a>
                 }
           
                 <input type="hidden" name="siguiente" value="true" /> <!-- Campo oculto para indicar "Siguiente" -->

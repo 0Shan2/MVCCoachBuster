@@ -59,8 +59,6 @@ namespace MVCCoachBuster.Controllers
             var numeroPagina = viewModel.Pagina ?? 1;
             viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
 
-          
-
             // código asíncrono
             return View(viewModel);
         }
@@ -116,13 +114,10 @@ namespace MVCCoachBuster.Controllers
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
    
-
             viewModel.Plan = plan;
-
 
             if (ModelState.IsValid)
             {
-
                 // 2º)Validamos si ya hay un plan con el mismo nombre
                 var existeElemtnoBd = _context.Planes
                     .Any(u => u.Nombre.ToLower().Trim() == plan.Nombre.ToLower().Trim());
@@ -146,7 +141,6 @@ namespace MVCCoachBuster.Controllers
                         nuevoPlan.Foto = await Utilerias.LeerImagen(archivo,_configuration);
                         // Agrega registros de depuración para verificar el valor de nuevoPlan.Foto
                         Console.WriteLine($"Valor de nuevoPlan.Foto después de cargar la imagen: {nuevoPlan.Foto}");
-
                     }
          
                     _context.Add(nuevoPlan);
@@ -170,16 +164,6 @@ namespace MVCCoachBuster.Controllers
                     //ModelState.AddModelError("", "Lo sentimos, ha ocurrido un error. Intente de nuevo.");
                     return View("Plan", viewModel);
                 }
-                /*
-                // Redirige al usuario a la URL de referencia almacenada en TempData
-                if (TempData.ContainsKey("UrlReferencia"))
-                {
-                    string urlReferencia = TempData["UrlReferencia"].ToString();
-                    return Redirect(urlReferencia);
-                }
-                */
-                //return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
-               // return RedirectToAction("Create", "Dias", new { planId = plan.Id });
             }
 
             return View("Plan", viewModel);
@@ -256,46 +240,28 @@ namespace MVCCoachBuster.Controllers
                     }
 
                     _context.Update(planBd);
-                     //Si no hay errores, la clase es actualizada correctamente
-                     await _context.SaveChangesAsync();
-                    _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
+                    //Si no hay errores, la clase es actualizada correctamente
+                    await _context.SaveChangesAsync();
+
                     // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
                     if (siguiente == "true")
                     {
-                        // Redirige al usuario a la vista de edit de "Dias" y pasa el ID del nuevo plan como parámetro
-                        return RedirectToAction("Edit", "Dias", new { planId = planBd.Id });
+                        _servicioNotificacion.Success($"ÉXITO al actualizar el nombre {plan.Nombre}");
+                        // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
+                        return RedirectToAction("Create", "Dias", new { planId = planBd.Id });
                     }
                     else
                     {
-
-                        // Redirige al usuario a la vista de edit de "Dias" y pasa el ID del nuevo plan como parámetro
-                        return RedirectToAction("Edit", "Dias", new { planId = planBd.Id });
+                        // Redirige al usuario a la vista de "Planes" o a otra vista de tu elección
+                        return RedirectToAction("Index");
                     }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlanExists(plan.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _servicioNotificacion.Warning("Lo sentimos, ha ocurrido un error. Intente de nuevo.");
+                    return NotFound();
                 }
-
-
-                // Redirige al usuario a la URL de referencia almacenada en TempData
-                if (TempData.ContainsKey("UrlReferencia"))
-                {
-                    string urlReferencia = TempData["UrlReferencia"].ToString();
-                    return Redirect(urlReferencia);
-                }
-
-
-
-                //return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
-                return RedirectToAction("Edit", "Dias");
             }
 
             return View("Plan", viewModel);

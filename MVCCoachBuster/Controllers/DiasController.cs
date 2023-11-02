@@ -18,7 +18,7 @@ namespace MVCCoachBuster.Controllers
         {
             _context = context;
         }
-
+        //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias
         public async Task<IActionResult> Index()
         {
@@ -26,6 +26,7 @@ namespace MVCCoachBuster.Controllers
             return View(await coachBusterContext.ToListAsync());
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,6 +46,7 @@ namespace MVCCoachBuster.Controllers
             return View(dia);
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Create
         public IActionResult Create(int planId)
         {
@@ -116,66 +118,13 @@ namespace MVCCoachBuster.Controllers
             return View(dia);
         }
 
-        // GET: Dias/Edit/5
-        public async Task<IActionResult> Edit(int? id, int planId)
-        {
-            // Aquí recuperamos los días asociados al plan y los pasamos a la vista para su edición.
-            var diasAsociados = _context.Dia.Where(d => d.PlanId == planId).ToList();
-          
-            if (id == null || _context.Dia == null)
-            {
-                return NotFound();
-            }
-
-            var dia = await _context.Dia.FindAsync(id);
-            if (dia == null)
-            {
-                return NotFound();
-            }
-          
-            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id", dia.PlanId);
-            return View(dia);
-        }
-
-        // POST: Dias/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PlanId,numDias")] Dia dia)
-        {
-            if (id != dia.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(dia);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DiaExists(dia.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id", dia.PlanId);
-            return View(dia);
-        }
-
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Dia == null)
             {
                 return NotFound();
@@ -208,7 +157,15 @@ namespace MVCCoachBuster.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            // Redirige al usuario a la URL de referencia almacenada en TempData
+            if (TempData.ContainsKey("UrlReferencia"))
+            {
+                string urlReferencia = TempData["UrlReferencia"].ToString();
+                return Redirect(urlReferencia);
+            }
+            return RedirectToAction("Create", "Dias", new { planId = id});
+
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool DiaExists(int id)
