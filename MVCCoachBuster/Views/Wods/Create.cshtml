@@ -18,8 +18,8 @@
                 <input asp-for="Nombre" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="DiaId" class="control-label"></label>
-                <input asp-for="DiaId" class="form-control" readonly /> <!-- Mostrar el valor de DiaId como solo lectura -->
+                <label asp-for="DiaId" type="hidden" class="control-label"></label>
+                <input type="hidden"  asp-for="DiaId" class="form-control" readonly /> <!-- Mostrar el valor de DiaId como solo lectura -->
             </div>
 
             <!-- Agregar selección de ejercicios -->
@@ -45,16 +45,12 @@
             <hr />
 
             <button type="submit" class="btn btn-primary">Crear Wod con GrupoEjercicios</button>
-            <div>
-                <a asp-action="Create" asp-controller="Dias" asp-route-planId="@ViewBag.PlanId">Back to Create Dias</a>
-            </div>
+          
 
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 

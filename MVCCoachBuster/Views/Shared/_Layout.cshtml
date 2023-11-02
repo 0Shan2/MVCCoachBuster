@@ -29,7 +29,7 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Suscripciones" asp-action="ListaPlanesSuscritos">Lista Suscripciones</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Suscripciones" asp-action="ListaPlanesSuscritos"> Suscripciones</a>
                         </li>
 
                         <!--Solo los administradores podran ver el link de Rol, que nos lleva a su Index -->
@@ -56,7 +56,7 @@
                             if (User.IsInRole("Entrenador"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-light" asp-area="" asp-controller="Planes" asp-action="ListaPlanesCreados">Lista de Planes creados</a>
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Planes" asp-action="ListaPlanesCreados">Planes creados</a>
                                 </li>
 
                             }

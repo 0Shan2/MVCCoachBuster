@@ -4,36 +4,73 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Calendario Días</h1>
 
-<h4>Dia</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <!-- Campo oculto para PlanId -->
+            <input type="hidden" asp-for="PlanId" value="@ViewBag.PlanId" />
+
             <div class="form-group">
-                <label asp-for="PlanId" class="control-label"></label>
-                <select asp-for="PlanId" class="form-control" asp-items="ViewBag.PlanId"></select>
-                <span asp-validation-for="PlanId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NumDias" class="control-label"></label>
-                <input asp-for="NumDias" class="form-control" />
-                <span asp-validation-for="NumDias" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Añadir" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+
 <div>
-    <a asp-action="Index">Back to List</a>
+    <div class="container">
+
+
+        <div class="row">
+            @foreach (var dia in ViewBag.DiasDelMismoPlan)
+            {
+                <div class="col-md-2">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @dia.NumDias
+                            </h5>
+                            <p class="card-text">
+                                <a asp-action="Delete" asp-route-id="@dia.Id">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                <a class="btn btn-primary me-3" asp-controller="Wods" asp-action="Create" asp-route-diaId="@dia.Id">
+                                    <i class="fas fa-plus"></i>&nbsp;Añadir Wod
+                                </a>
+
+                                <ul>
+                                    @if (dia != null && dia.Wod != null)
+                                    {
+                                        @foreach (var wod in dia.Wod)
+                                        {
+                                            <li>@wod.Nombre</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>No hay Wods disponibles.</li>
+                                    }
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

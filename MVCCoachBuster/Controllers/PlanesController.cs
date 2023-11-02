@@ -218,7 +218,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
 
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
@@ -259,6 +259,18 @@ namespace MVCCoachBuster.Controllers
                      //Si no hay errores, la clase es actualizada correctamente
                      await _context.SaveChangesAsync();
                     _servicioNotificacion.Success($"ÉXITO al actualizar el rol {plan.Nombre}");
+                    // Redirige al usuario a la vista de creación de "Dias" y pasa el ID del nuevo plan como parámetro
+                    if (siguiente == "true")
+                    {
+                        // Redirige al usuario a la vista de edit de "Dias" y pasa el ID del nuevo plan como parámetro
+                        return RedirectToAction("Edit", "Dias", new { planId = planBd.Id });
+                    }
+                    else
+                    {
+
+                        // Redirige al usuario a la vista de edit de "Dias" y pasa el ID del nuevo plan como parámetro
+                        return RedirectToAction("Edit", "Dias", new { planId = planBd.Id });
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -271,6 +283,8 @@ namespace MVCCoachBuster.Controllers
                         throw;
                     }
                 }
+
+
                 // Redirige al usuario a la URL de referencia almacenada en TempData
                 if (TempData.ContainsKey("UrlReferencia"))
                 {
@@ -278,7 +292,10 @@ namespace MVCCoachBuster.Controllers
                     return Redirect(urlReferencia);
                 }
 
-                return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
+
+
+                //return RedirectToAction("Index"); // Si no hay URL de referencia en TempData
+                return RedirectToAction("Edit", "Dias");
             }
 
             return View("Plan", viewModel);

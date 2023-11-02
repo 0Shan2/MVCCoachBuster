@@ -117,8 +117,11 @@ namespace MVCCoachBuster.Controllers
         }
 
         // GET: Dias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int planId)
         {
+            // Aquí recuperamos los días asociados al plan y los pasamos a la vista para su edición.
+            var diasAsociados = _context.Dia.Where(d => d.PlanId == planId).ToList();
+          
             if (id == null || _context.Dia == null)
             {
                 return NotFound();
@@ -129,6 +132,7 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
+          
             ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id", dia.PlanId);
             return View(dia);
         }
