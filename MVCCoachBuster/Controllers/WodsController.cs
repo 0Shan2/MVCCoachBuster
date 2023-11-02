@@ -73,10 +73,12 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Create
-        public IActionResult Create(int planId, int diaId, int wodId, List<int> selectedGrupoEjercicios)
+        public IActionResult Create(int diaId, int planId)
         {
             TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
-
+            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
+            // Asigna el valor de planId a ViewBag para que se use en la vista
+            ViewBag.PlanId = planId;
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
             ViewBag.DiaId = diaId; //Asignamos diaId a ViewBag para que se use en la vista
             //Para la selección de los ejercicos
@@ -95,7 +97,11 @@ namespace MVCCoachBuster.Controllers
         {
             if (ModelState.IsValid)
             {
+              
                 wod.DiaId = diaId; //Asignamos el valor de diaId al nuevo Wod
+               
+
+         // Obtén planId desde el objeto Dia
                 _context.Add(wod);
               
                 await _context.SaveChangesAsync();
@@ -127,7 +133,7 @@ namespace MVCCoachBuster.Controllers
                 }
                 */
 
-                return RedirectToAction("Create", "Dias", new { planId = planId, diaId = diaId, wodId = wodId, selectedGrupoEjercicios });
+                return RedirectToAction("Create", "Dias", new { planId = planId, diaId = diaId,  wodId = wodId });
 
             }
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();

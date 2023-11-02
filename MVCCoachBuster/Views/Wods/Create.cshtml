@@ -17,8 +17,9 @@
                 <label asp-for="Nombre">Nombre del Wod</label>
                 <input asp-for="Nombre" class="form-control" />
             </div>
+            <input type="hidden" name="planId" value="@ViewBag.planId" />
             <div class="form-group">
-                <label asp-for="DiaId" type="hidden" class="control-label"></label>
+                <!-- <label asp-for="DiaId" type="hidden" class="control-label"></label>-->
                 <input type="hidden"  asp-for="DiaId" class="form-control" readonly /> <!-- Mostrar el valor de DiaId como solo lectura -->
             </div>
 
