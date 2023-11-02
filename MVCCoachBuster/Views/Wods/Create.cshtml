@@ -1,12 +1,10 @@
 ﻿@model MVCCoachBuster.Models.Wod
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Wod";
 }
 
-<h1>Create</h1>
-
-<h4>Wod</h4>
+<h4>@ViewData["Title"]</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -26,11 +24,9 @@
             <!-- Agregar selección de ejercicios -->
             <div class="form-group">
                 <label>Selecciona los ejercicios:</label>
-
                 <a class="btn btn-primary" asp-action="Create" asp-controller="GrupoEjercicios">
                     <i class="fa-solid fa-add"></i>&nbsp;Añadir Ejercicio
                 </a>
-
                 @foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
                 {
                     <div class="list-group">
@@ -40,14 +36,9 @@
                         </div>
                     </div>
                 }
-                
             </div>
-
             <hr />
-
             <button type="submit" class="btn btn-primary">Crear Wod con GrupoEjercicios</button>
-          
-
         </form>
     </div>
 </div>

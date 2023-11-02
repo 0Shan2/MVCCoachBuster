@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MVCCoachBuster.Controllers
 {
-    
     public class AccountController : Controller
     {
         private readonly CoachBusterContext _context;
@@ -22,7 +21,6 @@ namespace MVCCoachBuster.Controllers
         private readonly ILogger<AccountController> _logger;
 
         //1º)Obtenemos acceso a IConfiguration 
-        //
         public AccountController(CoachBusterContext context, IPasswordHasher<Usuario> passwordHasher,
             INotyfService servicioNotificacion, ILogger<AccountController> logger)
         {
@@ -33,7 +31,6 @@ namespace MVCCoachBuster.Controllers
         }
         public IActionResult Index()
         {
-
             return View();
         }
 
@@ -69,7 +66,6 @@ namespace MVCCoachBuster.Controllers
 				if (result == PasswordVerificationResult.Success)
 				{
                     //La contraseña es correcta
-
                     //Claim es un fragmento de información del usuario, en este caso
                     //agregamos su correo y el rol.
                 
@@ -78,15 +74,12 @@ namespace MVCCoachBuster.Controllers
                        new Claim(ClaimTypes.NameIdentifier, usuarioBd.Id.ToString()),
                        new Claim(ClaimTypes.Name, usuarioBd.Nombre),
 					   new Claim(ClaimTypes.Email, usuarioBd.Correo),
-
-                       
                        new Claim(ClaimTypes.Role,usuarioBd.Rol.Nombre)
 					};
                     if (!string.IsNullOrEmpty(usuarioBd.Foto))
                     {
                         claims.Add(new Claim("Foto", usuarioBd.Foto));
                     }
-
 
                     //El ClaimIdentity es el contenedor de todos los claims del usuario.
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -114,7 +107,6 @@ namespace MVCCoachBuster.Controllers
 					_servicioNotificacion.Warning("La contraseña es incorrecta");
 					return View(viewModel);
 				}
-
             }
             return View(viewModel);
         }
@@ -173,8 +165,6 @@ namespace MVCCoachBuster.Controllers
                         RolId = 3
                     };
                     nuevoUsuario.Contrasena = _passwordHasher.HashPassword(nuevoUsuario, model.Contrasena);
-
-
 
                     _context.Usuarios.Add(nuevoUsuario);
                     await _context.SaveChangesAsync();

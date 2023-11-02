@@ -5,16 +5,15 @@
 <!-- Index deja de ser IEnumerable sino ListadoViewModel-->
 @model ListadoViewModel<Plan>
 @{
-    ViewData["Title"] = "Planes";
-    
+    ViewData["Title"] = "Planes";  
 }
 
+<h4>@ViewData["Title"]</h4>
 @await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
     TerminoBusqueda = Model.TerminoBusqueda,
     TituloCrear = "Crear Plan",
     Total = Model.Total
 })
-
 
 <table class="table table-hover table-bordered table-striped">
     <thead class="bg-secondary text-white">

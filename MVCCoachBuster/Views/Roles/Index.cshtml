@@ -8,6 +8,7 @@
     ViewData["Title"] = "Roles";
 }
 
+<h4>@ViewData["Title"]</h4>
 @await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
     TerminoBusqueda = Model.TerminoBusqueda,
     TituloCrear = "Crear Rol",

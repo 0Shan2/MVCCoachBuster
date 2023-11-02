@@ -58,7 +58,6 @@ namespace MVCCoachBuster.Controllers
             // Recupera la lista de días asociados a un plan específico
             var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
             
-            //de aquiii
             // Cargar los Wods asociados a los días
             foreach (var dia in dias)
             {
@@ -80,7 +79,6 @@ namespace MVCCoachBuster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int planId, [Bind("PlanId,NumDias")] Dia dia)
         {
-
             if (ModelState.IsValid)
             {
                 // Determina cuántos días ya existen para el plan
@@ -112,8 +110,6 @@ namespace MVCCoachBuster.Controllers
                 return RedirectToAction("Create", new { planId = planId });
 
             }
-
-
             // Si hay un error de validación, puedes manejarlo aquí
             return View(dia);
         }

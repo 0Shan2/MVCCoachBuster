@@ -9,13 +9,11 @@
 @{
     
     ViewData["Title"] = "Planes";
-
 }
-
 
 <section>
     <div class="container py-2">
-        <div class="h1 text-center text-dark" style="font-family: 'TuFuente', sans-serif; font-size: 36px; font-weight: bold;"  id="pageHeaderTitle">Todo en una sola app:</div>
+        <div class="h1 text-center text-dark" style="font-family: 'TuFuente', sans-serif; font-size: 36px; font-weight: bold;"  id="pageHeaderTitle">@ViewData["Title"]</div>
         <div class="postcard-list">
           @foreach (var item in Model.Registros)
           {
@@ -24,8 +22,7 @@
                         @if (item.Foto != null)
                         {
                             <img class="postcard__img" src="/images/@(item.Foto)" alt="Foto del Plan" />
-                        }
-                        
+                        }     
                  </a>
               <div class="postcard__text t-dark">
                   <h1 class="postcard__title yellow"><a href="#">@item.Nombre</a></h1>
@@ -37,20 +34,12 @@
                             <span style="font-weight: bold;">$</span>@item.Precio
                         </div>
 
-
                         <form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
                             <input type="hidden" name="idPlan" value="@item.Id" />
                             <button type="submit" class="btn btn-light">
                                 <a class="nav-link text-grey fw-bold">Suscribirse</a>
                             </button>
                         </form>
-
-                        @*
-                  <button type="button" class="btn btn-light">
-                    <a class="nav-link text-grey fw-bold" id="login" asp-controller="Account" asp-action="Login">Suscribirse</a>
-                  </button>
-                  *@
-
                </div>
              </article>
           }

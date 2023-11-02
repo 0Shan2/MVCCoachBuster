@@ -3,19 +3,17 @@
 @using MVCCoachBuster.ViewModels
 @model ListadoViewModel<WodXEjercicio>
 
-
 @{
     ViewData["Title"] = "Listado Wod x Ejercicio";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h4>@ViewData["Title"]</h4>
 <hr>
-
 
 @foreach (var grupo in Model.Registros.GroupBy(item => item.Wod.Nombre))
 {
     <div class="card">
-        <div class="card-header" style="background-color:#FBCDC4">
+        <div class="card-header" style="background-color:#D6D8DD">
             <h4 class="mb-0">
                 @grupo.Key
             </h4>
@@ -23,10 +21,6 @@
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th>Grupo de Ejercicios</th>
-                        <th></th>
-                    </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in grupo)
@@ -45,40 +39,6 @@
         </div>
     </div>
 }
-
-
-@*
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Registros[0].WodId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Registros[0].GrupoEjerciciosId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Registros)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.WodId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GrupoEjerciciosId)
-                </td>
-                <td>
-                    <partial name="Acciones/_Crud" model="@item.Id" />
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-*@
-
 
 
 <!--Elemento de paginación-->

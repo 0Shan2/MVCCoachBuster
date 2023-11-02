@@ -4,11 +4,11 @@
 @model ListadoViewModel<Suscripcion>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Suscripciones";
 }
 
-<h1>Index</h1>
-
+<h4>@ViewData["Title"]</h4>
+<hr />
 
 <table class="table table-hover table-bordered table-striped">
     <thead class="bg-secondary text-white ">
@@ -19,7 +19,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Registros[0].planId)
             </th>
-
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -33,7 +33,7 @@
             </td>
             <td>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
-                        <i class="fa-solid fa-trash"></i>&nbsp;Abandonar
+                        <i class="fa-solid fa-trash"></i>&nbsp;Eliminar suscripción
                     </a>
             </td>
         </tr>
@@ -41,6 +41,7 @@
     </tbody>
 </table>
 
+<!--Elemento de paginación-->
 @Html.PagedListPager(Model.Registros, page => Url.Action("Index", new {
     Pagina = page,
     TerminoBusqueda = Model.TerminoBusqueda

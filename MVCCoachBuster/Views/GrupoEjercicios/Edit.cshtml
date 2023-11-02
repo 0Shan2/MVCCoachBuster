@@ -1,16 +1,15 @@
 ﻿@model MVCCoachBuster.Models.GrupoEjercicios
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar: " + Model.Nombre;
 }
 
-<h1>Edit</h1>
+<h4>@ViewData["Title"]</h4>
 
-<h4>GrupoEjercicios</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<form asp-action="Edit">
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -34,13 +33,11 @@
                 <span asp-validation-for="Instrucciones" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <partial name="Acciones/_Edit" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 

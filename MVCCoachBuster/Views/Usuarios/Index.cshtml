@@ -7,6 +7,7 @@
     ViewData["Title"] = "Usuarios";
 }
 
+<h4>@ViewData["Title"]</h4>
 @await Html.PartialAsync("Acciones/_CrearBusqueda", new CrearBusquedaViewModel{
     TerminoBusqueda = Model.TerminoBusqueda,
     TituloCrear = "Crear Usuario",
@@ -48,8 +49,6 @@
                 @Html.DisplayFor(modelItem => item.Rol.Nombre)
             </td>
             <td>
-
-               
                     <partial name="Acciones/_Crud" model="@item.Id" />
 
                     <!--Control de roles, para el cambio de contraseña-->

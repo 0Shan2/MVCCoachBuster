@@ -20,8 +20,6 @@ namespace MVCCoachBuster.Controllers
 		private readonly IConfiguration _configuration;
 		private readonly INotyfService _servicioNotificacion;
 	
-
-
 		public HomeController(ILogger<HomeController> logger, CoachBusterContext context, IConfiguration configuration,
 			INotyfService servicioNotificacion)
         {
@@ -33,7 +31,6 @@ namespace MVCCoachBuster.Controllers
 
 		public async Task<IActionResult> Index(ListadoViewModel<Plan> viewModel)
 		{
-           
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
 			var consulta = _context.Planes
 				.OrderBy(m => m.Nombre)
@@ -50,21 +47,6 @@ namespace MVCCoachBuster.Controllers
 			viewModel.Total = consulta.Count();
 			var numeroPagina = viewModel.Pagina ?? 1;
 			viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
-
-          
-
-            //// Crea una lista de tareas asincrónicas para cargar las imágenes
-            //var tasks = viewModel.Registros.Select(plan => Utilerias.ConvertirImagenABytes(plan.Foto, _configuration));
-
-            //// Espera hasta que todas las tareas se completen en paralelo
-            //var imagenesEnBytes = await Task.WhenAll(tasks);
-
-            //// Asigna las imágenes en bytes a los planes
-            //for (var i = 0; i < viewModel.Registros.Count; i++)
-            //{
-            //    viewModel.Registros[i].FotoBytes = imagenesEnBytes[i];
-            //}
-
 
             // código asíncrono
             return View(viewModel);
