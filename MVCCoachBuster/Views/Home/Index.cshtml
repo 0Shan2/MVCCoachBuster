@@ -15,7 +15,7 @@
 
 <section>
     <div class="container py-2">
-      <div class="h1 text-center text-dark" id="pageHeaderTitle">Entrenamientos</div>
+        <div class="h1 text-center text-dark" style="font-family: 'TuFuente', sans-serif; font-size: 36px; font-weight: bold;"  id="pageHeaderTitle">Todo en una sola app:</div>
         <div class="postcard-list">
           @foreach (var item in Model.Registros)
           {
@@ -33,7 +33,9 @@
                     <p>@item.Descripcion</p>
                   </div>
                   <div class="postcard__bar"></div>
-                  <div class="postcard__preview-txt">@item.Precio</div>
+                        <div class="postcard__preview-txt" style="font-size: 20px;">
+                            <span style="font-weight: bold;">$</span>@item.Precio
+                        </div>
 
 
                         <form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
@@ -54,7 +56,6 @@
           }
         </div>
     </div>
-    
 </section>
 
 @Html.PagedListPager(Model.Registros, page => Url.Action("Index", new {

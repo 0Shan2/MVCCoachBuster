@@ -73,9 +73,12 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Wods/Create
-        public IActionResult Create(int diaId)
+        public IActionResult Create(int diaId, int planId)
         {
             TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
+            // Asigna el valor de planId a ViewBag para que se use en la vista
+            ViewBag.PlanId = planId;
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id");
             ViewBag.DiaId = diaId; //Asignamos diaId a ViewBag para que se use en la vista
             //Para la selección de los ejercicos
@@ -94,8 +97,13 @@ namespace MVCCoachBuster.Controllers
         {
             if (ModelState.IsValid)
             {
+              
                 wod.DiaId = diaId; //Asignamos el valor de diaId al nuevo Wod
+               
+
+         // Obtén planId desde el objeto Dia
                 _context.Add(wod);
+              
                 await _context.SaveChangesAsync();
 
                 int wodId = wod.Id; //Obtenermos la Id de nuevo Wod
@@ -108,6 +116,7 @@ namespace MVCCoachBuster.Controllers
                         var wodxEjercicio = new WodXEjercicio
                         {
                             WodId = wod.Id,
+
                             GrupoEjerciciosId = grupoEjercicioId,
                         };
                         _context.Add(wodxEjercicio);
@@ -115,13 +124,16 @@ namespace MVCCoachBuster.Controllers
                     await _context.SaveChangesAsync();
 
                 }
+                /*
                 // Redirige al usuario a la URL de referencia almacenada en TempData
                 if (TempData.ContainsKey("UrlReferencia"))
                 {
                     string urlReferencia = TempData["UrlReferencia"].ToString();
                     return Redirect(urlReferencia);
                 }
-                return RedirectToAction("Create", "Dias", new { planId = planId, diaId = diaId });
+                */
+
+                return RedirectToAction("Create", "Dias", new { planId = planId, diaId = diaId,  wodId = wodId });
 
             }
             ViewData["GrupoEjercicios"] = _context.Set<GrupoEjercicios>().ToList();

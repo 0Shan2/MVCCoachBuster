@@ -72,7 +72,7 @@ namespace MVCCoachBuster.Controllers
 
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // GET: GrupoEjercicios/Create
-        public IActionResult Create()
+        public IActionResult Create(int grupoEjerciciosId)
         {
             TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
             return View();
@@ -89,13 +89,16 @@ namespace MVCCoachBuster.Controllers
             {
                 _context.Add(grupoEjercicios);
                 await _context.SaveChangesAsync();
+               
                 // Redirige al usuario a la URL de referencia almacenada en TempData
                 if (TempData.ContainsKey("UrlReferencia"))
                 {
                     string urlReferencia = TempData["UrlReferencia"].ToString();
                     return Redirect(urlReferencia);
                 }
-                return RedirectToAction(nameof(Index)); 
+               
+                 return RedirectToAction(nameof(Index)); 
+               // return RedirectToAction("Create", "Wods", new { grupoEjerciciosId });
             }
             return View(grupoEjercicios);
         }
