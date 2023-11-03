@@ -41,6 +41,10 @@ else
                         <a asp-action="Delete" asp-route-id="@suscripcionId" class="btn btn-danger">
                             <i class="fa-solid fa-trash"></i>&nbsp;Abandonar
                         </a>
+                        <a asp-controller="Dias" asp-action="Index" asp-route-planId="@plan.Id" class="btn btn-primary">
+                           <i class="fa-solid fa-play"></i>&nbsp;Iniciar
+                        </a>
+
                     </div>
                 </div>
             </div>
