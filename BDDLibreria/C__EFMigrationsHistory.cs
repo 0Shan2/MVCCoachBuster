@@ -7,18 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class WodXEjercicio
+    public partial class C__EFMigrationsHistory
     {
-        public int Id { get; set; }
-        public Nullable<int> WodId { get; set; }
-        public Nullable<int> GrupoEjerciciosId { get; set; }
-    
-        public virtual GrupoEjercicios GrupoEjercicios { get; set; }
-        public virtual Wod Wod { get; set; }
+        public string MigrationId { get; set; }
+        public string ProductVersion { get; set; }
     }
 }

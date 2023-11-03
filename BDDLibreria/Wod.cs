@@ -7,23 +7,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Rol
+    public partial class Wod
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Rol()
+        public Wod()
         {
-            this.Usuario = new HashSet<Usuario>();
+            this.WodXEjercicio = new HashSet<WodXEjercicio>();
+            this.WodXEjercicio1 = new HashSet<WodXEjercicio>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
+        public Nullable<int> DiaId { get; set; }
+        public Nullable<bool> IsCompleted { get; set; }
     
+        public virtual Dia Dia { get; set; }
+        public virtual Dia Dia1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Usuario> Usuario { get; set; }
+        public virtual ICollection<WodXEjercicio> WodXEjercicio { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WodXEjercicio> WodXEjercicio1 { get; set; }
     }
 }

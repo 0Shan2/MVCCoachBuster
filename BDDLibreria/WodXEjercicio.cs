@@ -7,17 +7,19 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagrams
+    public partial class WodXEjercicio
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public int Id { get; set; }
+        public Nullable<int> WodId { get; set; }
+        public Nullable<int> GrupoEjerciciosId { get; set; }
+    
+        public virtual GrupoEjercicios GrupoEjercicios { get; set; }
+        public virtual Wod Wod { get; set; }
+        public virtual Wod Wod1 { get; set; }
     }
 }

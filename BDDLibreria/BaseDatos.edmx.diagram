@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d5efe6c0b91e46e5aa27e378c1e32aa4" Name="Diagram1">
+        <EntityTypeShape EntityType="CoachBusterModel.C__EFMigrationsHistory" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.Dia" Width="1.5" PointX="7.5" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.GrupoEjercicios" Width="1.5" PointX="10.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.Planes" Width="1.5" PointX="5.25" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.Rol" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.Suscripcion" Width="1.5" PointX="4" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.sysdiagrams" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.Usuario" Width="1.5" PointX="3" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.Wod" Width="1.5" PointX="9.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoachBusterModel.WodXEjercicio" Width="1.5" PointX="12" PointY="3.625" IsExpanded="true" />
+        <AssociationConnector Association="CoachBusterModel.FK_Dia_Planes" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_Wod_Dia" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_Wod_Dia_Cascade" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FX_Dia_Planes" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_WodXEjercicio_GrupoEjercicios1" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_Planes_Usuario_UsuarioId" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_Suscripcion_Planes" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_Usuario_Rol_RolId" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_Suscripcion_Usuario1" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_WodXEjercicio_Wod" ManuallyRouted="false" />
+        <AssociationConnector Association="CoachBusterModel.FK_WodXEjercicio_Wod_Cascade" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

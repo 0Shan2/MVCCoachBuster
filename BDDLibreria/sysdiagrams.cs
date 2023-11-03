@@ -7,18 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Suscripcion
+    public partial class sysdiagrams
     {
-        public int Id { get; set; }
-        public Nullable<int> usuarioId { get; set; }
-        public Nullable<int> planId { get; set; }
-    
-        public virtual Planes Planes { get; set; }
-        public virtual Usuario Usuario { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

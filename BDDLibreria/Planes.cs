@@ -7,26 +7,34 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class GrupoEjercicios
+    public partial class Planes
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public GrupoEjercicios()
+        public Planes()
         {
-            this.WodXEjercicio = new HashSet<WodXEjercicio>();
+            this.Dia = new HashSet<Dia>();
+            this.Dia1 = new HashSet<Dia>();
+            this.Suscripcion = new HashSet<Suscripcion>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public Nullable<int> Puntuacion { get; set; }
-        public string Instrucciones { get; set; }
-        public string URLVideo { get; set; }
+        public string Descripcion { get; set; }
+        public decimal Precio { get; set; }
+        public int UsuarioId { get; set; }
+        public string Foto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WodXEjercicio> WodXEjercicio { get; set; }
+        public virtual ICollection<Dia> Dia { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Dia> Dia1 { get; set; }
+        public virtual Usuario Usuario { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Suscripcion> Suscripcion { get; set; }
     }
 }

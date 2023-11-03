@@ -7,32 +7,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Usuario
+    public partial class Dia
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Usuario()
+        public Dia()
         {
-            this.Planes = new HashSet<Planes>();
-            this.Suscripcion = new HashSet<Suscripcion>();
+            this.Wod = new HashSet<Wod>();
+            this.Wod1 = new HashSet<Wod>();
         }
     
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Correo { get; set; }
-        public string Contrasena { get; set; }
-        public int Telefono { get; set; }
-        public int RolId { get; set; }
-        public string Foto { get; set; }
+        public Nullable<int> PlanId { get; set; }
+        public string NumDias { get; set; }
+        public Nullable<bool> IsCompleted { get; set; }
     
+        public virtual Planes Planes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Planes> Planes { get; set; }
-        public virtual Rol Rol { get; set; }
+        public virtual ICollection<Wod> Wod { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Suscripcion> Suscripcion { get; set; }
+        public virtual ICollection<Wod> Wod1 { get; set; }
+        public virtual Planes Planes1 { get; set; }
     }
 }

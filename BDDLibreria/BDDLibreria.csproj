@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8E993182-BE41-4FC3-A03D-079F3F45AF98}</ProjectGuid>
+    <ProjectGuid>{55926612-EEF9-4B68-A792-8C9BD624FA42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibreriaBDD</RootNamespace>
-    <AssemblyName>LibreriaBDD</AssemblyName>
+    <RootNamespace>BDDLibreria</RootNamespace>
+    <AssemblyName>BDDLibreria</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -50,76 +50,76 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDatos.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseDatos.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseDatos.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseDatos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseDatos.edmx</DependentUpon>
+    </Compile>
     <Compile Include="C__EFMigrationsHistory.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Dia.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="GrupoEjercicios.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ModelBDD.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModelBDD.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ModelBDD.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModelBDD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ModelBDD.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModelBDD.edmx</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Planes.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rol.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Suscripcion.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Usuario.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Wod.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="WodXEjercicio.cs">
-      <DependentUpon>ModelBDD.tt</DependentUpon>
+      <DependentUpon>BaseDatos.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="ModelBDD.edmx">
+    <EntityDeploy Include="BaseDatos.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModelBDD.Designer.cs</LastGenOutput>
+      <LastGenOutput>BaseDatos.Designer.cs</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="ModelBDD.edmx.diagram">
-      <DependentUpon>ModelBDD.edmx</DependentUpon>
+    <None Include="BaseDatos.edmx.diagram">
+      <DependentUpon>BaseDatos.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModelBDD.Context.tt">
+    <Content Include="BaseDatos.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModelBDD.Context.cs</LastGenOutput>
-      <DependentUpon>ModelBDD.edmx</DependentUpon>
+      <LastGenOutput>BaseDatos.Context.cs</LastGenOutput>
+      <DependentUpon>BaseDatos.edmx</DependentUpon>
     </Content>
-    <Content Include="ModelBDD.tt">
+    <Content Include="BaseDatos.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelBDD.edmx</DependentUpon>
-      <LastGenOutput>ModelBDD.cs</LastGenOutput>
+      <DependentUpon>BaseDatos.edmx</DependentUpon>
+      <LastGenOutput>BaseDatos.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

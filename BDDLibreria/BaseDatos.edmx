@@ -16,8 +16,10 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="PlanId" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlanId" Type="int" />
+          <Property Name="NumDias" Type="nchar" MaxLength="10" />
+          <Property Name="IsCompleted" Type="bit" />
         </EntityType>
         <EntityType Name="GrupoEjercicios">
           <Key>
@@ -81,9 +83,10 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
           <Property Name="DiaId" Type="int" />
+          <Property Name="IsCompleted" Type="bit" />
         </EntityType>
         <EntityType Name="WodXEjercicio">
           <Key>
@@ -91,10 +94,10 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="WodId" Type="int" />
-          <Property Name="GrupoEjercicioId" Type="int" />
+          <Property Name="GrupoEjerciciosId" Type="int" />
         </EntityType>
         <Association Name="FK_Dia_Planes">
-          <End Role="Planes" Type="Self.Planes" Multiplicity="1" />
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1" />
           <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Planes">
@@ -169,7 +172,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WodXEjercicio_GrupoEjercicios">
+        <Association Name="FK_Wod_Dia_Cascade">
+          <End Role="Dia" Type="Self.Dia" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Wod" Type="Self.Wod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wod">
+              <PropertyRef Name="DiaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_GrupoEjercicios1">
           <End Role="GrupoEjercicios" Type="Self.GrupoEjercicios" Multiplicity="0..1" />
           <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
           <ReferentialConstraint>
@@ -177,7 +194,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="GrupoEjercicioId" />
+              <PropertyRef Name="GrupoEjerciciosId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -190,6 +207,34 @@
             </Principal>
             <Dependent Role="WodXEjercicio">
               <PropertyRef Name="WodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_Wod_Cascade">
+          <End Role="Wod" Type="Self.Wod" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WodXEjercicio">
+              <PropertyRef Name="WodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FX_Dia_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dia">
+              <PropertyRef Name="PlanId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -228,13 +273,25 @@
             <End Role="Dia" EntitySet="Dia" />
             <End Role="Wod" EntitySet="Wod" />
           </AssociationSet>
-          <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios" Association="Self.FK_WodXEjercicio_GrupoEjercicios">
+          <AssociationSet Name="FK_Wod_Dia_Cascade" Association="Self.FK_Wod_Dia_Cascade">
+            <End Role="Dia" EntitySet="Dia" />
+            <End Role="Wod" EntitySet="Wod" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios1" Association="Self.FK_WodXEjercicio_GrupoEjercicios1">
             <End Role="GrupoEjercicios" EntitySet="GrupoEjercicios" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
           </AssociationSet>
           <AssociationSet Name="FK_WodXEjercicio_Wod" Association="Self.FK_WodXEjercicio_Wod">
             <End Role="Wod" EntitySet="Wod" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_Wod_Cascade" Association="Self.FK_WodXEjercicio_Wod_Cascade">
+            <End Role="Wod" EntitySet="Wod" />
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
+          <AssociationSet Name="FX_Dia_Planes" Association="Self.FX_Dia_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Dia" EntitySet="Dia" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -253,10 +310,14 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="PlanId" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlanId" Type="Int32" />
+          <Property Name="NumDias" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="IsCompleted" Type="Boolean" />
           <NavigationProperty Name="Planes" Relationship="Self.FK_Dia_Planes" FromRole="Dia" ToRole="Planes" />
           <NavigationProperty Name="Wod" Relationship="Self.FK_Wod_Dia" FromRole="Dia" ToRole="Wod" />
+          <NavigationProperty Name="Wod1" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Dia" ToRole="Wod" />
+          <NavigationProperty Name="Planes1" Relationship="Self.FX_Dia_Planes" FromRole="Dia" ToRole="Planes" />
         </EntityType>
         <EntityType Name="GrupoEjercicios">
           <Key>
@@ -267,7 +328,7 @@
           <Property Name="Puntuacion" Type="Int32" />
           <Property Name="Instrucciones" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="URLVideo" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios" FromRole="GrupoEjercicios" ToRole="WodXEjercicio" />
+          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios1" FromRole="GrupoEjercicios" ToRole="WodXEjercicio" />
         </EntityType>
         <EntityType Name="Planes">
           <Key>
@@ -280,6 +341,7 @@
           <Property Name="UsuarioId" Type="Int32" Nullable="false" />
           <Property Name="Foto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Dia" Relationship="Self.FK_Dia_Planes" FromRole="Planes" ToRole="Dia" />
+          <NavigationProperty Name="Dia1" Relationship="Self.FX_Dia_Planes" FromRole="Planes" ToRole="Dia" />
           <NavigationProperty Name="Usuario" Relationship="Self.FK_Planes_Usuario_UsuarioId" FromRole="Planes" ToRole="Usuario" />
           <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Suscripcion_Planes" FromRole="Planes" ToRole="Suscripcion" />
         </EntityType>
@@ -330,11 +392,14 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DiaId" Type="Int32" />
+          <Property Name="IsCompleted" Type="Boolean" />
           <NavigationProperty Name="Dia" Relationship="Self.FK_Wod_Dia" FromRole="Wod" ToRole="Dia" />
+          <NavigationProperty Name="Dia1" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Wod" ToRole="Dia" />
           <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_Wod" FromRole="Wod" ToRole="WodXEjercicio" />
+          <NavigationProperty Name="WodXEjercicio1" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="Wod" ToRole="WodXEjercicio" />
         </EntityType>
         <EntityType Name="WodXEjercicio">
           <Key>
@@ -342,12 +407,13 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="WodId" Type="Int32" />
-          <Property Name="GrupoEjercicioId" Type="Int32" />
-          <NavigationProperty Name="GrupoEjercicios" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios" FromRole="WodXEjercicio" ToRole="GrupoEjercicios" />
+          <Property Name="GrupoEjerciciosId" Type="Int32" />
+          <NavigationProperty Name="GrupoEjercicios" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios1" FromRole="WodXEjercicio" ToRole="GrupoEjercicios" />
           <NavigationProperty Name="Wod" Relationship="Self.FK_WodXEjercicio_Wod" FromRole="WodXEjercicio" ToRole="Wod" />
+          <NavigationProperty Name="Wod1" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="WodXEjercicio" ToRole="Wod" />
         </EntityType>
         <Association Name="FK_Dia_Planes">
-          <End Role="Planes" Type="Self.Planes" Multiplicity="1" />
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1" />
           <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Planes">
@@ -370,7 +436,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WodXEjercicio_GrupoEjercicios">
+        <Association Name="FK_Wod_Dia_Cascade">
+          <End Role="Dia" Type="Self.Dia" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Wod" Type="Self.Wod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wod">
+              <PropertyRef Name="DiaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FX_Dia_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dia">
+              <PropertyRef Name="PlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_GrupoEjercicios1">
           <End Role="GrupoEjercicios" Type="Self.GrupoEjercicios" Multiplicity="0..1" />
           <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
           <ReferentialConstraint>
@@ -378,7 +472,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="GrupoEjercicioId" />
+              <PropertyRef Name="GrupoEjerciciosId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -446,6 +540,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WodXEjercicio_Wod_Cascade">
+          <End Role="Wod" Type="Self.Wod" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WodXEjercicio">
+              <PropertyRef Name="WodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="CoachBusterEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="C__EFMigrationsHistory" EntityType="Self.C__EFMigrationsHistory" />
           <EntitySet Name="Dia" EntityType="Self.Dia" />
@@ -465,7 +573,15 @@
             <End Role="Dia" EntitySet="Dia" />
             <End Role="Wod" EntitySet="Wod" />
           </AssociationSet>
-          <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios" Association="Self.FK_WodXEjercicio_GrupoEjercicios">
+          <AssociationSet Name="FK_Wod_Dia_Cascade" Association="Self.FK_Wod_Dia_Cascade">
+            <End Role="Dia" EntitySet="Dia" />
+            <End Role="Wod" EntitySet="Wod" />
+          </AssociationSet>
+          <AssociationSet Name="FX_Dia_Planes" Association="Self.FX_Dia_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Dia" EntitySet="Dia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios1" Association="Self.FK_WodXEjercicio_GrupoEjercicios1">
             <End Role="GrupoEjercicios" EntitySet="GrupoEjercicios" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
           </AssociationSet>
@@ -489,6 +605,10 @@
             <End Role="Wod" EntitySet="Wod" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
           </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_Wod_Cascade" Association="Self.FK_WodXEjercicio_Wod_Cascade">
+            <End Role="Wod" EntitySet="Wod" />
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -509,6 +629,8 @@
               <MappingFragment StoreEntitySet="Dia">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PlanId" ColumnName="PlanId" />
+                <ScalarProperty Name="NumDias" ColumnName="NumDias" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -582,6 +704,7 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="DiaId" ColumnName="DiaId" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -590,7 +713,7 @@
               <MappingFragment StoreEntitySet="WodXEjercicio">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="WodId" ColumnName="WodId" />
-                <ScalarProperty Name="GrupoEjercicioId" ColumnName="GrupoEjercicioId" />
+                <ScalarProperty Name="GrupoEjerciciosId" ColumnName="GrupoEjerciciosId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

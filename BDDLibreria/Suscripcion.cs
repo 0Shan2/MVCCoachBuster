@@ -7,14 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibreriaBDD
+namespace BDDLibreria
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class C__EFMigrationsHistory
+    public partial class Suscripcion
     {
-        public string MigrationId { get; set; }
-        public string ProductVersion { get; set; }
+        public int Id { get; set; }
+        public Nullable<int> usuarioId { get; set; }
+        public Nullable<int> planId { get; set; }
+    
+        public virtual Planes Planes { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }
