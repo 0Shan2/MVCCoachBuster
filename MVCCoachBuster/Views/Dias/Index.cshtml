@@ -4,3 +4,17 @@
     ViewData["Title"] = "Index";
 }
 
+<h1>Días</h1>
+
+
+
+<ul class="list-group">
+        @foreach (var item in Model)
+        {
+
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        @Html.DisplayFor(modelItem => item.NumDias)
+            <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+    </li>
+    }
+</ul>
