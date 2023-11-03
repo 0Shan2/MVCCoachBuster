@@ -43,15 +43,47 @@ namespace MVCCoachBuster.Controllers
 
             // Configura ViewBag.Wod con la lista de Wods
             ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
-            //aquiiii agregado
+
+            // Calcula el progreso en función de los datos en la base de datos
+            var progreso = (dias.Count(d => d.IsCompleted) * 100.0) / dias.Count;
+            var diasCompletados = dias.Count(d => d.IsCompleted);
+
             ViewBag.Dias = dias;
+            ViewBag.AriaValueNow = diasCompletados;
+            ViewBag.Progreso = (diasCompletados * 100) / ViewBag.Dias.Count; // Calcula el porcentaje de progreso
+
+            /*
             foreach (var dia in dias)
             {
-                dia.IsCompleted = dia.IsCompleted ?? false;
+                dia.IsCompleted = false; //Asignamos falso por defecto
             }
+            */
 
             var coachBusterContext = _context.Dia.Include(d => d.Plan).Where(d => d.PlanId == planId);
             return View(await coachBusterContext.ToListAsync());
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        [HttpPost]
+        public IActionResult MarcarComoCompletado(int diaId, bool completo)
+        {
+            try
+            {
+                //Recuperamos el día
+                var dia = _context.Dia.FirstOrDefault(d => d.Id == diaId);
+                if (dia != null)
+                {
+                    dia.IsCompleted = completo; //Actualiza el estado de isCompleted
+                    _context.SaveChanges();
+                    return Json(new { success = true, isCompleted = dia.IsCompleted });
+                }
+                _servicioNotificacion.Information("No se ha encontrado el día");
+            }
+            catch (Exception)
+            {
+                _servicioNotificacion.Warning("Ha ocurrido un error.");
+            }
+            return Json(new { success = false });
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -195,26 +227,6 @@ namespace MVCCoachBuster.Controllers
         private bool DiaExists(int id)
         {
             return _context.Dia.Any(e => e.Id == id);
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        [HttpPost]
-        public IActionResult MarcarComoCompletado (int diaId, bool completo) {
-            try
-            {
-                //Recuperamos el día
-                var dia = _context.Dia.FirstOrDefault(d => d.Id == diaId);
-                if (dia != null)
-                {
-                    dia.IsCompleted = completo; //Actualiza el estado de isCompleted
-                    _context.SaveChanges(); 
-                }
-                _servicioNotificacion.Information("No se ha encontrado el día");
-            } catch (Exception ex)
-            {
-                _servicioNotificacion.Warning("Ha ocurrido un error.");
-            }
-            return View();
         }
 
     }

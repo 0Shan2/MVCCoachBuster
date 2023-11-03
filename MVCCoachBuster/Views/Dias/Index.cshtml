@@ -1,20 +1,53 @@
 ﻿@model IEnumerable<MVCCoachBuster.Models.Dia>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de días del plan: " ;
 }
 
-<h1>Días</h1>
+<h4>@ViewData["Title"]</h4>
+<hr />
 
-
+<br />
+<div class="progress" style="height: 20px;">
+   <div class="progress-bar bg-success" role="progressbar" style="width: @(ViewBag.Progreso)%" aria-valuenow="@(ViewBag.AriaValueNow)" aria-valuemin="0" aria-valuemax="@(ViewBag.Dias.Count)"></div>
+</div>
+<br />
 
 <ul class="list-group">
-        @foreach (var item in Model)
-        {
-
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        @Html.DisplayFor(modelItem => item.NumDias)
-            <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
-    </li>
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            @Html.DisplayFor(modelItem => item.NumDias)
+            <input class="form-check-input me-1" type="checkbox" id="check-@item.Id" @(item.IsCompleted ? "checked" : "") onchange="marcarDiaComoCompletado(@item.Id, this.checked)">
+        </li>
     }
 </ul>
+
+<script>
+    function marcarDiaComoCompletado(diaId, completado) {
+        $.ajax({
+            url: '@Url.Action("MarcarComoCompletado", "Dias")',
+            type: 'POST',
+            data: { diaId: diaId, completo: completado },
+            success: function (data) {
+                if (data.success) {
+                    // Actualiza el estado del día en la vista
+                    var checkbox = $("#check-" + diaId);
+                    checkbox.prop("checked", data.isCompleted);
+
+                    // Actualiza la barra de progreso
+                    var progressBar = $(".progress-bar");
+                    var diasCompletados = $("input:checked").length;
+                    var totalDias = $("input").length;
+                    var progreso = (diasCompletados / totalDias) * 100;
+                    progressBar.css("width", progreso + "%");
+                    progressBar.attr("aria-valuenow", diasCompletados);
+
+                    // Realizar acciones adicionales si es necesario
+                } else {
+                    // Maneja errores o notifica al usuario
+                }
+            }
+        });
+    }
+</script>
