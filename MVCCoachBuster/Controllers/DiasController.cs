@@ -58,7 +58,7 @@ namespace MVCCoachBuster.Controllers
         // GET: Dias/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Dia == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -66,6 +66,19 @@ namespace MVCCoachBuster.Controllers
             var dia = await _context.Dia
                 .Include(d => d.Plan)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (dia == null)
+            {
+                return NotFound();
+            }
+
+            // Carga la relación entre Día, Wod, WodXEjercicio y GrupoEjercicios
+            dia = await _context.Dia
+                .Include(d => d.Wod)
+                    .ThenInclude(w => w.WodXEjercicio)
+                        .ThenInclude(we => we.GrupoEjercicios)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (dia == null)
             {
                 return NotFound();
