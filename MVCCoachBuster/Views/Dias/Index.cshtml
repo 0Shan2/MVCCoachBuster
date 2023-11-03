@@ -17,7 +17,9 @@
     @foreach (var item in Model)
     {
         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a asp-controller="Dias" asp-action="Details" asp-route-id="@item.Id">
             @Html.DisplayFor(modelItem => item.NumDias)
+                </a>
             <input class="form-check-input me-1" type="checkbox" id="check-@item.Id" @(item.IsCompleted ? "checked" : "") onchange="marcarDiaComoCompletado(@item.Id, this.checked)">
         </li>
     }
