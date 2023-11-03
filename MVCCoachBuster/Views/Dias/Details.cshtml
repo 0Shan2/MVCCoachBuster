@@ -21,15 +21,74 @@
                         <li>
                       
                             @wodXEjercicio.GrupoEjercicios.Nombre
+                            <a href="javascript:void(0);" onclick="openModal('instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id')">
+                                <i class="fas fa-sticky-note fa-xs"></i>
+                            </a>
+                            <a href="@wodXEjercicio.GrupoEjercicios.URLVideo" target="_blank">
+                                <i class="fas fa-video fa-xs"></i>
+                            </a>
                         </li>
+               
+                   
                     }
                 </ul>
             </div>
+
+
   
         </div>
     }
 </div>
 
+
+@foreach (var wod in Model.Wod)
+{
+    @foreach (var wodXEjercicio in wod.WodXEjercicio)
+    {
+        <div id="instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id" class="modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Instrucciones</h5>
+                        <button type="button" class="btn-close" onclick="closeModal('instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id')"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Instrucciones: @wodXEjercicio.GrupoEjercicios.Instrucciones</p>
+                        <p>Puntaje: @wodXEjercicio.GrupoEjercicios.Puntuacion</p>
+                        <p>Video: @wodXEjercicio.GrupoEjercicios.URLVideo</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id')">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
 <a onclick="window.history.back();" class="btn btn-secondary">
     <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Regresar
 </a>
+<script>
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+
+        // Agregar un manejador de eventos para cerrar el modal al hacer clic fuera de él
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal(modalId);
+            }
+        };
+    }
+
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+
+        // Eliminar el manejador de eventos para evitar cierres no deseados
+        window.onclick = null;
+    }
+
+</script>
