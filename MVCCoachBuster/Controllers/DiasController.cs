@@ -20,9 +20,31 @@ namespace MVCCoachBuster.Controllers
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int planId)
         {
-            var coachBusterContext = _context.Dia.Include(d => d.Plan);
+
+            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
+            // Asigna el valor de planId a ViewBag para que se use en la vista
+            ViewBag.PlanId = planId;
+            // Recupera la lista de días asociados a un plan específico
+            var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
+
+            // Cargar los Wods asociados a los días
+            foreach (var dia in dias)
+            {
+                dia.Wod = _context.Wod.Where(w => w.DiaId == dia.Id).ToList();
+            }
+
+            // Configura ViewBag.Wod con la lista de Wods
+            ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
+            //aquiiii agregado
+            ViewBag.Dias = dias;
+            foreach (var dia in dias)
+            {
+                dia.IsCompleted = dia.IsCompleted ?? false;
+            }
+
+            var coachBusterContext = _context.Dia.Include(d => d.Plan).Where(d => d.PlanId == planId);
             return View(await coachBusterContext.ToListAsync());
         }
 

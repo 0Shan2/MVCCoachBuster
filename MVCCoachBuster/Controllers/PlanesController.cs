@@ -82,7 +82,7 @@ namespace MVCCoachBuster.Controllers
 
 
             // Redirige al usuario a la vista de "Create" en el controlador "Dias" y pasa el ID del plan como parámetro
-            return RedirectToAction("Create", "Dias", new { planId = id });
+            return RedirectToAction("Index", "Dias", new { planId = id });
 
 
 

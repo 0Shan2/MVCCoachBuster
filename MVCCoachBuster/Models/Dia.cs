@@ -13,7 +13,7 @@ namespace MVCCoachBuster.Models
         public int PlanId { get; set; }
         public Plan Plan { get; set; }
         public string NumDias { get; set; }
-        public bool IsCompleted { get; set; }
+        public bool? IsCompleted { get; set; }
         public ICollection<Wod> Wod { get; set; }
 
     }
