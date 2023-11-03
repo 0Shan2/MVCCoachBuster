@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,15 @@ namespace MVCCoachBuster.Controllers
     public class DiasController : Controller
     {
         private readonly CoachBusterContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly INotyfService _servicioNotificacion;
 
-        public DiasController(CoachBusterContext context)
+        public DiasController(CoachBusterContext context, IConfiguration configuration,
+            INotyfService servicioNotificacion)
         {
             _context = context;
+            _configuration = configuration;
+            _servicioNotificacion = servicioNotificacion;
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias
@@ -115,7 +121,6 @@ namespace MVCCoachBuster.Controllers
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -164,9 +169,31 @@ namespace MVCCoachBuster.Controllers
             //return RedirectToAction(nameof(Index));
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------------------
         private bool DiaExists(int id)
         {
             return _context.Dia.Any(e => e.Id == id);
         }
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        [HttpPost]
+        public IActionResult MarcarComoCompletado (int diaId, bool completo) {
+            try
+            {
+                //Recuperamos el día
+                var dia = _context.Dia.FirstOrDefault(d => d.Id == diaId);
+                if (dia != null)
+                {
+                    dia.IsCompleted = completo; //Actualiza el estado de isCompleted
+                    _context.SaveChanges(); 
+                }
+                _servicioNotificacion.Information("No se ha encontrado el día");
+            } catch (Exception ex)
+            {
+                _servicioNotificacion.Warning("Ha ocurrido un error.");
+            }
+            return View();
+        }
+
     }
 }
