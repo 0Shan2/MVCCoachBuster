@@ -131,17 +131,24 @@ namespace MVCCoachBuster.Controllers
         // GET: Wods/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Wod == null)
             {
                 return NotFound();
             }
 
-            var wod = await _context.Wod.FindAsync(id);
+            var wod = await _context.Wod
+                .Include(w => w.WodXEjercicio) // Cargamos la lista de WodXEjercicio
+                .FirstOrDefaultAsync(w => w.Id == id);
             if (wod == null)
             {
                 return NotFound();
             }
             ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            // Cargar la lista de grupos de ejercicios y asignarla a ViewBag
+            ViewBag.GrupoEjercicios = await _context.GrupoEjercicios.ToListAsync();
+
             return View(wod);
         }
 
@@ -150,7 +157,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,DiaId")] Wod wod)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (id != wod.Id)
             {
@@ -161,8 +168,43 @@ namespace MVCCoachBuster.Controllers
             {
                 try
                 {
-                    _context.Update(wod);
+                    // Cargamos el Wod existente con sus relaciones
+                    var existingWod = await _context.Wod
+                        .Include(w => w.WodXEjercicio)
+                        .FirstOrDefaultAsync(w => w.Id == id);
+
+                    if (existingWod == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Actualizamos las propiedades del Wod
+                    existingWod.Nombre = wod.Nombre;
+                    existingWod.DiaId = wod.DiaId;
+
+                    // Eliminamos grupos de ejercicios deseleccionados
+                    var gruposAEliminar = existingWod.WodXEjercicio
+                        .Where(x => !selectedGrupoEjercicios.Contains(x.GrupoEjerciciosId))
+                        .ToList();
+                    _context.RemoveRange(gruposAEliminar);
+
+                    // Agregamos grupos de ejercicios seleccionados que no estén en la lista existente
+                    var gruposAAgregar = selectedGrupoEjercicios
+                        .Where(x => !existingWod.WodXEjercicio.Any(e => e.GrupoEjerciciosId == x))
+                        .Select(x => new WodXEjercicio { WodId = id, GrupoEjerciciosId = x })
+                        .ToList();
+                    _context.AddRange(gruposAAgregar);
+
+                    // Guardamos los cambios en la base de datos
                     await _context.SaveChangesAsync();
+
+                    // Redirige al usuario a la URL de referencia almacenada en TempData
+                    if (TempData.ContainsKey("UrlReferencia"))
+                    {
+                        string urlReferencia = TempData["UrlReferencia"].ToString();
+                        return Redirect(urlReferencia);
+                    }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

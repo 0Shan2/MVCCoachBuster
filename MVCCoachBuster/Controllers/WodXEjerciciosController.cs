@@ -32,7 +32,7 @@ namespace MVCCoachBuster.Controllers
         // GET: WodXEjercicios
         public async Task<IActionResult> Index(ListadoViewModel<WodXEjercicio> viewModel)
         {
-            var registrosPorPagina = _configuration.GetValue("registrosPorPagina", 5);
+           // var registrosPorPagina = _configuration.GetValue("registrosPorPagina", 5);
             var consulta = _context.WodXEjercicio
                 .Include(w => w.GrupoEjercicios)
                 .Include(w => w.Wod)
@@ -46,7 +46,7 @@ namespace MVCCoachBuster.Controllers
             
             viewModel.Total = consulta.Count();
             var numeroPagina = viewModel.Pagina ?? 1;
-            viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
+            viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, 10);
            
             return View(viewModel);
         }
