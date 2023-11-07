@@ -7,7 +7,7 @@
 <h4>@ViewData["Title"]</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -34,6 +34,9 @@
                         <div class="list-group-item">
                             <input type="checkbox" name="selectedGrupoEjercicios" value="@grupoEjercicio.Id" @(isSelected ? "checked" : "") />
                             @grupoEjercicio.Nombre
+                            <a href="javascript:void(0);" onclick="openModal('instruccionesModal-@grupoEjercicio.Id')">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </a>
                         </div>
                     </div>
                 }
@@ -42,4 +45,55 @@
             <button type="submit" class="btn btn-primary">Actualizar Wod con GrupoEjercicios</button>
         </form>
     </div>
+
 </div>
+
+
+
+
+@foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
+{
+    <div id="instruccionesModal-@grupoEjercicio.Id" class="modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Instrucciones</h5>
+                    <button type="button" class="btn-close" onclick="closeModal('instruccionesModal-@grupoEjercicio.Id')"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Instrucciones: @grupoEjercicio.Instrucciones</p>
+                    <p>Puntaje: @grupoEjercicio.Puntuacion</p>
+                    <p>Video: @grupoEjercicio.URLVideo</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('instruccionesModal-@grupoEjercicio.Id')">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script>
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+
+        // Agregar un manejador de eventos para cerrar el modal al hacer clic fuera de él
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal(modalId);
+            }
+        };
+    }
+
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+
+        // Eliminar el manejador de eventos para evitar cierres no deseados
+        window.onclick = null;
+    }
+
+</script>
