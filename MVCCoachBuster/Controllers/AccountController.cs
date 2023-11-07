@@ -100,8 +100,9 @@ namespace MVCCoachBuster.Controllers
 
                     _logger.LogWarning("El usuario " + usuarioBd.Nombre + " ha accedido al sistema" +DateTime.Now.ToLongDateString());
 
-					return LocalRedirect(viewModel.ReturnUrl);
-				}
+					//return LocalRedirect(viewModel.ReturnUrl);
+                    return RedirectToAction("Index", "Home");
+                }
                 else
                 {
 					_servicioNotificacion.Warning("La contraseña es incorrecta");
