@@ -94,13 +94,16 @@ namespace MVCCoachBuster.Controllers
             _context.Add(suscripcion);
             await _context.SaveChangesAsync();
 
-            return View("SuscripcionExitosa");
+            return RedirectToAction("Index", "Home");
         }
+
 
         //---------------------------------------------------------------------------------------------------------------------------------------
         [Authorize]
         public async Task<IActionResult> ListaPlanesSuscritos(ListadoViewModel<Plan> viewModel)
         {
+            
+
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
 
             //Obtenemos el id del usuario
