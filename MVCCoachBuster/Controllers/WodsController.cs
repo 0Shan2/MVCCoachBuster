@@ -271,6 +271,7 @@ namespace MVCCoachBuster.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         private bool WodExists(int id)
         {
           return _context.Wod.Any(e => e.Id == id);

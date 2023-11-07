@@ -50,7 +50,16 @@ namespace MVCCoachBuster.Controllers
 
             ViewBag.Dias = dias;
             ViewBag.AriaValueNow = diasCompletados;
-            ViewBag.Progreso = (diasCompletados * 100) / ViewBag.Dias.Count; // Calcula el porcentaje de progreso
+            if (ViewBag.Dias.Count > 0)
+            {
+                ViewBag.Progreso = (diasCompletados * 100) / ViewBag.Dias.Count;
+            }
+            else
+            {
+                // Aquí puedes manejar el caso en el que no hay días
+                // Por ejemplo, asignar un valor predeterminado o mostrar un mensaje de error
+                ViewBag.Progreso = 0; // Valor predeterminado
+            }
 
             /*
             foreach (var dia in dias)
@@ -115,9 +124,61 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
+            // Calcula el progreso en función de los WOD completados en este día
+            var wods = dia.Wod;
+            var wodsCompletados = wods.Count(w => w.IsCompleted);
+            if (wods.Count > 0)
+            {
+                ViewBag.WodProgreso = (wodsCompletados * 100) / wods.Count;
+            }
+            else
+            {
+                ViewBag.WodProgreso = 0; // Otra opción: manejar el caso cuando no hay WODs
+            }
 
             return View(dia);
         }
+        //------------------------------------------------------------------------------------------------------------------------------------------------
+        [HttpPost]
+        public IActionResult MarcarWodComoCompletadoWod(int wodId, bool completo)
+        {
+            try
+            {
+                //recuperamos el wod
+                var wod = _context.Wod
+                           .Include(w => w.Dia)
+                           .ThenInclude(d => d.Plan)
+                           .FirstOrDefault(w => w.Id == wodId);
+
+
+                if (wod != null)
+                {
+                    wod.IsCompleted = completo; // Actualiza el estado de isCompleted del WOD
+                    _context.SaveChanges();
+
+                    // Actualiza el estado del día asociado
+                    if (wod.Dia != null)
+                    {
+                        wod.Dia.IsCompleted = wod.Dia.Wod.All(d => d.IsCompleted);
+                        _context.SaveChanges();
+
+                        // Calcula el progreso del día
+                        int totalDias = wod.Dia.Plan.Dia.Count;
+                        int diasCompletados = wod.Dia.Plan.Dia.Count(d => d.IsCompleted);
+                        int diaProgreso = (diasCompletados * 100) / totalDias;
+
+                        return Json(new { success = true, isCompleted = wod.IsCompleted, diaId = wod.Dia.Id, diaIsCompleted = wod.Dia.IsCompleted, diaProgreso });
+                    }
+                }
+                _servicioNotificacion.Information("No se ha encontrado el WOD");
+            }
+            catch (Exception)
+            {
+                _servicioNotificacion.Warning("Ha ocurrido un error.");
+            }
+            return Json(new { success = false });
+        }
+
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Create
@@ -130,7 +191,7 @@ namespace MVCCoachBuster.Controllers
             ViewBag.PlanId = planId;
             // Recupera la lista de días asociados a un plan específico
             var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
-            
+
             // Cargar los Wods asociados a los días
             foreach (var dia in dias)
             {
@@ -231,7 +292,7 @@ namespace MVCCoachBuster.Controllers
                 string urlReferencia = TempData["UrlReferencia"].ToString();
                 return Redirect(urlReferencia);
             }
-            return RedirectToAction("Create", "Dias", new { planId = id});
+            return RedirectToAction("Create", "Dias", new { planId = id });
 
             //return RedirectToAction(nameof(Index));
         }

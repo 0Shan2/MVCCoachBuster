@@ -7,11 +7,15 @@
 
 <h3>@Model.NumDias</h3>
 
+
 <div class="container">
+    <div class="progress" style="height: 20px;">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: @(ViewBag.WodProgreso)%" aria-valuenow="@(ViewBag.WodProgreso)" aria-valuemin="0" aria-valuemax="@(Model.Wod.Count)"></div>
+    </div>
     @foreach (var wod in Model.Wod)
     {
         <div class="card border-primary mb-4 ">
-            <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" value="" aria-label="...">
+            <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="wod-@wod.Id" @(wod.IsCompleted ? "checked" : "") onchange="marcarWodComoCompletado(@wod.Id, this.checked)">
             <div class="card-header">@wod.Nombre</div>
             <div class="card-body ">
            
@@ -67,6 +71,7 @@
 }
 
 
+
 <a onclick="window.history.back();" class="btn btn-secondary">
     <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Regresar
 </a>
@@ -90,5 +95,32 @@
         // Eliminar el manejador de eventos para evitar cierres no deseados
         window.onclick = null;
     }
+    function marcarWodComoCompletado(wodId, completado) {
+        $.ajax({
+            url: '@Url.Action("MarcarWodComoCompletadoWod", "Dias")',
+            type: 'POST',
+            data: { wodId: wodId, completo: completado },
+            success: function (data) {
+                if (data.success) {
+                    // Actualiza el estado del WOD en la vista
+                    var checkbox = $("#wod-" + wodId);
+                    checkbox.prop("checked", data.isCompleted);
+
+                    // Actualiza la barra de progreso de los WOD
+                    var progressBar = $(".progress-bar");
+                    var wodsCompletados = $("input:checked").length;
+                    var totalWods = $("input").length;
+                    var wodProgreso = (wodsCompletados * 100) / totalWods;
+                    progressBar.css("width", wodProgreso + "%");
+                    progressBar.attr("aria-valuenow", wodsCompletados);
+                } else {
+                    // Maneja errores o notifica al usuario
+                }
+            }
+        });
+    }
+
+
+
 
 </script>
