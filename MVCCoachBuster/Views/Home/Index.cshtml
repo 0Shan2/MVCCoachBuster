@@ -9,6 +9,7 @@
 @{
     
     ViewData["Title"] = "Planes";
+
 }
 
 <section>
@@ -34,12 +35,21 @@
                             <span style="font-weight: bold;">$</span>@item.Precio
                         </div>
 
-                        <form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
-                            <input type="hidden" name="idPlan" value="@item.Id" />
-                            <button type="submit" class="btn btn-light">
-                                <a class="nav-link text-grey fw-bold">Suscribirse</a>
-                            </button>
-                        </form>
+                        @if (Model.PlanesSuscritosIds != null && Model.PlanesSuscritosIds.Contains(item.Id))
+                        {
+                            <a asp-controller="Dias" asp-action="Index" asp-route-planId="@item.Id" class="btn btn-primary" style="width: 110px; padding: 10px 15px;">
+                                <i class="fa-solid fa-play"></i>&nbsp;Iniciar
+                            </a>
+                        }
+                        else
+                        {
+                            <form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
+                                <input type="hidden" name="idPlan" value="@item.Id" />
+                                <button type="submit" class="btn btn-light">
+                                    <a class="nav-link text-grey fw-bold">Suscribirse</a>
+                                </button>
+                            </form>
+                        }
                </div>
              </article>
           }
