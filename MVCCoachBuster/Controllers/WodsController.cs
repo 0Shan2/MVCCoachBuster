@@ -102,7 +102,7 @@ namespace MVCCoachBuster.Controllers
               
                 await _context.SaveChangesAsync();
 
-                int wodId = wod.Id; //Obtenermos la Id de nuevo Wod
+                int wodId = wod.Id; //Obtenemos la Id de nuevo Wod
 
                 //Recogemos un listado de GrupoEjercicios
                 if(selectedGrupoEjercicios != null)
@@ -227,6 +227,8 @@ namespace MVCCoachBuster.Controllers
         // GET: Wods/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            TempData["UrlReferencia"] = Request.Headers["Referer"].ToString();
+
             if (id == null || _context.Wod == null)
             {
                 return NotFound();
@@ -259,6 +261,13 @@ namespace MVCCoachBuster.Controllers
             }
             
             await _context.SaveChangesAsync();
+            // Redirige al usuario a la URL de referencia almacenada en TempData
+            if (TempData.ContainsKey("UrlReferencia"))
+            {
+                string urlReferencia = TempData["UrlReferencia"].ToString();
+                return Redirect(urlReferencia);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -55,6 +55,9 @@
                                             <li>@wod.Nombre
                                                 <a asp-controller="Wods" asp-action="Edit"  asp-route-id="@wod.Id">
                                                     <i class="fa-solid fa-square-pen"></i></a>
+                                                <a asp-controller="Wods" asp-action="Delete" asp-route-id="@wod.Id">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
                                             </li>
                                         }
                                     }

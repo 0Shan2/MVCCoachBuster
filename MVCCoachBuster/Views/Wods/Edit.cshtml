@@ -24,6 +24,9 @@
             <!-- Agregar selección de ejercicios -->
             <div class="form-group">
                 <label>Selecciona los ejercicios:</label>
+                <a class="btn btn-primary" asp-action="Create" asp-controller="GrupoEjercicios">
+                    <i class="fa-solid fa-add"></i>&nbsp;Añadir Ejercicio
+                </a>
                 @foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
                 {
                     var isSelected = Model.WodXEjercicio.Any(x => x.GrupoEjerciciosId == grupoEjercicio.Id);
