@@ -26,7 +26,7 @@ namespace MVCCoachBuster.Helpers
                 Nombre = usuarioDto.Nombre,
                 Correo = usuarioDto.Correo,
                 Telefono = usuarioDto.Telefono,
-                RolId = usuarioDto.RolId
+                IdRol = usuarioDto.IdRol
             };
             usuario.Contrasena = _passwordHasher.HashPassword(usuario, usuarioDto.Contrasena);
             return usuario;
@@ -40,7 +40,7 @@ namespace MVCCoachBuster.Helpers
                 Nombre = usuario.Nombre,
                 Correo = usuario.Correo,
                 Telefono = usuario.Telefono,
-                RolId = usuario.RolId,
+                IdRol = usuario.IdRol,
                 //Foto = usuario.Foto
             };
         }
@@ -53,7 +53,7 @@ namespace MVCCoachBuster.Helpers
                 Nombre = usuario.Nombre,
                 Correo = usuario.Correo,
                 Telefono = usuario.Telefono,
-                RolId = usuario.RolId,
+                IdRol = usuario.IdRol,
                 //Foto = usuario.Foto
            };
         }
@@ -63,7 +63,7 @@ namespace MVCCoachBuster.Helpers
             usuarioBd.Nombre = usuario.Nombre;
             usuarioBd.Correo = usuario.Correo;
             usuarioBd.Telefono = usuario.Telefono;
-            usuarioBd.RolId = usuario.RolId;
+            usuarioBd.IdRol = usuario.IdRol;
         }
 
         public CambiarContrasenaViewModel CrearCambiarContrasenaViewModel(Usuario usuario)

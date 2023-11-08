@@ -41,8 +41,8 @@ namespace MVCCoachBuster.Controllers
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Suscripcion
                 .OrderBy(m => m.Id)
-                .Include(m => m.usuario)
-                .Include(m => m.plan)
+                .Include(m => m.Usuario)
+                .Include(m => m.Plan)
                 .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
             viewModel.Total = consulta.Count();
@@ -74,7 +74,7 @@ namespace MVCCoachBuster.Controllers
 
             // Verificar si el usuario ya está suscrito al plan
             var existingSuscripcion = _context.Suscripcion
-                .FirstOrDefault(s => s.usuarioId == idUsu && s.planId == idPlan);
+                .FirstOrDefault(s => s.IdUsuario == idUsu && s.IdPlan == idPlan);
 
             if (existingSuscripcion != null)
             {
@@ -86,8 +86,8 @@ namespace MVCCoachBuster.Controllers
             //Creamos la entrada en la tabla de suscripciones
             var suscripcion = new Suscripcion
             {
-                planId = idPlan,
-                usuarioId = idUsu
+                IdPlan = idPlan,
+                IdUsuario = idUsu
             };
 
             //Guardamos la suscripcion en nuestra base
@@ -118,16 +118,16 @@ namespace MVCCoachBuster.Controllers
 
             foreach (var suscripcion in suscripciones)
             {
-                suscripcionesPorPlan[suscripcion.planId] = suscripcion.Id;
+                suscripcionesPorPlan[suscripcion.IdPlan] = suscripcion.Id;
             }
 
             // Recuperamos los IDs de los planes a los que está inscrito el usuario
-            List<int> idsPlanesInsc = suscripciones.Select(s => s.planId).ToList();
+            List<int> idsPlanesInsc = suscripciones.Select(s => s.IdPlan).ToList();
 
             //Recuperamos los objetos Plan a partir de los IDs
             var planesInscritos = _context.Planes
                 .Where(p => idsPlanesInsc.Contains(p.Id))
-                .Include(m => m.Entrenador)
+                .Include(m => m.UsuEntrenador)
                 .OrderBy(m => m.Nombre)
                 .AsNoTracking();
 
@@ -152,7 +152,7 @@ namespace MVCCoachBuster.Controllers
             // Aquí suponemos que tienes un DbSet<Suscripcion> en tu contexto de Entity Framework
             // y que la entidad Suscripcion tiene una propiedad PlanId para relacionar con los planes
             return _context.Suscripcion
-            .Where(s => s.usuarioId == usuarioId)
+            .Where(s => s.IdUsuario == usuarioId)
                 .ToList();
         }
         
@@ -203,9 +203,9 @@ namespace MVCCoachBuster.Controllers
 
             //Recuperamos las suscripciones para el plan
             var suscripciones = _context.Suscripcion
-                .Where(s => s.planId == planId)
-                 .Include(m => m.plan)
-                .Include(u => u.usuario) // Para incluir la información del usuario
+                .Where(s => s.IdPlan == planId)
+                 .Include(m => m.Plan)
+                .Include(u => u.Usuario) // Para incluir la información del usuario
                 .AsNoTracking();
 
             viewModel.Total = suscripciones.Count();

@@ -31,7 +31,7 @@ namespace MVCCoachBuster.ViewModels
         public string ConfirmarContrasena { get; set; }
 
         [Display(Name = "Rol")]
-        public int RolId { get; set; }
+        public int IdRol { get; set; }
 
     }
 }

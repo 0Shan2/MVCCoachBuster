@@ -94,7 +94,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Correo,Contrasena,ConfirmarContrasena,Telefono,RolId,Foto")] UsuarioRegistroDto usuario)
+        public async Task<IActionResult> Create([Bind("Nombre,Correo,Contrasena,ConfirmarContrasena,Telefono,IdRol,Foto")] UsuarioRegistroDto usuario)
         {
             AgregarUsuarioViewModel viewModel = new AgregarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
@@ -185,7 +185,7 @@ namespace MVCCoachBuster.Controllers
             EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
             viewModel.Usuario = _usuarioFactoria.CrearUsuarioEdicion(usuario);
-            viewModel.Usuario.RolId = usuario.RolId;
+            viewModel.Usuario.IdRol = usuario.IdRol;
             viewModel.Usuario.Foto = usuario.Foto;
             
             return View("Perfil",viewModel);
@@ -196,7 +196,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Perfil(int id, [Bind("Id,Nombre,Correo,Telefono,RolId, Foto")] UsuarioEdicionDto usuario)
+        public async Task<IActionResult> Perfil(int id, [Bind("Id,Nombre,Correo,Telefono,IdRol, Foto")] UsuarioEdicionDto usuario)
         {
             EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");
@@ -255,7 +255,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Correo,Telefono,RolId, Foto")] UsuarioEdicionDto usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Correo,Telefono,IdRol, Foto")] UsuarioEdicionDto usuario)
         {
             EditarUsuarioViewModel viewModel = new EditarUsuarioViewModel();
             viewModel.ListadoRoles = new SelectList(_context.Roles.AsNoTracking(), "Id", "Nombre");

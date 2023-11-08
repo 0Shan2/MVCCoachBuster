@@ -86,7 +86,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WodId,GrupoEjerciciosId")] WodXEjercicio wodXEjercicio)
+        public async Task<IActionResult> Create([Bind("Id,IdWod,IdGrupoEjercicios")] WodXEjercicio wodXEjercicio)
         {
             if (ModelState.IsValid)
             {
@@ -94,8 +94,8 @@ namespace MVCCoachBuster.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GrupoEjerciciosId"] = new SelectList(_context.GrupoEjercicios, "Id", "Id", wodXEjercicio.GrupoEjerciciosId);
-            ViewData["WodId"] = new SelectList(_context.Wod, "Id", "Id", wodXEjercicio.WodId);
+            ViewData["GrupoEjerciciosId"] = new SelectList(_context.GrupoEjercicios, "Id", "Id", wodXEjercicio.IdGrupoEjercicios);
+            ViewData["WodId"] = new SelectList(_context.Wod, "Id", "Id", wodXEjercicio.IdWod);
             return View(wodXEjercicio);
         }
 
@@ -113,8 +113,8 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-            ViewData["GrupoEjerciciosId"] = new SelectList(_context.GrupoEjercicios, "Id", "Id", wodXEjercicio.GrupoEjerciciosId);
-            ViewData["WodId"] = new SelectList(_context.Wod, "Id", "Id", wodXEjercicio.WodId);
+            ViewData["GrupoEjerciciosId"] = new SelectList(_context.GrupoEjercicios, "Id", "Id", wodXEjercicio.IdGrupoEjercicios);
+            ViewData["WodId"] = new SelectList(_context.Wod, "Id", "Id", wodXEjercicio.IdWod);
             return View(wodXEjercicio);
         }
 
@@ -123,7 +123,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,WodId,GrupoEjerciciosId")] WodXEjercicio wodXEjercicio)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IdWod,IdGrupoEjercicios")] WodXEjercicio wodXEjercicio)
         {
             if (id != wodXEjercicio.Id)
             {
@@ -150,8 +150,8 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GrupoEjerciciosId"] = new SelectList(_context.GrupoEjercicios, "Id", "Id", wodXEjercicio.GrupoEjerciciosId);
-            ViewData["WodId"] = new SelectList(_context.Wod, "Id", "Id", wodXEjercicio.WodId);
+            ViewData["GrupoEjerciciosId"] = new SelectList(_context.GrupoEjercicios, "Id", "Id", wodXEjercicio.IdGrupoEjercicios);
+            ViewData["WodId"] = new SelectList(_context.Wod, "Id", "Id", wodXEjercicio.IdWod);
             return View(wodXEjercicio);
         }
 

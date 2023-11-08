@@ -7,8 +7,8 @@
 
 @{
     var suscripciones = Model.Registros;
-    var coachTeam = suscripciones.Where(s => s.usuario.RolId == 2).ToList();
-    var userTeam = suscripciones.Where(s => s.usuario.RolId == 3).ToList();
+    var coachTeam = suscripciones.Where(s => s.Usuario.IdRol == 2).ToList();
+    var userTeam = suscripciones.Where(s => s.Usuario.IdRol == 3).ToList();
 }
 
 <h6 class="bg-light p-2 border-top border-bottom">Coach team</h6>
@@ -17,10 +17,10 @@
     {
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <img src="/images/@(suscripcion.usuario.Foto)" alt="Foto de perfil" style="width: 45px; height: 45px" class="rounded-circle" />
+                <img src="/images/@(suscripcion.Usuario.Foto)" alt="Foto de perfil" style="width: 45px; height: 45px" class="rounded-circle" />
                 <div class="ms-3">
-                    <p class="fw-bold mb-1">@suscripcion.usuario.Nombre</p>
-                    <p class="text-muted mb-0">@suscripcion.usuario.Correo</p>
+                    <p class="fw-bold mb-1">@suscripcion.Usuario.Nombre</p>
+                    <p class="text-muted mb-0">@suscripcion.Usuario.Correo</p>
                 </div>
             </div>
         </li>
@@ -33,10 +33,10 @@
     {
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <img src="/images/@(suscripcion.usuario.Foto)" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                <img src="/images/@(suscripcion.Usuario.Foto)" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
                 <div class="ms-3">
-                    <p class="fw-bold mb-1">@suscripcion.usuario.Nombre</p>
-                    <p class="text-muted mb-0">@suscripcion.usuario.Correo</p>
+                    <p class="fw-bold mb-1">@suscripcion.Usuario.Nombre</p>
+                    <p class="text-muted mb-0">@suscripcion.Usuario.Correo</p>
                 </div>
             </div>
         </li>

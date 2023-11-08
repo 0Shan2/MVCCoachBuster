@@ -18,7 +18,7 @@
             <input type="hidden" name="planId" value="@ViewBag.planId" />
             <div class="form-group">
                 <!-- <label asp-for="DiaId" type="hidden" class="control-label"></label>-->
-                <input type="hidden"  asp-for="DiaId" class="form-control" readonly /> <!-- Mostrar el valor de DiaId como solo lectura -->
+                <input type="hidden"  asp-for="IdDia" class="form-control" readonly /> <!-- Mostrar el valor de DiaId como solo lectura -->
             </div>
 
             <!-- Agregar selección de ejercicios -->
@@ -60,7 +60,6 @@
                 </div>
                 <div class="modal-body">
                     <p>Instrucciones: @grupoEjercicio.Instrucciones</p>
-                    <p>Puntaje: @grupoEjercicio.Puntuacion</p>
                     <p>Video: @grupoEjercicio.URLVideo</p>
                 </div>
                 <div class="modal-footer">

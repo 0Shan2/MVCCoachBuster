@@ -14,10 +14,10 @@
     <thead class="bg-secondary text-white ">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Registros[0].usuarioId)
+                @Html.DisplayNameFor(model => model.Registros[0].IdUsuario)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Registros[0].planId)
+                @Html.DisplayNameFor(model => model.Registros[0].IdPlan)
             </th>
             <th> </th>
         </tr>
@@ -26,10 +26,10 @@
 @foreach (var item in Model.Registros) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.usuario.Nombre)
+                @Html.DisplayFor(modelItem => item.Usuario.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.plan.Nombre)
+                @Html.DisplayFor(modelItem => item.Plan.Nombre)
             </td>
             <td>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">

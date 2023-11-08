@@ -93,11 +93,11 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int diaId,int planId, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
+        public async Task<IActionResult> Create(int diaId,int planId, [Bind("Id,Nombre,IdDia")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (ModelState.IsValid)
             {
-                wod.DiaId = diaId; //Asignamos el valor de diaId al nuevo Wod
+                wod.IdDia = diaId; //Asignamos el valor de diaId al nuevo Wod
                 _context.Add(wod);
               
                 await _context.SaveChangesAsync();
@@ -111,9 +111,9 @@ namespace MVCCoachBuster.Controllers
                     {
                         var wodxEjercicio = new WodXEjercicio
                         {
-                            WodId = wod.Id,
+                            IdWod = wod.Id,
 
-                            GrupoEjerciciosId = grupoEjercicioId,
+                            IdGrupoEjercicios = grupoEjercicioId,
                         };
                         _context.Add(wodxEjercicio);
                     }
@@ -145,7 +145,7 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.IdDia);
             // Cargar la lista de grupos de ejercicios y asignarla a ViewBag
             ViewBag.GrupoEjercicios = await _context.GrupoEjercicios.ToListAsync();
 
@@ -157,7 +157,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,DiaId")] Wod wod, List<int> selectedGrupoEjercicios)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,IdDia")] Wod wod, List<int> selectedGrupoEjercicios)
         {
             if (id != wod.Id)
             {
@@ -180,18 +180,18 @@ namespace MVCCoachBuster.Controllers
 
                     // Actualizamos las propiedades del Wod
                     existingWod.Nombre = wod.Nombre;
-                    existingWod.DiaId = wod.DiaId;
+                    existingWod.IdDia = wod.IdDia;
 
                     // Eliminamos grupos de ejercicios deseleccionados
                     var gruposAEliminar = existingWod.WodXEjercicio
-                        .Where(x => !selectedGrupoEjercicios.Contains(x.GrupoEjerciciosId))
+                        .Where(x => !selectedGrupoEjercicios.Contains(x.IdGrupoEjercicios))
                         .ToList();
                     _context.RemoveRange(gruposAEliminar);
 
                     // Agregamos grupos de ejercicios seleccionados que no estén en la lista existente
                     var gruposAAgregar = selectedGrupoEjercicios
-                        .Where(x => !existingWod.WodXEjercicio.Any(e => e.GrupoEjerciciosId == x))
-                        .Select(x => new WodXEjercicio { WodId = id, GrupoEjerciciosId = x })
+                        .Where(x => !existingWod.WodXEjercicio.Any(e => e.IdGrupoEjercicios == x))
+                        .Select(x => new WodXEjercicio { IdWod = id, IdGrupoEjercicios = x })
                         .ToList();
                     _context.AddRange(gruposAAgregar);
 
@@ -219,7 +219,7 @@ namespace MVCCoachBuster.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.DiaId);
+            ViewData["DiaId"] = new SelectList(_context.Set<Dia>(), "Id", "Id", wod.IdDia);
             return View(wod);
         }
 

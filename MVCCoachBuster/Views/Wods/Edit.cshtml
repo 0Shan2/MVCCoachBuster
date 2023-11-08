@@ -17,8 +17,8 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="DiaId">Día</label>
-                <input asp-for="DiaId" class="form-control" readonly />
+                <label asp-for="IdDia">Día</label>
+                <input asp-for="IdDia" class="form-control" readonly />
             </div>
 
             <!-- Agregar selección de ejercicios -->
@@ -29,7 +29,7 @@
                 </a>
                 @foreach (var grupoEjercicio in ViewBag.GrupoEjercicios)
                 {
-                    var isSelected = Model.WodXEjercicio.Any(x => x.GrupoEjerciciosId == grupoEjercicio.Id);
+                    var isSelected = Model.WodXEjercicio.Any(x => x.IdGrupoEjercicios == grupoEjercicio.Id);
                     <div class="list-group">
                         <div class="list-group-item">
                             <input type="checkbox" name="selectedGrupoEjercicios" value="@grupoEjercicio.Id" @(isSelected ? "checked" : "") />
@@ -62,7 +62,6 @@
                 </div>
                 <div class="modal-body">
                     <p>Instrucciones: @grupoEjercicio.Instrucciones</p>
-                    <p>Puntaje: @grupoEjercicio.Puntuacion</p>
                     <p>Video: @grupoEjercicio.URLVideo</p>
                 </div>
                 <div class="modal-footer">

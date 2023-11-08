@@ -16,7 +16,7 @@ namespace MVCCoachBuster.ViewModels
 
         [Required(ErrorMessage = "El perfil del usuario es obligatorio.")]
         [Display(Name = "Rol")]
-        public int RolId { get; set; }
+        public int IdRol { get; set; }
 
         //Agregamos la imagen
         [Display(Name = "Foto")]
