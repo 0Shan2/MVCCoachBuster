@@ -107,7 +107,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan, string siguiente)
+        public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,IdUsuario,Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.IdUsuario);

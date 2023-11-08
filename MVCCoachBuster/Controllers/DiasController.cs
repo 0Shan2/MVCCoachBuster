@@ -29,9 +29,6 @@ namespace MVCCoachBuster.Controllers
         // GET: Dias
         public async Task<IActionResult> Index(int planId)
         {
-
-
-
             ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
             // Asigna el valor de planId a ViewBag para que se use en la vista
             ViewBag.PlanId = planId;
@@ -47,57 +44,9 @@ namespace MVCCoachBuster.Controllers
             // Configura ViewBag.Wod con la lista de Wods
             ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
 
-            // Calcula el progreso en función de los datos en la base de datos
-            var progreso = (dias.Count(d => d.IsCompleted) * 100.0) / dias.Count;
-            var diasCompletados = dias.Count(d => d.IsCompleted);
-
-            ViewBag.Dias = dias;
-            ViewBag.AriaValueNow = diasCompletados;
-            if (ViewBag.Dias.Count > 0)
-            {
-                ViewBag.Progreso = (diasCompletados * 100) / ViewBag.Dias.Count;
-            }
-            else
-            {
-                // Aquí puedes manejar el caso en el que no hay días
-             
-                ViewBag.Progreso = 0; // Valor predeterminado
-            }
-
-            /*
-            foreach (var dia in dias)
-            {
-                dia.IsCompleted = false; //Asignamos falso por defecto
-            }
-            */
 
             var coachBusterContext = _context.Dia.Include(d => d.Plan).Where(d => d.IdPlan == planId);
             return View(await coachBusterContext.ToListAsync());
-        }
-
-
-
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        [HttpPost]
-        public IActionResult MarcarComoCompletado(int diaId, bool completo)
-        {
-            try
-            {
-                //Recuperamos el día
-                var dia = _context.Dia.FirstOrDefault(d => d.Id == diaId);
-                if (dia != null)
-                {
-                    dia.IsCompleted = completo; //Actualiza el estado de isCompleted
-                    _context.SaveChanges();
-                    return Json(new { success = true, isCompleted = dia.IsCompleted });
-                }
-                _servicioNotificacion.Information("No se ha encontrado el día");
-            }
-            catch (Exception)
-            {
-                _servicioNotificacion.Warning("Ha ocurrido un error.");
-            }
-            return Json(new { success = false });
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -129,60 +78,11 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-            // Calcula el progreso en función de los WOD completados en este día
-            var wods = dia.Wod;
-            var wodsCompletados = wods.Count(w => w.IsCompleted);
-            if (wods.Count > 0)
-            {
-                ViewBag.WodProgreso = (wodsCompletados * 100) / wods.Count;
-            }
-            else
-            {
-                ViewBag.WodProgreso = 0; // Otra opción: manejar el caso cuando no hay WODs
-            }
+   
 
             return View(dia);
         }
-        //------------------------------------------------------------------------------------------------------------------------------------------------
-        [HttpPost]
-        public IActionResult MarcarWodComoCompletadoWod(int wodId, bool completo)
-        {
-            try
-            {
-                //recuperamos el wod
-                var wod = _context.Wod
-                           .Include(w => w.Dia)
-                           .ThenInclude(d => d.Plan)
-                           .FirstOrDefault(w => w.Id == wodId);
 
-
-                if (wod != null)
-                {
-                    wod.IsCompleted = completo; // Actualiza el estado de isCompleted del WOD
-                    _context.SaveChanges();
-
-                    // Actualiza el estado del día asociado
-                    if (wod.Dia != null)
-                    {
-                        wod.Dia.IsCompleted = wod.Dia.Wod.All(d => d.IsCompleted);
-                        _context.SaveChanges();
-
-                        // Calcula el progreso del día
-                        int totalDias = wod.Dia.Plan.Dia.Count;
-                        int diasCompletados = wod.Dia.Plan.Dia.Count(d => d.IsCompleted);
-                        int diaProgreso = (diasCompletados * 100) / totalDias;
-
-                        return Json(new { success = true, isCompleted = wod.IsCompleted, diaId = wod.Dia.Id, diaIsCompleted = wod.Dia.IsCompleted, diaProgreso });
-                    }
-                }
-                _servicioNotificacion.Information("No se ha encontrado el WOD");
-            }
-            catch (Exception)
-            {
-                _servicioNotificacion.Warning("Ha ocurrido un error.");
-            }
-            return Json(new { success = false });
-        }
 
 
         //-------------------------------------------------------------------------------------------------------------------------------------------

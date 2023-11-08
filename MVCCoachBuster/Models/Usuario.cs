@@ -20,6 +20,7 @@ namespace MVCCoachBuster.Models
 
         public int Telefono {  get; set; }
         public int IdRol { get; set; }
+        [ForeignKey("IdRol")]
         public Rol Rol { get; set; }
 
         //Añadir imagen

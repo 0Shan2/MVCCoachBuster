@@ -4,6 +4,7 @@ using MVCCoachBuster.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCCoachBuster.Migrations
 {
     [DbContext(typeof(CoachBusterContext))]
-    partial class CoachBusterContextModelSnapshot : ModelSnapshot
+    [Migration("20231108144131_BBDDre")]
+    partial class BBDDre
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,9 +98,12 @@ namespace MVCCoachBuster.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("UsuEntrenadorId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("UsuEntrenadorId");
 
                     b.ToTable("Planes", (string)null);
                 });
@@ -176,12 +181,15 @@ namespace MVCCoachBuster.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int?>("RolId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Telefono")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdRol");
+                    b.HasIndex("RolId");
 
                     b.ToTable("Usuario", (string)null);
                 });
@@ -255,9 +263,7 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Usuario", "UsuEntrenador")
                         .WithMany()
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuEntrenadorId");
 
                     b.Navigation("UsuEntrenador");
                 });
@@ -281,9 +287,7 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Rol", "Rol")
                         .WithMany("Usuarios")
-                        .HasForeignKey("IdRol")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RolId");
 
                     b.Navigation("Rol");
                 });

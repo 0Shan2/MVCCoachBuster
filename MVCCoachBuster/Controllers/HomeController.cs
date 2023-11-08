@@ -43,8 +43,8 @@ namespace MVCCoachBuster.Controllers
 
             // Consulta para obtener los IDs de los planes a los que el usuario está suscrito
             var planesSuscritosIds = _context.Suscripcion
-                .Where(s => s.usuarioId == idUsu)
-                .Select(s => s.planId)
+                .Where(s => s.IdUsuario == idUsu)
+                .Select(s => s.IdPlan)
                 .ToList();
 
             return planesSuscritosIds;
@@ -54,7 +54,7 @@ namespace MVCCoachBuster.Controllers
             // Aquí suponemos que tienes un DbSet<Suscripcion> en tu contexto de Entity Framework
             // y que la entidad Suscripcion tiene una propiedad PlanId para relacionar con los planes
             return _context.Suscripcion
-            .Where(s => s.usuarioId == usuarioId)
+            .Where(s => s.IdUsuario == usuarioId)
                 .ToList();
         }
 
@@ -82,11 +82,11 @@ namespace MVCCoachBuster.Controllers
 
             foreach (var suscripcion in suscripciones)
             {
-                suscripcionesPorPlan[suscripcion.planId] = suscripcion.Id;
+                suscripcionesPorPlan[suscripcion.IdPlan] = suscripcion.Id;
             }
 
             // Recuperamos los IDs de los planes a los que está inscrito el usuario
-            List<int> idsPlanesInsc = suscripciones.Select(s => s.planId).ToList();
+            List<int> idsPlanesInsc = suscripciones.Select(s => s.IdPlan).ToList();
 
             //Recuperamos los objetos Plan a partir de los IDs
             var planesInscritos = _context.Planes

@@ -9,9 +9,7 @@
 <hr />
 
 <br />
-<div class="progress" style="height: 20px;">
-   <div class="progress-bar bg-success" role="progressbar" style="width: @(ViewBag.Progreso)%" aria-valuenow="@(ViewBag.AriaValueNow)" aria-valuemin="0" aria-valuemax="@(ViewBag.Dias.Count)"></div>
-</div>
+
 <br />
 
 <ul class="list-group">
@@ -24,7 +22,7 @@
                 </a>
             </div>
             <div class="custom-control custom-switch">
-                <input class="custom-control-input" type="checkbox" id="check-@item.Id" @(item.IsCompleted ? "checked" : "") onchange="marcarDiaComoCompletado(@item.Id, this.checked, '@Url.Action("ActualizarDias", "Dias")')">
+                <input class="custom-control-input" type="checkbox">
                 <label class="custom-control-label" for="check-@item.Id"></label>
 
             </div>
@@ -33,33 +31,3 @@
 </ul>
 
 
-<script>
-    function marcarDiaComoCompletado(diaId, completado) {
-        $.ajax({
-            url: '@Url.Action("MarcarComoCompletado", "Dias")',
-            type: 'POST',
-            data: { diaId: diaId, completo: completado },
-            success: function (data) {
-                if (data.success) {
-                    // Actualiza el estado del día en la vista
-                    var checkbox = $("#check-" + diaId);
-                    checkbox.prop("checked", data.isCompleted);
-
-                    // Actualiza la barra de progreso
-                    var progressBar = $(".progress-bar");
-                    var diasCompletados = $("input:checked").length;
-                    var totalDias = $("input").length;
-                    var progreso = (diasCompletados / totalDias) * 100;
-                    progressBar.css("width", progreso + "%");
-                    progressBar.attr("aria-valuenow", diasCompletados);
-                    // Reemplaza location.reload() con location.href
-
-
-                    // Realizar acciones adicionales si es necesario
-                } else {
-                    // Maneja errores o notifica al usuario
-                }
-            }
-        });
-    }
-</script>

@@ -22,6 +22,8 @@ namespace MVCCoachBuster.Models
 
         [Display(Name ="Entrenador")]
         public int IdUsuario { get; set; }
+
+        [ForeignKey("IdUsuario")]
         public virtual Usuario UsuEntrenador { get; set; }
         public string Foto { get; set; }
 

@@ -9,7 +9,7 @@ namespace MVCCoachBuster.Models
     {
       
         public int Id { get; set; }
-
+        [ForeignKey("Plan")] // Añade esta anotación para definir la relación de clave foránea
         public int IdPlan { get; set; }
         public Plan Plan { get; set; }
         public string Nombre { get; set; }
