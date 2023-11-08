@@ -91,7 +91,7 @@ namespace MVCCoachBuster.Controllers
             //Recuperamos los objetos Plan a partir de los IDs
             var planesInscritos = _context.Planes
                 .Where(p => idsPlanesInsc.Contains(p.Id))
-                .Include(m => m.Entrenador)
+                .Include(m => m.UsuEntrenador)
                 .OrderBy(m => m.Nombre)
                 .AsNoTracking();
 
@@ -122,7 +122,7 @@ namespace MVCCoachBuster.Controllers
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
 			var consulta = _context.Planes
 				.OrderBy(m => m.Nombre)
-				.Include(m => m.Entrenador)
+				.Include(m => m.UsuEntrenador)
 				.AsQueryable(); //AsQueryable para poder hacer la busqueda
 
 

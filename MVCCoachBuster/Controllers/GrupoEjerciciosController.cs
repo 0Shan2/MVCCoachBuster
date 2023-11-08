@@ -82,7 +82,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Puntuacion,URLVideo,Instrucciones")] GrupoEjercicios grupoEjercicios)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,URLVideo,Instrucciones")] GrupoEjercicios grupoEjercicios)
         {
             if (ModelState.IsValid)
             {
@@ -124,7 +124,7 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Puntuacion,URLVideo,Instrucciones")] GrupoEjercicios grupoEjercicios)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,URLVideo")] GrupoEjercicios grupoEjercicios)
         {
             if (id != grupoEjercicios.Id)
             {

@@ -23,8 +23,8 @@ namespace MVCCoachBuster.ViewModels
         public decimal Precio { get; set; }
 
         [Display(Name = "Entrenador")]
-        public int UsuarioId { get; set; }
-        public virtual Usuario Entrenador { get; set; }
+        public int IdUsuario { get; set; }
+        public virtual Usuario UsuEntrenador { get; set; }
         public string Foto { get; set; }
 
 

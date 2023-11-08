@@ -29,60 +29,50 @@ namespace MVCCoachBuster.Controllers
         // GET: Dias
         public async Task<IActionResult> Index(int planId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId == null)
-            {
-                // Manejar el caso en el que el usuario no esté autenticado
-                return RedirectToAction("Login"); // o redirige a la página de inicio de sesión
-            }
-
-            int userIdAsInt;
-            if (!int.TryParse(userId, out userIdAsInt))
-            {
-                // Manejar el caso en el que la conversión de userId a int falló
-                return RedirectToAction("Error"); // Redirige a una página de error
-            }
-
-            // Consultar las suscripciones del usuario actual
-            var suscripciones = _context.Suscripcion.Where(s => s.usuarioId == userIdAsInt).ToList();
-
-            // Consultar los días asociados a las suscripciones del usuario
-            var diasUsuario = suscripciones
-                .SelectMany(s => _context.Dia.Where(d => d.PlanId == s.planId))
-                .ToList();
-
-            // Calcular el progreso del usuario en función de los días completados
-            double progresoUsuario = 0;
-            int diasCompletados = diasUsuario.Count(d => d.IsCompleted);
-
-            if (diasUsuario.Any())
-            {
-                progresoUsuario = (diasCompletados * 100.0) / diasUsuario.Count;
-            }
 
 
-            // Consultar los días específicos del plan
-            var diasDelPlan = _context.Dia.Where(d => d.PlanId == planId).ToList();
-
-            // Cargar los Wods asociados a los días del plan
-            foreach (var dia in diasDelPlan)
-            {
-                dia.Wod = _context.Wod.Where(w => w.DiaId == dia.Id).ToList();
-            }
 
             ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
+            // Asigna el valor de planId a ViewBag para que se use en la vista
             ViewBag.PlanId = planId;
-            ViewBag.Dias = diasDelPlan;
-            ViewBag.AriaValueNow = diasCompletados;
+            // Recupera la lista de días asociados a un plan específico
+            var dias = _context.Dia.Where(d => d.IdPlan == planId).ToList();
 
-            if (diasUsuario.Any())
+            // Cargar los Wods asociados a los días
+            foreach (var dia in dias)
             {
-                ViewBag.ProgresoUsuario = progresoUsuario;
+                dia.Wod = _context.Wod.Where(w => w.IdDia == dia.Id).ToList();
             }
 
-            return View(diasDelPlan.ToList());
+            // Configura ViewBag.Wod con la lista de Wods
+            ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
 
+            // Calcula el progreso en función de los datos en la base de datos
+            var progreso = (dias.Count(d => d.IsCompleted) * 100.0) / dias.Count;
+            var diasCompletados = dias.Count(d => d.IsCompleted);
+
+            ViewBag.Dias = dias;
+            ViewBag.AriaValueNow = diasCompletados;
+            if (ViewBag.Dias.Count > 0)
+            {
+                ViewBag.Progreso = (diasCompletados * 100) / ViewBag.Dias.Count;
+            }
+            else
+            {
+                // Aquí puedes manejar el caso en el que no hay días
+             
+                ViewBag.Progreso = 0; // Valor predeterminado
+            }
+
+            /*
+            foreach (var dia in dias)
+            {
+                dia.IsCompleted = false; //Asignamos falso por defecto
+            }
+            */
+
+            var coachBusterContext = _context.Dia.Include(d => d.Plan).Where(d => d.IdPlan == planId);
+            return View(await coachBusterContext.ToListAsync());
         }
 
 
@@ -205,12 +195,12 @@ namespace MVCCoachBuster.Controllers
             // Asigna el valor de planId a ViewBag para que se use en la vista
             ViewBag.PlanId = planId;
             // Recupera la lista de días asociados a un plan específico
-            var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
+            var dias = _context.Dia.Where(d => d.IdPlan == planId).ToList();
 
             // Cargar los Wods asociados a los días
             foreach (var dia in dias)
             {
-                dia.Wod = _context.Wod.Where(w => w.DiaId == dia.Id).ToList();
+                dia.Wod = _context.Wod.Where(w => w.IdDia == dia.Id).ToList();
             }
 
             // Configura ViewBag.Wod con la lista de Wods
@@ -226,12 +216,12 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int planId, [Bind("PlanId,NumDias")] Dia dia)
+        public async Task<IActionResult> Create(int planId, [Bind("IdPlan,Nombre")] Dia dia)
         {
             if (ModelState.IsValid)
             {
                 // Determina cuántos días ya existen para el plan
-                int numDiasExistentes = _context.Dia.Count(d => d.PlanId == planId);
+                int numDiasExistentes = _context.Dia.Count(d => d.IdPlan == planId);
 
                 // Calcula cuántas semanas completas ya se han creado
                 int semanasCompletas = numDiasExistentes / 7;
@@ -244,7 +234,7 @@ namespace MVCCoachBuster.Controllers
                     // Crea un nuevo día y asócialo al plan con el planId
                     var nuevoDia = new Dia
                     {
-                        PlanId = planId, // Asigna el PlanId que recibes como parámetro
+                        IdPlan = planId, // Asigna el PlanId que recibes como parámetro
                         Nombre = "Día " + i, // Formatea el número de día
                                               //NumDias = dia.NumDias,
                                               // Otras propiedades del día

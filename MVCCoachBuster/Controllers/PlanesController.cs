@@ -43,7 +43,7 @@ namespace MVCCoachBuster.Controllers
             var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
             var consulta = _context.Planes
                 .OrderBy(m => m.Nombre)
-                .Include(m => m.Entrenador)
+                .Include(m => m.UsuEntrenador)
                 .AsQueryable(); //AsQueryable para poder hacer la busqueda
 
             //2º) Para buscar un plan
@@ -69,7 +69,7 @@ namespace MVCCoachBuster.Controllers
             }
 
             var plan = await _context.Planes
-                .Include(p => p.Entrenador)
+                .Include(p => p.UsuEntrenador)
                 .Include(p=> p.Dia)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -110,7 +110,7 @@ namespace MVCCoachBuster.Controllers
         public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,UsuarioId,Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
-            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.IdUsuario);
    
             viewModel.Plan = plan;
 
@@ -188,7 +188,7 @@ namespace MVCCoachBuster.Controllers
             viewModel.Plan.Foto = plan.Foto;
             viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios
                 .Where(u => u.Rol.Id == 2)
-                .AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+                .AsNoTracking(), "Id", "Nombre", plan.IdUsuario);
 
             return View("Plan", viewModel);
         }
@@ -198,10 +198,10 @@ namespace MVCCoachBuster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,UsuarioId, Foto")] PlanCreacionEdicionDto plan, string siguiente)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,IdUsuario, Foto")] PlanCreacionEdicionDto plan, string siguiente)
         {
             AgregarEditarPlanViewModel viewModel = new AgregarEditarPlanViewModel();
-            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.UsuarioId);
+            viewModel.ListadoEntrenadores = new SelectList(_context.Usuarios.Where(u => u.Rol.Id == 2).AsNoTracking(), "Id", "Nombre", plan.IdUsuario);
             viewModel.Plan = plan;
 
             if (id != plan.Id)
@@ -272,7 +272,7 @@ namespace MVCCoachBuster.Controllers
             }
 
             var plan = await _context.Planes
-                .Include(p => p.Entrenador)
+                .Include(p => p.UsuEntrenador)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (plan == null)
             {
@@ -332,7 +332,7 @@ namespace MVCCoachBuster.Controllers
 
             //Recuperamos la lista de coach con sus entrenamientos
             var planesCreados = _context.Planes
-                .Where(p => p.UsuarioId == idCoach)
+                .Where(p => p.IdUsuario == idCoach)
                 .OrderBy(m => m.Nombre)
                 .AsNoTracking();
 

@@ -40,9 +40,9 @@ namespace MVCCoachBuster.Data
 			var usuarios = new Usuario[]
             {
 
-                 new Usuario{Nombre="Admin", Correo="admin@a.es",  Contrasena = contrasenaHash, Telefono=620380297, RolId = roles[1].Id},
-                 new Usuario{Nombre="Entrenador", Correo="entrenador@e.es",  Contrasena = contrasenaHash, Telefono=1234123, RolId = roles[2].Id},
-                 new Usuario{Nombre="usuario", Correo="usuario@u.es",  Contrasena = contrasenaHash, Telefono=620380297, RolId = roles[2].Id},
+                 new Usuario{Nombre="Admin", Correo="admin@a.es",  Contrasena = contrasenaHash, Telefono=620380297, IdRol = roles[1].Id},
+                 new Usuario{Nombre="Entrenador", Correo="entrenador@e.es",  Contrasena = contrasenaHash, Telefono=1234123, IdRol = roles[2].Id},
+                 new Usuario{Nombre="usuario", Correo="usuario@u.es",  Contrasena = contrasenaHash, Telefono=620380297, IdRol = roles[2].Id},
 
 
 
@@ -58,10 +58,10 @@ namespace MVCCoachBuster.Data
 
             var planes = new Plan[]
             {
-               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  UsuarioId = usuarios[0].Id},
-               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  UsuarioId = usuarios[0].Id},
-               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  UsuarioId = usuarios[0].Id},
-               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  UsuarioId = usuarios[0].Id},
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  IdUsuario = usuarios[0].Id},
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  IdUsuario = usuarios[0].Id},
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  IdUsuario = usuarios[0].Id},
+               new Plan{Nombre="Fuerza", Descripcion="eeee",  Precio = 2,  IdUsuario = usuarios[0].Id},
 
             };
 

@@ -162,7 +162,7 @@ namespace MVCCoachBuster.Controllers
                     {
                         Nombre = model.Nombre,
                         Correo = model.Correo,
-                        RolId = 3
+                        IdRol = 3
                     };
                     nuevoUsuario.Contrasena = _passwordHasher.HashPassword(nuevoUsuario, model.Contrasena);
 

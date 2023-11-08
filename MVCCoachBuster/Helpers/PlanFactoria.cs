@@ -21,7 +21,7 @@ namespace MVCCoachBuster.Helpers
                 Nombre = planDto.Nombre,
                 Descripcion = planDto.Descripcion,
                 Precio = planDto.Precio,
-                UsuarioId = planDto.UsuarioId,
+                IdUsuario = planDto.IdUsuario,
                
             };
         }
@@ -34,7 +34,7 @@ namespace MVCCoachBuster.Helpers
                 Nombre = plan.Nombre,
                 Descripcion = plan.Descripcion,
                 Precio = plan.Precio,
-                UsuarioId = plan.UsuarioId,
+                IdUsuario = plan.IdUsuario,
                
             };
         }
@@ -45,7 +45,7 @@ namespace MVCCoachBuster.Helpers
             planBd.Nombre = planDto.Nombre;
             planBd.Descripcion = planDto.Descripcion;
             planBd.Precio = planDto.Precio;
-            planBd.UsuarioId = planDto.UsuarioId;
+            planBd.IdUsuario = planDto.IdUsuario;
          
         }
 
