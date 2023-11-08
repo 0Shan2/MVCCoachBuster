@@ -21,8 +21,8 @@ namespace MVCCoachBuster.Models
         public decimal Precio { get; set; }
 
         [Display(Name ="Entrenador")]
-        public int UsuarioId { get; set; }
-        public virtual Usuario Entrenador { get; set; }
+        public int IdUsuario { get; set; }
+        public virtual Usuario UsuEntrenador { get; set; }
         public string Foto { get; set; }
 
         public  ICollection<Dia> Dia { get; set; }
