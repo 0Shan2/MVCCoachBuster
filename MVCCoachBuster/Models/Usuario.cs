@@ -19,16 +19,12 @@ namespace MVCCoachBuster.Models
         public string Contrasena { get; set; }
 
         public int Telefono {  get; set; }
-        public int RolId { get; set; }
+        public int IdRol { get; set; }
         public Rol Rol { get; set; }
 
         //Añadir imagen
         public string Foto { get; set; }
-        /*
-        [NotMapped]
-        public byte[] FotoBytes { get; set; }
-        
-        */
+      
 
     }
 }

@@ -15,11 +15,10 @@ namespace BDDLibreria
     public partial class WodXEjercicio
     {
         public int Id { get; set; }
-        public Nullable<int> WodId { get; set; }
-        public Nullable<int> GrupoEjerciciosId { get; set; }
+        public Nullable<int> IdWod { get; set; }
+        public Nullable<int> IdGrupoEjercicios { get; set; }
     
         public virtual GrupoEjercicios GrupoEjercicios { get; set; }
         public virtual Wod Wod { get; set; }
-        public virtual Wod Wod1 { get; set; }
     }
 }

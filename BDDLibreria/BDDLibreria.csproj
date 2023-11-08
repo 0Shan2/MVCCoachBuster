@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{55926612-EEF9-4B68-A792-8C9BD624FA42}</ProjectGuid>
+    <ProjectGuid>{259A5441-9192-4047-B268-E18A62343ABC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BDDLibreria</RootNamespace>
@@ -50,76 +50,76 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseDatos.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BaseDatos.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BaseDatos.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BaseDatos.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BaseDatos.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BaseDatos.edmx</DependentUpon>
-    </Compile>
     <Compile Include="C__EFMigrationsHistory.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Dia.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="GrupoEjercicios.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Planes.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rol.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServerBBDD.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServerBBDD.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServerBBDD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServerBBDD.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServerBBDD.edmx</DependentUpon>
     </Compile>
     <Compile Include="Suscripcion.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Usuario.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Wod.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
     <Compile Include="WodXEjercicio.cs">
-      <DependentUpon>BaseDatos.tt</DependentUpon>
+      <DependentUpon>ServerBBDD.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="BaseDatos.edmx">
+    <EntityDeploy Include="ServerBBDD.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BaseDatos.Designer.cs</LastGenOutput>
+      <LastGenOutput>ServerBBDD.Designer.cs</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="BaseDatos.edmx.diagram">
-      <DependentUpon>BaseDatos.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
+    <None Include="ServerBBDD.edmx.diagram">
+      <DependentUpon>ServerBBDD.edmx</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BaseDatos.Context.tt">
+    <Content Include="ServerBBDD.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BaseDatos.Context.cs</LastGenOutput>
-      <DependentUpon>BaseDatos.edmx</DependentUpon>
+      <LastGenOutput>ServerBBDD.Context.cs</LastGenOutput>
+      <DependentUpon>ServerBBDD.edmx</DependentUpon>
     </Content>
-    <Content Include="BaseDatos.tt">
+    <Content Include="ServerBBDD.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BaseDatos.edmx</DependentUpon>
-      <LastGenOutput>BaseDatos.cs</LastGenOutput>
+      <DependentUpon>ServerBBDD.edmx</DependentUpon>
+      <LastGenOutput>ServerBBDD.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

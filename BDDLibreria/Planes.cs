@@ -18,7 +18,6 @@ namespace BDDLibreria
         public Planes()
         {
             this.Dia = new HashSet<Dia>();
-            this.Dia1 = new HashSet<Dia>();
             this.Suscripcion = new HashSet<Suscripcion>();
         }
     
@@ -26,13 +25,11 @@ namespace BDDLibreria
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }
-        public int UsuarioId { get; set; }
+        public int IdUsuario { get; set; }
         public string Foto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Dia> Dia { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Dia> Dia1 { get; set; }
         public virtual Usuario Usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Suscripcion> Suscripcion { get; set; }

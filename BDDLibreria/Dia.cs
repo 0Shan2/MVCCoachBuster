@@ -18,19 +18,15 @@ namespace BDDLibreria
         public Dia()
         {
             this.Wod = new HashSet<Wod>();
-            this.Wod1 = new HashSet<Wod>();
         }
     
         public int Id { get; set; }
-        public Nullable<int> PlanId { get; set; }
-        public string NumDias { get; set; }
+        public Nullable<int> IdPlan { get; set; }
+        public string Nombre { get; set; }
         public Nullable<bool> IsCompleted { get; set; }
     
         public virtual Planes Planes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Wod> Wod { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Wod> Wod1 { get; set; }
-        public virtual Planes Planes1 { get; set; }
     }
 }

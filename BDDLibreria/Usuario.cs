@@ -26,7 +26,7 @@ namespace BDDLibreria
         public string Correo { get; set; }
         public string Contrasena { get; set; }
         public int Telefono { get; set; }
-        public int RolId { get; set; }
+        public int IdRol { get; set; }
         public string Foto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

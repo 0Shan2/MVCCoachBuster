@@ -17,7 +17,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PlanId" Type="int" />
+          <Property Name="IdPlan" Type="int" />
           <Property Name="NumDias" Type="nchar" MaxLength="10" />
           <Property Name="IsCompleted" Type="bit" />
         </EntityType>
@@ -27,7 +27,6 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
-          <Property Name="Puntuacion" Type="int" />
           <Property Name="Instrucciones" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="URLVideo" Type="nvarchar" MaxLength="250" />
         </EntityType>
@@ -39,7 +38,7 @@
           <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
           <Property Name="Descripcion" Type="nvarchar" MaxLength="200" />
           <Property Name="Precio" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="UsuarioId" Type="int" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
           <Property Name="Foto" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Rol">
@@ -54,8 +53,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="usuarioId" Type="int" />
-          <Property Name="planId" Type="int" />
+          <Property Name="IdUsuario" Type="int" />
+          <Property Name="IdPlan" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -76,7 +75,7 @@
           <Property Name="Correo" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Contrasena" Type="nvarchar(max)" />
           <Property Name="Telefono" Type="int" Nullable="false" />
-          <Property Name="RolId" Type="int" Nullable="false" />
+          <Property Name="IdRol" Type="int" Nullable="false" />
           <Property Name="Foto" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Wod">
@@ -85,7 +84,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
-          <Property Name="DiaId" Type="int" />
+          <Property Name="IdDia" Type="int" />
           <Property Name="IsCompleted" Type="bit" />
         </EntityType>
         <EntityType Name="WodXEjercicio">
@@ -93,22 +92,24 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="WodId" Type="int" />
-          <Property Name="GrupoEjerciciosId" Type="int" />
+          <Property Name="IdWod" Type="int" />
+          <Property Name="IdGrupoEjercicios" Type="int" />
         </EntityType>
         <Association Name="FK_Dia_Planes">
-          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1" />
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Planes">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Dia">
-              <PropertyRef Name="PlanId" />
+              <PropertyRef Name="IdPlan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Planes_Usuario_UsuarioId">
+        <Association Name="FK_Planes_Usuario_IdUsuario">
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -118,7 +119,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Planes">
-              <PropertyRef Name="UsuarioId" />
+              <PropertyRef Name="IdUsuario" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -130,11 +131,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Suscripcion">
-              <PropertyRef Name="planId" />
+              <PropertyRef Name="IdPlan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Suscripcion_Usuario1">
+        <Association Name="FK_Suscripcion_Usuario">
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
           <ReferentialConstraint>
@@ -142,11 +143,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Suscripcion">
-              <PropertyRef Name="usuarioId" />
+              <PropertyRef Name="IdUsuario" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Usuario_Rol_RolId">
+        <Association Name="FK_Usuario_Rol_IdRol">
           <End Role="Rol" Type="Self.Rol" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -156,19 +157,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Usuario">
-              <PropertyRef Name="RolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Wod_Dia">
-          <End Role="Dia" Type="Self.Dia" Multiplicity="0..1" />
-          <End Role="Wod" Type="Self.Wod" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Dia">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Wod">
-              <PropertyRef Name="DiaId" />
+              <PropertyRef Name="IdRol" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -182,7 +171,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Wod">
-              <PropertyRef Name="DiaId" />
+              <PropertyRef Name="IdDia" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -194,19 +183,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="GrupoEjerciciosId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WodXEjercicio_Wod">
-          <End Role="Wod" Type="Self.Wod" Multiplicity="0..1" />
-          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Wod">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="WodId" />
+              <PropertyRef Name="IdGrupoEjercicios" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -220,21 +197,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="WodId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FX_Dia_Planes">
-          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Planes">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Dia">
-              <PropertyRef Name="PlanId" />
+              <PropertyRef Name="IdWod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -253,7 +216,7 @@
             <End Role="Planes" EntitySet="Planes" />
             <End Role="Dia" EntitySet="Dia" />
           </AssociationSet>
-          <AssociationSet Name="FK_Planes_Usuario_UsuarioId" Association="Self.FK_Planes_Usuario_UsuarioId">
+          <AssociationSet Name="FK_Planes_Usuario_IdUsuario" Association="Self.FK_Planes_Usuario_IdUsuario">
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Planes" EntitySet="Planes" />
           </AssociationSet>
@@ -261,17 +224,13 @@
             <End Role="Planes" EntitySet="Planes" />
             <End Role="Suscripcion" EntitySet="Suscripcion" />
           </AssociationSet>
-          <AssociationSet Name="FK_Suscripcion_Usuario1" Association="Self.FK_Suscripcion_Usuario1">
+          <AssociationSet Name="FK_Suscripcion_Usuario" Association="Self.FK_Suscripcion_Usuario">
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Suscripcion" EntitySet="Suscripcion" />
           </AssociationSet>
-          <AssociationSet Name="FK_Usuario_Rol_RolId" Association="Self.FK_Usuario_Rol_RolId">
+          <AssociationSet Name="FK_Usuario_Rol_IdRol" Association="Self.FK_Usuario_Rol_IdRol">
             <End Role="Rol" EntitySet="Rol" />
             <End Role="Usuario" EntitySet="Usuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Wod_Dia" Association="Self.FK_Wod_Dia">
-            <End Role="Dia" EntitySet="Dia" />
-            <End Role="Wod" EntitySet="Wod" />
           </AssociationSet>
           <AssociationSet Name="FK_Wod_Dia_Cascade" Association="Self.FK_Wod_Dia_Cascade">
             <End Role="Dia" EntitySet="Dia" />
@@ -281,17 +240,9 @@
             <End Role="GrupoEjercicios" EntitySet="GrupoEjercicios" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
           </AssociationSet>
-          <AssociationSet Name="FK_WodXEjercicio_Wod" Association="Self.FK_WodXEjercicio_Wod">
-            <End Role="Wod" EntitySet="Wod" />
-            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
-          </AssociationSet>
           <AssociationSet Name="FK_WodXEjercicio_Wod_Cascade" Association="Self.FK_WodXEjercicio_Wod_Cascade">
             <End Role="Wod" EntitySet="Wod" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
-          </AssociationSet>
-          <AssociationSet Name="FX_Dia_Planes" Association="Self.FX_Dia_Planes">
-            <End Role="Planes" EntitySet="Planes" />
-            <End Role="Dia" EntitySet="Dia" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -311,13 +262,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PlanId" Type="Int32" />
+          <Property Name="IdPlan" Type="Int32" />
           <Property Name="NumDias" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="IsCompleted" Type="Boolean" />
           <NavigationProperty Name="Planes" Relationship="Self.FK_Dia_Planes" FromRole="Dia" ToRole="Planes" />
-          <NavigationProperty Name="Wod" Relationship="Self.FK_Wod_Dia" FromRole="Dia" ToRole="Wod" />
-          <NavigationProperty Name="Wod1" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Dia" ToRole="Wod" />
-          <NavigationProperty Name="Planes1" Relationship="Self.FX_Dia_Planes" FromRole="Dia" ToRole="Planes" />
+          <NavigationProperty Name="Wod" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Dia" ToRole="Wod" />
         </EntityType>
         <EntityType Name="GrupoEjercicios">
           <Key>
@@ -325,7 +274,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Puntuacion" Type="Int32" />
           <Property Name="Instrucciones" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="URLVideo" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios1" FromRole="GrupoEjercicios" ToRole="WodXEjercicio" />
@@ -338,11 +286,10 @@
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Precio" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="UsuarioId" Type="Int32" Nullable="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
           <Property Name="Foto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Dia" Relationship="Self.FK_Dia_Planes" FromRole="Planes" ToRole="Dia" />
-          <NavigationProperty Name="Dia1" Relationship="Self.FX_Dia_Planes" FromRole="Planes" ToRole="Dia" />
-          <NavigationProperty Name="Usuario" Relationship="Self.FK_Planes_Usuario_UsuarioId" FromRole="Planes" ToRole="Usuario" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Planes_Usuario_IdUsuario" FromRole="Planes" ToRole="Usuario" />
           <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Suscripcion_Planes" FromRole="Planes" ToRole="Suscripcion" />
         </EntityType>
         <EntityType Name="Rol">
@@ -351,17 +298,17 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol_RolId" FromRole="Rol" ToRole="Usuario" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol_IdRol" FromRole="Rol" ToRole="Usuario" />
         </EntityType>
         <EntityType Name="Suscripcion">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="usuarioId" Type="Int32" />
-          <Property Name="planId" Type="Int32" />
+          <Property Name="IdUsuario" Type="Int32" />
+          <Property Name="IdPlan" Type="Int32" />
           <NavigationProperty Name="Planes" Relationship="Self.FK_Suscripcion_Planes" FromRole="Suscripcion" ToRole="Planes" />
-          <NavigationProperty Name="Usuario" Relationship="Self.FK_Suscripcion_Usuario1" FromRole="Suscripcion" ToRole="Usuario" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Suscripcion_Usuario" FromRole="Suscripcion" ToRole="Usuario" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -382,11 +329,11 @@
           <Property Name="Correo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Contrasena" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Telefono" Type="Int32" Nullable="false" />
-          <Property Name="RolId" Type="Int32" Nullable="false" />
+          <Property Name="IdRol" Type="Int32" Nullable="false" />
           <Property Name="Foto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Planes" Relationship="Self.FK_Planes_Usuario_UsuarioId" FromRole="Usuario" ToRole="Planes" />
-          <NavigationProperty Name="Rol" Relationship="Self.FK_Usuario_Rol_RolId" FromRole="Usuario" ToRole="Rol" />
-          <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Suscripcion_Usuario1" FromRole="Usuario" ToRole="Suscripcion" />
+          <NavigationProperty Name="Planes" Relationship="Self.FK_Planes_Usuario_IdUsuario" FromRole="Usuario" ToRole="Planes" />
+          <NavigationProperty Name="Rol" Relationship="Self.FK_Usuario_Rol_IdRol" FromRole="Usuario" ToRole="Rol" />
+          <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Suscripcion_Usuario" FromRole="Usuario" ToRole="Suscripcion" />
         </EntityType>
         <EntityType Name="Wod">
           <Key>
@@ -394,45 +341,32 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DiaId" Type="Int32" />
+          <Property Name="IdDia" Type="Int32" />
           <Property Name="IsCompleted" Type="Boolean" />
-          <NavigationProperty Name="Dia" Relationship="Self.FK_Wod_Dia" FromRole="Wod" ToRole="Dia" />
-          <NavigationProperty Name="Dia1" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Wod" ToRole="Dia" />
-          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_Wod" FromRole="Wod" ToRole="WodXEjercicio" />
-          <NavigationProperty Name="WodXEjercicio1" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="Wod" ToRole="WodXEjercicio" />
+          <NavigationProperty Name="Dia" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Wod" ToRole="Dia" />
+          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="Wod" ToRole="WodXEjercicio" />
         </EntityType>
         <EntityType Name="WodXEjercicio">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="WodId" Type="Int32" />
-          <Property Name="GrupoEjerciciosId" Type="Int32" />
+          <Property Name="IdWod" Type="Int32" />
+          <Property Name="IdGrupoEjercicios" Type="Int32" />
           <NavigationProperty Name="GrupoEjercicios" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios1" FromRole="WodXEjercicio" ToRole="GrupoEjercicios" />
-          <NavigationProperty Name="Wod" Relationship="Self.FK_WodXEjercicio_Wod" FromRole="WodXEjercicio" ToRole="Wod" />
-          <NavigationProperty Name="Wod1" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="WodXEjercicio" ToRole="Wod" />
+          <NavigationProperty Name="Wod" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="WodXEjercicio" ToRole="Wod" />
         </EntityType>
         <Association Name="FK_Dia_Planes">
-          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1" />
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Planes">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Dia">
-              <PropertyRef Name="PlanId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Wod_Dia">
-          <End Role="Dia" Type="Self.Dia" Multiplicity="0..1" />
-          <End Role="Wod" Type="Self.Wod" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Dia">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Wod">
-              <PropertyRef Name="DiaId" />
+              <PropertyRef Name="IdPlan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -446,21 +380,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Wod">
-              <PropertyRef Name="DiaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FX_Dia_Planes">
-          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Planes">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Dia">
-              <PropertyRef Name="PlanId" />
+              <PropertyRef Name="IdDia" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -472,11 +392,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="GrupoEjerciciosId" />
+              <PropertyRef Name="IdGrupoEjercicios" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Planes_Usuario_UsuarioId">
+        <Association Name="FK_Planes_Usuario_IdUsuario">
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -486,7 +406,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Planes">
-              <PropertyRef Name="UsuarioId" />
+              <PropertyRef Name="IdUsuario" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -498,11 +418,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Suscripcion">
-              <PropertyRef Name="planId" />
+              <PropertyRef Name="IdPlan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Usuario_Rol_RolId">
+        <Association Name="FK_Usuario_Rol_IdRol">
           <End Role="Rol" Type="Self.Rol" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -512,11 +432,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Usuario">
-              <PropertyRef Name="RolId" />
+              <PropertyRef Name="IdRol" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Suscripcion_Usuario1">
+        <Association Name="FK_Suscripcion_Usuario">
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
           <ReferentialConstraint>
@@ -524,19 +444,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Suscripcion">
-              <PropertyRef Name="usuarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WodXEjercicio_Wod">
-          <End Role="Wod" Type="Self.Wod" Multiplicity="0..1" />
-          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Wod">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="WodId" />
+              <PropertyRef Name="IdUsuario" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -550,7 +458,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="WodXEjercicio">
-              <PropertyRef Name="WodId" />
+              <PropertyRef Name="IdWod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -569,23 +477,15 @@
             <End Role="Planes" EntitySet="Planes" />
             <End Role="Dia" EntitySet="Dia" />
           </AssociationSet>
-          <AssociationSet Name="FK_Wod_Dia" Association="Self.FK_Wod_Dia">
-            <End Role="Dia" EntitySet="Dia" />
-            <End Role="Wod" EntitySet="Wod" />
-          </AssociationSet>
           <AssociationSet Name="FK_Wod_Dia_Cascade" Association="Self.FK_Wod_Dia_Cascade">
             <End Role="Dia" EntitySet="Dia" />
             <End Role="Wod" EntitySet="Wod" />
-          </AssociationSet>
-          <AssociationSet Name="FX_Dia_Planes" Association="Self.FX_Dia_Planes">
-            <End Role="Planes" EntitySet="Planes" />
-            <End Role="Dia" EntitySet="Dia" />
           </AssociationSet>
           <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios1" Association="Self.FK_WodXEjercicio_GrupoEjercicios1">
             <End Role="GrupoEjercicios" EntitySet="GrupoEjercicios" />
             <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
           </AssociationSet>
-          <AssociationSet Name="FK_Planes_Usuario_UsuarioId" Association="Self.FK_Planes_Usuario_UsuarioId">
+          <AssociationSet Name="FK_Planes_Usuario_IdUsuario" Association="Self.FK_Planes_Usuario_IdUsuario">
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Planes" EntitySet="Planes" />
           </AssociationSet>
@@ -593,17 +493,13 @@
             <End Role="Planes" EntitySet="Planes" />
             <End Role="Suscripcion" EntitySet="Suscripcion" />
           </AssociationSet>
-          <AssociationSet Name="FK_Usuario_Rol_RolId" Association="Self.FK_Usuario_Rol_RolId">
+          <AssociationSet Name="FK_Usuario_Rol_IdRol" Association="Self.FK_Usuario_Rol_IdRol">
             <End Role="Rol" EntitySet="Rol" />
             <End Role="Usuario" EntitySet="Usuario" />
           </AssociationSet>
-          <AssociationSet Name="FK_Suscripcion_Usuario1" Association="Self.FK_Suscripcion_Usuario1">
+          <AssociationSet Name="FK_Suscripcion_Usuario" Association="Self.FK_Suscripcion_Usuario">
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Suscripcion" EntitySet="Suscripcion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WodXEjercicio_Wod" Association="Self.FK_WodXEjercicio_Wod">
-            <End Role="Wod" EntitySet="Wod" />
-            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
           </AssociationSet>
           <AssociationSet Name="FK_WodXEjercicio_Wod_Cascade" Association="Self.FK_WodXEjercicio_Wod_Cascade">
             <End Role="Wod" EntitySet="Wod" />
@@ -628,7 +524,7 @@
             <EntityTypeMapping TypeName="CoachBusterModel.Dia">
               <MappingFragment StoreEntitySet="Dia">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="PlanId" ColumnName="PlanId" />
+                <ScalarProperty Name="IdPlan" ColumnName="IdPlan" />
                 <ScalarProperty Name="NumDias" ColumnName="NumDias" />
                 <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
               </MappingFragment>
@@ -639,7 +535,6 @@
               <MappingFragment StoreEntitySet="GrupoEjercicios">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Puntuacion" ColumnName="Puntuacion" />
                 <ScalarProperty Name="Instrucciones" ColumnName="Instrucciones" />
                 <ScalarProperty Name="URLVideo" ColumnName="URLVideo" />
               </MappingFragment>
@@ -652,7 +547,7 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="Precio" ColumnName="Precio" />
-                <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
                 <ScalarProperty Name="Foto" ColumnName="Foto" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -669,8 +564,8 @@
             <EntityTypeMapping TypeName="CoachBusterModel.Suscripcion">
               <MappingFragment StoreEntitySet="Suscripcion">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="usuarioId" ColumnName="usuarioId" />
-                <ScalarProperty Name="planId" ColumnName="planId" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdPlan" ColumnName="IdPlan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -693,7 +588,7 @@
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-                <ScalarProperty Name="RolId" ColumnName="RolId" />
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
                 <ScalarProperty Name="Foto" ColumnName="Foto" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -703,7 +598,7 @@
               <MappingFragment StoreEntitySet="Wod">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="DiaId" ColumnName="DiaId" />
+                <ScalarProperty Name="IdDia" ColumnName="IdDia" />
                 <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -712,8 +607,8 @@
             <EntityTypeMapping TypeName="CoachBusterModel.WodXEjercicio">
               <MappingFragment StoreEntitySet="WodXEjercicio">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="WodId" ColumnName="WodId" />
-                <ScalarProperty Name="GrupoEjerciciosId" ColumnName="GrupoEjerciciosId" />
+                <ScalarProperty Name="IdWod" ColumnName="IdWod" />
+                <ScalarProperty Name="IdGrupoEjercicios" ColumnName="IdGrupoEjercicios" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

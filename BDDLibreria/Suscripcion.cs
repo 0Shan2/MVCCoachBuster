@@ -15,8 +15,8 @@ namespace BDDLibreria
     public partial class Suscripcion
     {
         public int Id { get; set; }
-        public Nullable<int> usuarioId { get; set; }
-        public Nullable<int> planId { get; set; }
+        public Nullable<int> IdUsuario { get; set; }
+        public Nullable<int> IdPlan { get; set; }
     
         public virtual Planes Planes { get; set; }
         public virtual Usuario Usuario { get; set; }
