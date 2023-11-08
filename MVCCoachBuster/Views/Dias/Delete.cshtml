@@ -1,7 +1,7 @@
 ﻿@model MVCCoachBuster.Models.Dia
 
 @{
-    ViewData["Title"] = "eliminar: " +Model.NumDias;
+    ViewData["Title"] = "eliminar: " +Model.Nombre;
 }
 
 <h3>¿Estás seguro de @ViewData["Title"]?</h3>
@@ -9,10 +9,10 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumDias)
+            @Html.DisplayNameFor(model => model.Nombre)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumDias)
+            @Html.DisplayFor(model => model.Nombre)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Plan.Nombre)

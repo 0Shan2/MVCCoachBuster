@@ -34,7 +34,6 @@ namespace MVCCoachBuster.Controllers
             return View();
         }
 
-        //Esta peticion tendra un parametro return url, el cual va a contener la url a la que inteabamos acceder
         public IActionResult Login(string returnUrl)
         {
             LoginViewModel viewModel = new LoginViewModel();
@@ -53,7 +52,7 @@ namespace MVCCoachBuster.Controllers
 				var usuarioBd = _context.Usuarios
 		              .Include(u => u.Rol)
 		              .FirstOrDefault(u => u.Correo.ToLower().Trim() == viewModel.Correo.ToLower().Trim());
-				//si no existe el usuario enviamos una notificacion
+				
 				if (usuarioBd == null)
 				{
 					ModelState.AddModelError("", "Lo sentimos, el usuario no existe");

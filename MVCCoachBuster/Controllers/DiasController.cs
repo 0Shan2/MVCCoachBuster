@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -28,49 +29,63 @@ namespace MVCCoachBuster.Controllers
         // GET: Dias
         public async Task<IActionResult> Index(int planId)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
-            // Asigna el valor de planId a ViewBag para que se use en la vista
-            ViewBag.PlanId = planId;
-            // Recupera la lista de días asociados a un plan específico
-            var dias = _context.Dia.Where(d => d.PlanId == planId).ToList();
+            if (userId == null)
+            {
+                // Manejar el caso en el que el usuario no esté autenticado
+                return RedirectToAction("Login"); // o redirige a la página de inicio de sesión
+            }
 
-            // Cargar los Wods asociados a los días
-            foreach (var dia in dias)
+            int userIdAsInt;
+            if (!int.TryParse(userId, out userIdAsInt))
+            {
+                // Manejar el caso en el que la conversión de userId a int falló
+                return RedirectToAction("Error"); // Redirige a una página de error
+            }
+
+            // Consultar las suscripciones del usuario actual
+            var suscripciones = _context.Suscripcion.Where(s => s.usuarioId == userIdAsInt).ToList();
+
+            // Consultar los días asociados a las suscripciones del usuario
+            var diasUsuario = suscripciones
+                .SelectMany(s => _context.Dia.Where(d => d.PlanId == s.planId))
+                .ToList();
+
+            // Calcular el progreso del usuario en función de los días completados
+            double progresoUsuario = 0;
+            int diasCompletados = diasUsuario.Count(d => d.IsCompleted);
+
+            if (diasUsuario.Any())
+            {
+                progresoUsuario = (diasCompletados * 100.0) / diasUsuario.Count;
+            }
+
+
+            // Consultar los días específicos del plan
+            var diasDelPlan = _context.Dia.Where(d => d.PlanId == planId).ToList();
+
+            // Cargar los Wods asociados a los días del plan
+            foreach (var dia in diasDelPlan)
             {
                 dia.Wod = _context.Wod.Where(w => w.DiaId == dia.Id).ToList();
             }
 
-            // Configura ViewBag.Wod con la lista de Wods
-            ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
-
-            // Calcula el progreso en función de los datos en la base de datos
-            var progreso = (dias.Count(d => d.IsCompleted) * 100.0) / dias.Count;
-            var diasCompletados = dias.Count(d => d.IsCompleted);
-
-            ViewBag.Dias = dias;
+            ViewData["PlanId"] = new SelectList(_context.Planes, "Id", "Id");
+            ViewBag.PlanId = planId;
+            ViewBag.Dias = diasDelPlan;
             ViewBag.AriaValueNow = diasCompletados;
-            if (ViewBag.Dias.Count > 0)
+
+            if (diasUsuario.Any())
             {
-                ViewBag.Progreso = (diasCompletados * 100) / ViewBag.Dias.Count;
-            }
-            else
-            {
-                // Aquí puedes manejar el caso en el que no hay días
-                // Por ejemplo, asignar un valor predeterminado o mostrar un mensaje de error
-                ViewBag.Progreso = 0; // Valor predeterminado
+                ViewBag.ProgresoUsuario = progresoUsuario;
             }
 
-            /*
-            foreach (var dia in dias)
-            {
-                dia.IsCompleted = false; //Asignamos falso por defecto
-            }
-            */
+            return View(diasDelPlan.ToList());
 
-            var coachBusterContext = _context.Dia.Include(d => d.Plan).Where(d => d.PlanId == planId);
-            return View(await coachBusterContext.ToListAsync());
         }
+
+
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         [HttpPost]
@@ -230,7 +245,7 @@ namespace MVCCoachBuster.Controllers
                     var nuevoDia = new Dia
                     {
                         PlanId = planId, // Asigna el PlanId que recibes como parámetro
-                        NumDias = "Día " + i, // Formatea el número de día
+                        Nombre = "Día " + i, // Formatea el número de día
                                               //NumDias = dia.NumDias,
                                               // Otras propiedades del día
                     };
