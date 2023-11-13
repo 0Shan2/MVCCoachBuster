@@ -292,9 +292,18 @@ namespace MVCCoachBuster.Controllers
                 {
                     return Problem("Entity set 'CoachBusterContext.Planes'  is null.");
                 }
-                var plan = await _context.Planes.FindAsync(id);
+                var plan = await _context.Planes
+                    .Include(d => d.Dia)
+                    .ThenInclude(m => m.Wod)
+                    .FirstOrDefaultAsync(u => u.Id == id);
+
                 if (plan != null)
                 {
+                    foreach (var dia in plan.Dia)
+                    {
+                        _context.Wod.RemoveRange(dia.Wod);
+                    }
+                    _context.Dia.RemoveRange(plan.Dia);
                     _context.Planes.Remove(plan);
                 }
 

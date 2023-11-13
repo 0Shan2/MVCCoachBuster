@@ -166,6 +166,7 @@ namespace MVCCoachBuster.Controllers
 
             var dia = await _context.Dia
                 .Include(d => d.Plan)
+                .Include(w => w.Wod) 
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dia == null)
             {
@@ -184,9 +185,12 @@ namespace MVCCoachBuster.Controllers
             {
                 return Problem("Entity set 'CoachBusterContext.Dia'  is null.");
             }
-            var dia = await _context.Dia.FindAsync(id);
+            var dia = await _context.Dia
+                .Include(d => d.Wod)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (dia != null)
             {
+                _context.Wod.RemoveRange(dia.Wod);
                 _context.Dia.Remove(dia);
             }
 

@@ -254,9 +254,14 @@ namespace MVCCoachBuster.Controllers
             {
                 return Problem("Entity set 'CoachBusterContext.Wod'  is null.");
             }
-            var wod = await _context.Wod.FindAsync(id);
+            var wod = await _context.Wod
+             .Include(w => w.WodXEjercicio)  // Incluye las relaciones de WodXEjercicio
+             .FirstOrDefaultAsync(m => m.Id == id);
+
             if (wod != null)
             {
+                // Primero eliminamos la relación
+                _context.WodXEjercicio.RemoveRange(wod.WodXEjercicio);
                 _context.Wod.Remove(wod);
             }
             
