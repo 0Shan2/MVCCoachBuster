@@ -414,6 +414,26 @@ namespace MVCCoachBuster.Controllers
         }
 
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // Listado de Entrenadores
+        public async Task<IActionResult> ListaEntrenadores(ListadoViewModel<Usuario> viewModel)
+        {
+
+            var entrenadores = _context.Usuarios
+                .Where(m => m.IdRol == 2)
+                .AsNoTracking();
+
+            // Para buscar a un entrenador
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
+            {
+                entrenadores = entrenadores.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda));
+            }
+
+            viewModel.Total = entrenadores.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await entrenadores.ToPagedListAsync(numeroPagina, 10);
+
+            return View(viewModel);
+        }
         
 
     }
