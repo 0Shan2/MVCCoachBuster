@@ -288,10 +288,6 @@ namespace MVCCoachBuster.Controllers
         {
             try
             {
-                if (_context.Planes == null)
-                {
-                    return Problem("Entity set 'CoachBusterContext.Planes'  is null.");
-                }
                 var plan = await _context.Planes
                     .Include(d => d.Dia)
                     .ThenInclude(m => m.Wod)
@@ -300,6 +296,15 @@ namespace MVCCoachBuster.Controllers
 
                 if (plan != null)
                 {
+                    bool hayUsuariosInscritos = _context.Suscripcion.Any(s => s.IdPlan == id);
+
+                    if (hayUsuariosInscritos)
+                    {
+                        // Hay usuarios inscritos, no permitir la eliminación
+                        _servicioNotificacion.Warning("No se puede eliminar el plan, hay usuarios inscritos.");
+                        return RedirectToAction("UsuariosSuscritosAlPlan", "Suscripciones", new { planId = id });
+                    }
+
                     foreach (var dia in plan.Dia)
                     {
                         foreach(var wod in dia.Wod)
@@ -326,8 +331,7 @@ namespace MVCCoachBuster.Controllers
             }
             catch (DbUpdateException)
             {
-                _servicioNotificacion.Warning("Ha ocurrido un error. Compruebe que no haya usuarios suscritos al plan.");
-                return RedirectToAction("UsuariosSuscritosAlPlan", "Suscripciones", new { planId = id });
+                _servicioNotificacion.Warning("Ha ocurrido un error.");
             }
             return RedirectToAction(nameof(Index));
         }
