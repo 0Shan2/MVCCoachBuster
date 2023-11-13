@@ -22,6 +22,8 @@ namespace MVCCoachBuster.Data
         public DbSet<GrupoEjercicios> GrupoEjercicios { get; set; }
         public DbSet<Wod> Wod { get; set; }
         public DbSet<MVCCoachBuster.Models.WodXEjercicio> WodXEjercicio { get; set; }
+        public DbSet<MVCCoachBuster.Models.Progreso> Progreso { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Rol>().ToTable("Rol");
@@ -29,9 +31,12 @@ namespace MVCCoachBuster.Data
             modelBuilder.Entity<Plan>().ToTable("Planes");
             modelBuilder.Entity<Suscripcion>().ToTable("Suscripcion");
             modelBuilder.Entity<GrupoEjercicios>().ToTable("GrupoEjercicios");
+            modelBuilder.Entity<Progreso>().ToTable("Progreso");
+
             base.OnModelCreating(modelBuilder);
              
         }
+     
         
 
         

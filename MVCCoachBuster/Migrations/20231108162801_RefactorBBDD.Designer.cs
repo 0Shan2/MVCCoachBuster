@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCCoachBuster.Migrations
 {
     [DbContext(typeof(CoachBusterContext))]
-    [Migration("20231108144131_BBDDre")]
-    partial class BBDDre
+    [Migration("20231108162801_RefactorBBDD")]
+    partial class RefactorBBDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,12 +41,9 @@ namespace MVCCoachBuster.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlanId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PlanId");
+                    b.HasIndex("IdPlan");
 
                     b.ToTable("Dia");
                 });
@@ -98,12 +95,9 @@ namespace MVCCoachBuster.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("UsuEntrenadorId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuEntrenadorId");
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Planes", (string)null);
                 });
@@ -140,17 +134,11 @@ namespace MVCCoachBuster.Migrations
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlanId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PlanId");
+                    b.HasIndex("IdPlan");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Suscripcion", (string)null);
                 });
@@ -181,15 +169,12 @@ namespace MVCCoachBuster.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int?>("RolId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Telefono")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RolId");
+                    b.HasIndex("IdRol");
 
                     b.ToTable("Usuario", (string)null);
                 });
@@ -202,9 +187,6 @@ namespace MVCCoachBuster.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("DiaId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("IdDia")
                         .HasColumnType("int");
 
@@ -216,7 +198,7 @@ namespace MVCCoachBuster.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiaId");
+                    b.HasIndex("IdDia");
 
                     b.ToTable("Wod");
                 });
@@ -229,23 +211,17 @@ namespace MVCCoachBuster.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("GrupoEjerciciosId")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdGrupoEjercicios")
                         .HasColumnType("int");
 
                     b.Property<int>("IdWod")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WodId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("GrupoEjerciciosId");
+                    b.HasIndex("IdGrupoEjercicios");
 
-                    b.HasIndex("WodId");
+                    b.HasIndex("IdWod");
 
                     b.ToTable("WodXEjercicio");
                 });
@@ -254,7 +230,9 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Plan", "Plan")
                         .WithMany("Dia")
-                        .HasForeignKey("PlanId");
+                        .HasForeignKey("IdPlan")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Plan");
                 });
@@ -263,7 +241,9 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Usuario", "UsuEntrenador")
                         .WithMany()
-                        .HasForeignKey("UsuEntrenadorId");
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UsuEntrenador");
                 });
@@ -272,11 +252,15 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Plan", "Plan")
                         .WithMany()
-                        .HasForeignKey("PlanId");
+                        .HasForeignKey("IdPlan")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MVCCoachBuster.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Plan");
 
@@ -287,7 +271,9 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Rol", "Rol")
                         .WithMany("Usuarios")
-                        .HasForeignKey("RolId");
+                        .HasForeignKey("IdRol")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Rol");
                 });
@@ -296,7 +282,7 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.Dia", "Dia")
                         .WithMany("Wod")
-                        .HasForeignKey("DiaId");
+                        .HasForeignKey("IdDia");
 
                     b.Navigation("Dia");
                 });
@@ -305,11 +291,15 @@ namespace MVCCoachBuster.Migrations
                 {
                     b.HasOne("MVCCoachBuster.Models.GrupoEjercicios", "GrupoEjercicios")
                         .WithMany("WodXEjercicio")
-                        .HasForeignKey("GrupoEjerciciosId");
+                        .HasForeignKey("IdGrupoEjercicios")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MVCCoachBuster.Models.Wod", "Wod")
                         .WithMany("WodXEjercicio")
-                        .HasForeignKey("WodId");
+                        .HasForeignKey("IdWod")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GrupoEjercicios");
 

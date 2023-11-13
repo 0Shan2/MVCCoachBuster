@@ -149,7 +149,7 @@ namespace MVCCoachBuster.Controllers
                 return RedirectToAction("Create", new { planId = planId });
 
             }
-            // Si hay un error de validación, puedes manejarlo aquí
+           
             return View(dia);
         }
 
