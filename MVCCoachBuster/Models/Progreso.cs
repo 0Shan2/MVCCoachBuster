@@ -16,6 +16,7 @@ namespace MVCCoachBuster.Models
         public WodXEjercicio WodXEjercicio { get; set; }
 
         public DateTime Fecha { get; set; }
+        public bool IsCompleted { get; set; }
 
 
 

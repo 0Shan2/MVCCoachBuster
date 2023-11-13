@@ -14,6 +14,6 @@ namespace MVCCoachBuster.Models
         public int IdPlan { get; set; }
         public Plan Plan { get; set; }
 
-
+        //public ICollection<Progreso> Progresos { get; set; }
     }
 }

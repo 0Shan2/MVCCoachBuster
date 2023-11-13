@@ -72,16 +72,21 @@ namespace MVCCoachBuster.Controllers
                 .Include(d => d.Wod)
                     .ThenInclude(w => w.WodXEjercicio)
                         .ThenInclude(we => we.GrupoEjercicios)
+
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (dia == null)
             {
                 return NotFound();
             }
-   
+
+
+    
+
 
             return View(dia);
         }
+
 
 
 
