@@ -187,9 +187,14 @@ namespace MVCCoachBuster.Controllers
             }
             var dia = await _context.Dia
                 .Include(d => d.Wod)
+                .ThenInclude(w => w.WodXEjercicio)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dia != null)
             {
+                foreach (var wod in dia.Wod)
+                {
+                    _context.WodXEjercicio.RemoveRange(wod.WodXEjercicio);
+                }
                 _context.Wod.RemoveRange(dia.Wod);
                 _context.Dia.Remove(dia);
             }

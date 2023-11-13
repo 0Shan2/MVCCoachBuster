@@ -295,10 +295,19 @@ namespace MVCCoachBuster.Controllers
                 var plan = await _context.Planes
                     .Include(d => d.Dia)
                     .ThenInclude(m => m.Wod)
+                    .ThenInclude(w => w.WodXEjercicio)
                     .FirstOrDefaultAsync(u => u.Id == id);
 
                 if (plan != null)
                 {
+                    foreach (var dia in plan.Dia)
+                    {
+                        foreach(var wod in dia.Wod)
+                        {
+                            _context.WodXEjercicio.RemoveRange(wod.WodXEjercicio);
+                        }
+                    }
+
                     foreach (var dia in plan.Dia)
                     {
                         _context.Wod.RemoveRange(dia.Wod);
