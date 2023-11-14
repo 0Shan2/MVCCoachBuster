@@ -26,61 +26,68 @@ namespace MVCCoachBuster.Controllers
         {
               return View(await _context.Progreso.ToListAsync());
         }
-
-        //Logica progreso
-
+        /*
         [HttpPost]
         public IActionResult MarcarWOD(int IdWodXEjercicio, int IdSuscripcion)
         {
-            var progreso = _context.Progreso
-         .FirstOrDefault(p => p.IdSuscripcion == IdSuscripcion && p.WodXEjercicio.Id == IdWodXEjercicio);
-
-            // Cargar manualmente las entidades relacionadas
-            _context.Entry(progreso)
-                .Reference(p => p.WodXEjercicio)
-                .Load();
-
-            _context.Entry(progreso.WodXEjercicio)
-                .Reference(we => we.Wod)
-                .Load();
-
-            if (progreso == null)
+            try
             {
-                progreso = new Progreso
+                var progreso = _context.Progreso.SingleOrDefault(p => p.IdWodXEjercicio == IdWodXEjercicio);
+
+                if (progreso == null || progreso.WodXEjercicio == null)
                 {
-                    IdSuscripcion = IdSuscripcion,
-                    IdWodXEjercicio = IdWodXEjercicio,
-                    Fecha = DateTime.Now,
-                };
+                    return NotFound("No se encontró el progreso o el WodXEjercicio asociado.");
+                }
 
-                _context.Progreso.Add(progreso);
+                progreso.IsCompleted = true;
+
+                // Utiliza una transacción para garantizar operaciones atómicas
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _context.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw; // Re-lanza la excepción después de hacer rollback
+                    }
+                }
+
+                return RedirectToAction("Details", "Dias", new { id = IdSuscripcion });
             }
-
-            progreso.IsCompleted = true; // Marcamos como completado
-
-            _context.SaveChanges();
-
-
-            return RedirectToAction("Details","Dias", new { diaId = progreso.WodXEjercicio.Wod.IdDia });
+            catch (Exception ex)
+            {
+                return BadRequest($"Error al marcar el WOD como completado: {ex.Message}");
+            }
         }
-
-
+        
         [HttpGet]
         public IActionResult ObtenerProgreso(int IdSuscripcion)
         {
-            // Obtén el número total de WODs para este día
-            int totalWODs = _context.Wod.Count();  // Ajusta según tus modelos y relaciones
+            try
+            {
+                var progreso = _context.Progreso.Count(p => p.IdSuscripcion == IdSuscripcion && p.IsCompleted);
 
-            // Obtén el número de WODs completados para este día
-            int wodsCompletados = _context.Progreso
-                .Count(p => p.IdSuscripcion == IdSuscripcion && p.IsCompleted);
+                var totalWODs = _context.Progreso
+                    .Where(p => p.IdSuscripcion == IdSuscripcion)
+                    .Select(p => p.WodXEjercicio)
+                    .Distinct()
+                    .Count();
 
-            // Calcular el progreso como una fracción
-            string progreso = $"{wodsCompletados}/{totalWODs} completados";
+                var progresoActualizado = $"{progreso}/{totalWODs} completados";
 
-            // Devuelve el progreso en formato JSON
-            return Json(progreso);
+                return Ok(progresoActualizado);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error al obtener el progreso actualizado: {ex.Message}");
+            }
         }
+        */
+
 
     }
 

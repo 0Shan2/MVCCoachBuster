@@ -10,13 +10,13 @@
     <div class="row d-flex">
         <div class="col-lg-6  d-flex justify-content-center align-items-center">
             <div class="card1 pb-5">
-                <i class="fa-solid fa-user-lock fa-9x text-primary"></i>
+                <i class="fa-solid fa-user-lock fa-9x text-black"></i>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="card border-0 px-4 py-5">
                 <form asp-action="Registro" enctype="multipart/form-data">
-                    <h4 class="bg-primary p-3 text-white text-center">Registro</h4>
+                    <h4 class="bg-black p-3 text-white text-center">Registro</h4>
                     <hr />
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
@@ -42,13 +42,13 @@
                     <div class="form-group d-flex justify-content-center">
 
                     
-                        <button type="submit" class="btn btn-outline-success me-2">
+                        <button type="submit" class="btn btn-outline-black me-2">
                             <i class="fa-solid fa-sign-in-alt"></i>
-                            Acceder</button>
-                        <button class="btn btn-sm btn-outline-secondary" type="submit">   
-                            <i class="fa-solid fa-sign-in-alt"></i>
-                            Ya tengo cuenta</button>
-                   
+                            Registrar</button>
+            
+                        <a asp-action="Login" class="btn btn-sm btn-black me-2">
+                            <i class="fa-solid fa-user"></i>&nbsp;Ya tengo cuenta
+                        </a>
                    
                     </div>
                 </form>

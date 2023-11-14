@@ -7,16 +7,16 @@ namespace MVCCoachBuster.Models
         public int Id { get; set; }
 
         [ForeignKey("IdSuscripcion")]
-        public int IdSuscripcion { get; set; }
+        public int? IdSuscripcion { get; set; }
         public Suscripcion Suscripcion { get; set; }
 
 
         [ForeignKey("IdWodXEjercicio")]
-        public int IdWodXEjercicio { get; set; }
+        public int? IdWodXEjercicio { get; set; }
         public WodXEjercicio WodXEjercicio { get; set; }
 
-        public DateTime Fecha { get; set; }
-        public bool IsCompleted { get; set; }
+        public DateTime? Fecha { get; set; }
+        public bool? IsCompleted { get; set; }
 
 
 

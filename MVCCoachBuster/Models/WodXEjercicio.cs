@@ -13,7 +13,7 @@ namespace MVCCoachBuster.Models
         public int IdGrupoEjercicios { get; set; }
         public  GrupoEjercicios GrupoEjercicios { get; set;}
 
-        //public ICollection<Progreso> Progresos { get; set; }
+        public ICollection<Progreso> Progresos { get; set; }
 
     }
 }

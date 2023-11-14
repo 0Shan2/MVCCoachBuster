@@ -9,26 +9,17 @@
 
 
 <div class="container">
-    @{
-        // Obtener el número total de WODs para este día
-        int totalWODs = Model.Wod.Count;
 
-        // Obtener el número de WODs completados para este día
-        int wodsCompletados = Model.Wod.Count(w => w.IsCompleted == true);
 
-        // Calcular el progreso como una fracción
-        string progreso = $"{wodsCompletados}/{totalWODs} completados";
-    }
+    
     <div class="alert alert-info" role="alert">
-        Progreso: @progreso
+        Progreso: 
     </div>
     @foreach (var wod in Model.Wod)
     {
         <div class="card border-primary mb-4 ">
             <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox"
-                   data-wodxejercicio-id="@wod.WodXEjercicio.First().Id"
-                   data-suscripcion-id="@ViewBag.IdSuscripcion"
-                   onclick="MarcarWOD(this)">
+                 >
 
             <div class="card-header">@wod.Nombre</div>
             <div class="card-body ">
@@ -107,40 +98,6 @@
         // Eliminar el manejador de eventos para evitar cierres no deseados
         window.onclick = null;
     }
-  // Función para marcar un WOD
-    function MarcarWOD(wodXEjercicioId, suscripcionId) {
-        // Realizar la llamada AJAX para marcar el WOD
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("MarcarWOD", "Progreso")',
-            data: { wodXEjercicioId: wodXEjercicioId, suscripcionId: suscripcionId },
-            success: function () {
-                // Actualizar el contenido del contenedor de progreso
-                actualizarProgreso();
-            },
-            error: function () {
-                // Manejar errores si es necesario
-            }
-        });
-    }
-
-    // Función para actualizar el progreso
-    function actualizarProgreso() {
-        // Realizar una nueva llamada AJAX para obtener el progreso actualizado
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Action("ObtenerProgreso", "Progreso")',
-            data: { suscripcionId: '@ViewBag.IdSuscripcion' },
-            success: function (progreso) {
-                // Actualizar el contenido del contenedor de progreso
-                $('#progreso-container').text('Progreso: ' + progreso);
-            },
-            error: function () {
-                // Manejar errores si es necesario
-            }
-        });
-    }
-
 
 
 

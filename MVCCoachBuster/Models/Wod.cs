@@ -9,7 +9,7 @@ namespace MVCCoachBuster.Models
         [ForeignKey("Dia")]
         public int? IdDia { get; set; }
         public Dia Dia { get; set; }
-        public bool IsCompleted { get; set; }
+
         public ICollection<WodXEjercicio> WodXEjercicio { get; set; }
     }
 }
