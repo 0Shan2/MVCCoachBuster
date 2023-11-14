@@ -50,80 +50,81 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BDD.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDD.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BDD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BDD.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDD.edmx</DependentUpon>
+    </Compile>
     <Compile Include="C__EFMigrationsHistory.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Dia.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="GrupoEjercicios.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Planes.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Progreso.cs">
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rol.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServerBBDD.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ServerBBDD.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServerBBDD.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServerBBDD.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ServerBBDD.edmx</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Suscripcion.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Usuario.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="Wod.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
     <Compile Include="WodXEjercicio.cs">
-      <DependentUpon>ServerBBDD.tt</DependentUpon>
+      <DependentUpon>BDD.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="ServerBBDD.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ServerBBDD.Designer.cs</LastGenOutput>
-    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="packages.config" />
-    <None Include="ServerBBDD.edmx.diagram">
-      <DependentUpon>ServerBBDD.edmx</DependentUpon>
+    <EntityDeploy Include="BDD.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BDD.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="BDD.edmx.diagram">
+      <DependentUpon>BDD.edmx</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ServerBBDD.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ServerBBDD.Context.cs</LastGenOutput>
-      <DependentUpon>ServerBBDD.edmx</DependentUpon>
-    </Content>
-    <Content Include="ServerBBDD.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ServerBBDD.edmx</DependentUpon>
-      <LastGenOutput>ServerBBDD.cs</LastGenOutput>
-    </Content>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BDD.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BDD.edmx</DependentUpon>
+      <LastGenOutput>BDD.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="BDD.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BDD.edmx</DependentUpon>
+      <LastGenOutput>BDD.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

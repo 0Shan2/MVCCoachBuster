@@ -14,11 +14,19 @@ namespace BDDLibreria
     
     public partial class Suscripcion
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Suscripcion()
+        {
+            this.Progreso = new HashSet<Progreso>();
+        }
+    
         public int Id { get; set; }
         public Nullable<int> IdUsuario { get; set; }
         public Nullable<int> IdPlan { get; set; }
     
         public virtual Planes Planes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Progreso> Progreso { get; set; }
         public virtual Usuario Usuario { get; set; }
     }
 }

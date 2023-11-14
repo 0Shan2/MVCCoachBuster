@@ -23,7 +23,6 @@ namespace BDDLibreria
         public int Id { get; set; }
         public string Nombre { get; set; }
         public Nullable<int> IdDia { get; set; }
-        public Nullable<bool> IsCompleted { get; set; }
     
         public virtual Dia Dia { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

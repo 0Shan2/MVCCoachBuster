@@ -14,11 +14,19 @@ namespace BDDLibreria
     
     public partial class WodXEjercicio
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public WodXEjercicio()
+        {
+            this.Progreso = new HashSet<Progreso>();
+        }
+    
         public int Id { get; set; }
         public Nullable<int> IdWod { get; set; }
         public Nullable<int> IdGrupoEjercicios { get; set; }
     
         public virtual GrupoEjercicios GrupoEjercicios { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Progreso> Progreso { get; set; }
         public virtual Wod Wod { get; set; }
     }
 }

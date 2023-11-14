@@ -105,16 +105,16 @@ namespace MVCCoachBuster.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("Fecha")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdSuscripcion")
+                    b.Property<int>("IdSuscripcion")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdWodXEjercicio")
+                    b.Property<int>("IdWodXEjercicio")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsCompleted")
+                    b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
                     b.Property<int?>("SuscripcionId")

@@ -1,0 +1,733 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CoachBusterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__EFMigrationsHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Dia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPlan" Type="int" />
+          <Property Name="Nombre" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="GrupoEjercicios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Instrucciones" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="URLVideo" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="Planes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
+          <Property Name="Precio" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Foto" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Progreso">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSuscripcion" Type="int" Nullable="false" />
+          <Property Name="IdWodXEjercicio" Type="int" Nullable="false" />
+          <Property Name="Fecha" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="IsCompleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Suscripcion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" />
+          <Property Name="IdPlan" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Correo" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Contrasena" Type="nvarchar(max)" />
+          <Property Name="Telefono" Type="int" Nullable="false" />
+          <Property Name="IdRol" Type="int" Nullable="false" />
+          <Property Name="Foto" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Wod">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="IdDia" Type="int" />
+        </EntityType>
+        <EntityType Name="WodXEjercicio">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdWod" Type="int" />
+          <Property Name="IdGrupoEjercicios" Type="int" />
+        </EntityType>
+        <Association Name="FK_Dia_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dia">
+              <PropertyRef Name="IdPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Planes_Usuario_IdUsuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Planes" Type="Self.Planes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Planes">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Progreso_Suscripcion">
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="1" />
+          <End Role="Progreso" Type="Self.Progreso" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suscripcion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Progreso">
+              <PropertyRef Name="IdSuscripcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Progreso_WodXEjercicio">
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="1" />
+          <End Role="Progreso" Type="Self.Progreso" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WodXEjercicio">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Progreso">
+              <PropertyRef Name="IdWodXEjercicio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Suscripcion_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1" />
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Suscripcion">
+              <PropertyRef Name="IdPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Suscripcion_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Suscripcion">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Rol_IdRol">
+          <End Role="Rol" Type="Self.Rol" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Wod_Dia_Cascade">
+          <End Role="Dia" Type="Self.Dia" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Wod" Type="Self.Wod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wod">
+              <PropertyRef Name="IdDia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_GrupoEjercicios1">
+          <End Role="GrupoEjercicios" Type="Self.GrupoEjercicios" Multiplicity="0..1" />
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GrupoEjercicios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WodXEjercicio">
+              <PropertyRef Name="IdGrupoEjercicios" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_Wod_Cascade">
+          <End Role="Wod" Type="Self.Wod" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WodXEjercicio">
+              <PropertyRef Name="IdWod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CoachBusterModelStoreContainer">
+          <EntitySet Name="__EFMigrationsHistory" EntityType="Self.__EFMigrationsHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dia" EntityType="Self.Dia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GrupoEjercicios" EntityType="Self.GrupoEjercicios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Planes" EntityType="Self.Planes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Progreso" EntityType="Self.Progreso" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rol" EntityType="Self.Rol" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Suscripcion" EntityType="Self.Suscripcion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Wod" EntityType="Self.Wod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WodXEjercicio" EntityType="Self.WodXEjercicio" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Dia_Planes" Association="Self.FK_Dia_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Dia" EntitySet="Dia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Planes_Usuario_IdUsuario" Association="Self.FK_Planes_Usuario_IdUsuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Planes" EntitySet="Planes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Progreso_Suscripcion" Association="Self.FK_Progreso_Suscripcion">
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+            <End Role="Progreso" EntitySet="Progreso" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Progreso_WodXEjercicio" Association="Self.FK_Progreso_WodXEjercicio">
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+            <End Role="Progreso" EntitySet="Progreso" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Suscripcion_Planes" Association="Self.FK_Suscripcion_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Suscripcion_Usuario" Association="Self.FK_Suscripcion_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Rol_IdRol" Association="Self.FK_Usuario_Rol_IdRol">
+            <End Role="Rol" EntitySet="Rol" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Wod_Dia_Cascade" Association="Self.FK_Wod_Dia_Cascade">
+            <End Role="Dia" EntitySet="Dia" />
+            <End Role="Wod" EntitySet="Wod" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios1" Association="Self.FK_WodXEjercicio_GrupoEjercicios1">
+            <End Role="GrupoEjercicios" EntitySet="GrupoEjercicios" />
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_Wod_Cascade" Association="Self.FK_WodXEjercicio_Wod_Cascade">
+            <End Role="Wod" EntitySet="Wod" />
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CoachBusterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__EFMigrationsHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Dia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPlan" Type="Int32" />
+          <Property Name="Nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Planes" Relationship="Self.FK_Dia_Planes" FromRole="Dia" ToRole="Planes" />
+          <NavigationProperty Name="Wod" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Dia" ToRole="Wod" />
+        </EntityType>
+        <EntityType Name="GrupoEjercicios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Instrucciones" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="URLVideo" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios1" FromRole="GrupoEjercicios" ToRole="WodXEjercicio" />
+        </EntityType>
+        <EntityType Name="Planes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Precio" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Foto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Dia" Relationship="Self.FK_Dia_Planes" FromRole="Planes" ToRole="Dia" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Planes_Usuario_IdUsuario" FromRole="Planes" ToRole="Usuario" />
+          <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Suscripcion_Planes" FromRole="Planes" ToRole="Suscripcion" />
+        </EntityType>
+        <EntityType Name="Progreso">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSuscripcion" Type="Int32" Nullable="false" />
+          <Property Name="IdWodXEjercicio" Type="Int32" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="IsCompleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Progreso_Suscripcion" FromRole="Progreso" ToRole="Suscripcion" />
+          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_Progreso_WodXEjercicio" FromRole="Progreso" ToRole="WodXEjercicio" />
+        </EntityType>
+        <EntityType Name="Rol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol_IdRol" FromRole="Rol" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Suscripcion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" />
+          <Property Name="IdPlan" Type="Int32" />
+          <NavigationProperty Name="Planes" Relationship="Self.FK_Suscripcion_Planes" FromRole="Suscripcion" ToRole="Planes" />
+          <NavigationProperty Name="Progreso" Relationship="Self.FK_Progreso_Suscripcion" FromRole="Suscripcion" ToRole="Progreso" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Suscripcion_Usuario" FromRole="Suscripcion" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contrasena" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="Int32" Nullable="false" />
+          <Property Name="IdRol" Type="Int32" Nullable="false" />
+          <Property Name="Foto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Planes" Relationship="Self.FK_Planes_Usuario_IdUsuario" FromRole="Usuario" ToRole="Planes" />
+          <NavigationProperty Name="Rol" Relationship="Self.FK_Usuario_Rol_IdRol" FromRole="Usuario" ToRole="Rol" />
+          <NavigationProperty Name="Suscripcion" Relationship="Self.FK_Suscripcion_Usuario" FromRole="Usuario" ToRole="Suscripcion" />
+        </EntityType>
+        <EntityType Name="Wod">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IdDia" Type="Int32" />
+          <NavigationProperty Name="Dia" Relationship="Self.FK_Wod_Dia_Cascade" FromRole="Wod" ToRole="Dia" />
+          <NavigationProperty Name="WodXEjercicio" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="Wod" ToRole="WodXEjercicio" />
+        </EntityType>
+        <EntityType Name="WodXEjercicio">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdWod" Type="Int32" />
+          <Property Name="IdGrupoEjercicios" Type="Int32" />
+          <NavigationProperty Name="GrupoEjercicios" Relationship="Self.FK_WodXEjercicio_GrupoEjercicios1" FromRole="WodXEjercicio" ToRole="GrupoEjercicios" />
+          <NavigationProperty Name="Progreso" Relationship="Self.FK_Progreso_WodXEjercicio" FromRole="WodXEjercicio" ToRole="Progreso" />
+          <NavigationProperty Name="Wod" Relationship="Self.FK_WodXEjercicio_Wod_Cascade" FromRole="WodXEjercicio" ToRole="Wod" />
+        </EntityType>
+        <Association Name="FK_Dia_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Dia" Type="Self.Dia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dia">
+              <PropertyRef Name="IdPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Wod_Dia_Cascade">
+          <End Role="Dia" Type="Self.Dia" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Wod" Type="Self.Wod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wod">
+              <PropertyRef Name="IdDia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_GrupoEjercicios1">
+          <End Role="GrupoEjercicios" Type="Self.GrupoEjercicios" Multiplicity="0..1" />
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GrupoEjercicios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WodXEjercicio">
+              <PropertyRef Name="IdGrupoEjercicios" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Planes_Usuario_IdUsuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Planes" Type="Self.Planes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Planes">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Suscripcion_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="0..1" />
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Suscripcion">
+              <PropertyRef Name="IdPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Progreso_Suscripcion">
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="1" />
+          <End Role="Progreso" Type="Self.Progreso" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suscripcion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Progreso">
+              <PropertyRef Name="IdSuscripcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Progreso_WodXEjercicio">
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="1" />
+          <End Role="Progreso" Type="Self.Progreso" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WodXEjercicio">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Progreso">
+              <PropertyRef Name="IdWodXEjercicio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Rol_IdRol">
+          <End Role="Rol" Type="Self.Rol" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Suscripcion_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Suscripcion">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WodXEjercicio_Wod_Cascade">
+          <End Role="Wod" Type="Self.Wod" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WodXEjercicio" Type="Self.WodXEjercicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WodXEjercicio">
+              <PropertyRef Name="IdWod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CoachBusterEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__EFMigrationsHistory" EntityType="Self.C__EFMigrationsHistory" />
+          <EntitySet Name="Dia" EntityType="Self.Dia" />
+          <EntitySet Name="GrupoEjercicios" EntityType="Self.GrupoEjercicios" />
+          <EntitySet Name="Planes" EntityType="Self.Planes" />
+          <EntitySet Name="Progreso" EntityType="Self.Progreso" />
+          <EntitySet Name="Rol" EntityType="Self.Rol" />
+          <EntitySet Name="Suscripcion" EntityType="Self.Suscripcion" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <EntitySet Name="Wod" EntityType="Self.Wod" />
+          <EntitySet Name="WodXEjercicio" EntityType="Self.WodXEjercicio" />
+          <AssociationSet Name="FK_Dia_Planes" Association="Self.FK_Dia_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Dia" EntitySet="Dia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Wod_Dia_Cascade" Association="Self.FK_Wod_Dia_Cascade">
+            <End Role="Dia" EntitySet="Dia" />
+            <End Role="Wod" EntitySet="Wod" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_GrupoEjercicios1" Association="Self.FK_WodXEjercicio_GrupoEjercicios1">
+            <End Role="GrupoEjercicios" EntitySet="GrupoEjercicios" />
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Planes_Usuario_IdUsuario" Association="Self.FK_Planes_Usuario_IdUsuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Planes" EntitySet="Planes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Suscripcion_Planes" Association="Self.FK_Suscripcion_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Progreso_Suscripcion" Association="Self.FK_Progreso_Suscripcion">
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+            <End Role="Progreso" EntitySet="Progreso" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Progreso_WodXEjercicio" Association="Self.FK_Progreso_WodXEjercicio">
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+            <End Role="Progreso" EntitySet="Progreso" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Rol_IdRol" Association="Self.FK_Usuario_Rol_IdRol">
+            <End Role="Rol" EntitySet="Rol" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Suscripcion_Usuario" Association="Self.FK_Suscripcion_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WodXEjercicio_Wod_Cascade" Association="Self.FK_WodXEjercicio_Wod_Cascade">
+            <End Role="Wod" EntitySet="Wod" />
+            <End Role="WodXEjercicio" EntitySet="WodXEjercicio" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CoachBusterModelStoreContainer" CdmEntityContainer="CoachBusterEntities1">
+          <EntitySetMapping Name="C__EFMigrationsHistory">
+            <EntityTypeMapping TypeName="CoachBusterModel.C__EFMigrationsHistory">
+              <MappingFragment StoreEntitySet="__EFMigrationsHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dia">
+            <EntityTypeMapping TypeName="CoachBusterModel.Dia">
+              <MappingFragment StoreEntitySet="Dia">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdPlan" ColumnName="IdPlan" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GrupoEjercicios">
+            <EntityTypeMapping TypeName="CoachBusterModel.GrupoEjercicios">
+              <MappingFragment StoreEntitySet="GrupoEjercicios">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Instrucciones" ColumnName="Instrucciones" />
+                <ScalarProperty Name="URLVideo" ColumnName="URLVideo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Planes">
+            <EntityTypeMapping TypeName="CoachBusterModel.Planes">
+              <MappingFragment StoreEntitySet="Planes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Progreso">
+            <EntityTypeMapping TypeName="CoachBusterModel.Progreso">
+              <MappingFragment StoreEntitySet="Progreso">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdSuscripcion" ColumnName="IdSuscripcion" />
+                <ScalarProperty Name="IdWodXEjercicio" ColumnName="IdWodXEjercicio" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rol">
+            <EntityTypeMapping TypeName="CoachBusterModel.Rol">
+              <MappingFragment StoreEntitySet="Rol">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suscripcion">
+            <EntityTypeMapping TypeName="CoachBusterModel.Suscripcion">
+              <MappingFragment StoreEntitySet="Suscripcion">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdPlan" ColumnName="IdPlan" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="CoachBusterModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="CoachBusterModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Wod">
+            <EntityTypeMapping TypeName="CoachBusterModel.Wod">
+              <MappingFragment StoreEntitySet="Wod">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdDia" ColumnName="IdDia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WodXEjercicio">
+            <EntityTypeMapping TypeName="CoachBusterModel.WodXEjercicio">
+              <MappingFragment StoreEntitySet="WodXEjercicio">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdWod" ColumnName="IdWod" />
+                <ScalarProperty Name="IdGrupoEjercicios" ColumnName="IdGrupoEjercicios" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
