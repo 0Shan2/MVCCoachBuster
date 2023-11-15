@@ -16,7 +16,8 @@ html {
 
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+
 }
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2&display=swap");
 /* This pen */
@@ -38,7 +39,7 @@ body {
 
 a, a:hover {
     text-decoration: none;
-   
+    font-family: 'Radomir tinkov gilroy', Arial, sans-serif !important;
     transition: color 0.3s ease-in-out;
 }
 
@@ -47,6 +48,7 @@ a, a:hover {
     text-transform: uppercase;
     text-align: center;
     font-size: 2.5rem;
+   
 }
 
 /* Cards */
@@ -59,6 +61,7 @@ a, a:hover {
     overflow: hidden;
     position: relative;
     color: #ffffff;
+    font-family: 'Radomir tinkov gilroy', Arial, sans-serif !important;
 }
 
     .postcard.dark {
@@ -89,6 +92,8 @@ a, a:hover {
 
     .postcard .postcard__title {
         font-size: 1.75rem;
+        font-weight: 500; /* Utiliza un valor más alto para un texto más grueso */
+        font-family: 'Radomir tinkov gilroy', Arial, sans-serif !important;
     }
 
     .postcard .postcard__img {
@@ -104,19 +109,24 @@ a, a:hover {
 
     .postcard .postcard__bar {
         width: 50px;
-        height: 10px;
-        margin: 10px 0;
+        height: 5px;
+        margin: 5px ;
         border-radius: 5px;
-        background-color: #424242;
+        background-color: #B0DB43;
         transition: width 0.2s ease;
     }
-
+    
     .postcard .postcard__text {
         padding: 1.5rem;
+        font-family: 'Radomir tinkov gilroy', Arial, sans-serif !important;
         position: relative;
         display: flex;
         flex-direction: column;
     }
+        
+  
+    }
+
 
     .postcard .postcard__preview-txt {
         overflow: hidden;
@@ -161,16 +171,18 @@ a, a:hover {
         border-radius: 10px;
     }
 
-    .postcard:hover .postcard__bar {
-        width: 100px;
-    }
+.postcard:hover .postcard__bar {
+    background-color: #B0DB43;
+    width: 100px;
+}
 
 @media screen and (min-width: 769px) {
     .postcard {
-        flex-wrap: inherit;
+          flex-wrap: inherit;
     }
 
         .postcard .postcard__title {
+  
             font-size: 2rem;
         }
 
@@ -255,7 +267,8 @@ a, a:hover {
 }
 
 .green .postcard__bar {
-    background-color: #79dd09;
+    background-color:  #B0DB43;
+    
 }
 
 .green::before {
@@ -275,7 +288,7 @@ a, a:hover {
 }
 
 .blue .postcard__bar {
-    background-color: #0076bd;
+    background-color: #B0DB43;
 }
 
 .blue::before {
@@ -295,7 +308,7 @@ a, a:hover {
 }
 
 .red .postcard__bar {
-    background-color: #bd150b;
+    background-color: #B0DB43;
 }
 
 .red::before {
@@ -316,7 +329,7 @@ a, a:hover {
 }
 
 .yellow .postcard__bar {
-    background-color: #bdbb49;
+    background-color: #B0DB43;
 }
 
 .yellow::before {

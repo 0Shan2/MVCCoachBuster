@@ -60,49 +60,48 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-
+            /*
             var dia = await _context.Dia
                 .Include(d => d.Plan)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            */
+            // Carga la relación entre Día, Wod, WodXEjercicio y GrupoEjercicios
+            var dia = await _context.Dia
 
+                .Include(d => d.Wod)
+                .ThenInclude(w => w.WodXEjercicio)
+                .ThenInclude(we => we.GrupoEjercicios)
+                .Include(d => d.Plan)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (dia == null)
             {
                 return NotFound();
             }
-            
-            // Carga la relación entre Día, Wod, WodXEjercicio y GrupoEjercicios
-            dia = await _context.Dia
-                .Include(d => d.Wod)
-                    .ThenInclude(w => w.WodXEjercicio)
-                        .ThenInclude(we => we.GrupoEjercicios)
-                .FirstOrDefaultAsync(m => m.Id == id);
 
+         
+
+            // Solo cargar el progreso relacionado con el día actual
             var progresoUsu = _context.Progreso
-                .Include(p => p.Suscripcion)
-                .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu)
-                .ToList();
+               .Include(p => p.Suscripcion)
+               .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu && p.WodXEjercicio.Wod.IdDia == dia.Id)
+               .ToList();
 
-            int totalGruposEjercicios = dia.Wod
-                .SelectMany(w => w.WodXEjercicio.Select(we => we.Id))
-                .Distinct()
-                .Count();
-
-            int gruposEjerciciosCompletados = progresoUsu
-                .Select(p => p.IdWodXEjercicio)
-                .Distinct()
-                .Count();
 
             int totalWods = dia.Wod.Count();
             int wodsCompletados = progresoUsu.Count(p => p.IsCompleted);
 
-            ViewBag.TotalGruposEjercicios = totalGruposEjercicios;
-            ViewBag.GruposEjerciciosCompletados = gruposEjerciciosCompletados;
             ViewBag.TotalWods = totalWods;
             ViewBag.WodsCompletados = wodsCompletados;
+            // Verificar si se debe realizar un refresh
+            if (TempData.ContainsKey("RefreshPage"))
+            {
+                // Eliminar el indicador de refresh para que no se vuelva a ejecutar en la siguiente solicitud
+                TempData.Remove("RefreshPage");
+                // Realizar un refresh redirigiendo a la misma página
+                return View(dia);
+            }
 
-           
 
-        
             if (dia == null)
             {
                 return NotFound();
@@ -116,6 +115,7 @@ namespace MVCCoachBuster.Controllers
         {
             try
             {
+         
                 var wod = _context.Wod
                     .Include(w => w.WodXEjercicio)
                     .FirstOrDefault(p => p.Id == wodId);
@@ -167,6 +167,17 @@ namespace MVCCoachBuster.Controllers
 
                     _context.SaveChanges();
                     _servicioNotificacion.Success("Progreso actualizado correctamente.");
+                    // Obtén el estado actualizado de IsCompleted después de guardar cambios
+                    var updatedWod = _context.Wod
+                        .Include(w => w.WodXEjercicio)
+                        .FirstOrDefault(p => p.Id == wodId);
+
+                    var isWodCompleted = updatedWod?.WodXEjercicio.All(we => we.Progresos?.Any(p => p.IsCompleted) ?? false) ?? false;
+
+                    _servicioNotificacion.Success("Progreso actualizado correctamente.");
+
+                    // Devuelve la respuesta JSON con el estado actualizado de IsCompleted
+                    return Json(new { IsWodCompleted = isWodCompleted });
                 }
                 else
                 {
@@ -203,7 +214,7 @@ namespace MVCCoachBuster.Controllers
 
             // Configura ViewBag.Wod con la lista de Wods
             ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
-            //aquiiii agregado
+          
             ViewBag.Dias = dias;
 
             return View();
