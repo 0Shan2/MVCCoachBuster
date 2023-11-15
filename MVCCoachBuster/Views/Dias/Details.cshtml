@@ -114,12 +114,24 @@
                 sessionStorage.setItem('wod-' + wodId, result.IsWodCompleted);
 
                 checkbox.change(); // Simular un evento de cambio para asegurar la actualización visual
+               
+                // Actualizar la barra de progreso solo cuando se selecciona un elemento
+                if (isSelected) {
+                    // Actualiza la barra de progreso
+                    var progressBar = $(".progress-bar");
+                    var diasCompletados = $("input:checked").length;
+                    var totalDias = $("input").length;
+                    var progreso = (diasCompletados / totalDias) * 100;
+                    progressBar.css("width", progreso + "%");
+                    progressBar.attr("aria-valuenow", diasCompletados);
+                }
             },
             error: function (error) {
                 console.error('Error al actualizar el progreso:', error);
             }
         });
     }
+
 
     // En el documento listo, restaurar el estado de los checkbox desde sessionStorage
     $(document).ready(function () {
