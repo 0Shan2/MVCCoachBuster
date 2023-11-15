@@ -5,24 +5,39 @@
 }
 
 <h3>@Model.Nombre</h3>
-
+<!--
 <div>
-    <p>Progreso: @ViewBag.WodsCompletados / @ViewBag.TotalWods</p>
+    <div class="alert alert-info" role="alert">
+        Progreso Grupos de Ejercicios: @ViewBag.GruposEjerciciosCompletados / @ViewBag.TotalGruposEjercicios
+    </div>
+    <div class="alert alert-info" role="alert">
+        Progreso Wods: @ViewBag.WodsCompletados / @ViewBag.TotalWods
+    </div>
+
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: @(ViewBag.WodsCompletados * 100 / ViewBag.TotalWods)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
+        <div class="progress-bar bg-success" role="progressbar" style="width: @(ViewBag.GruposEjerciciosCompletados * 100 / ViewBag.TotalGruposEjercicios)%;" aria-valuenow="@ViewBag.GruposEjerciciosCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalGruposEjercicios"></div>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: @(ViewBag.WodsCompletados * 100 / ViewBag.TotalWods)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
     </div>
 </div>
+-->
+
 
 <div class="container">
     @foreach (var wod in Model.Wod)
     {
         <div class="card border-primary mb-4 ">
             <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="wod-@wod.Id" onchange="updateProgress(@wod.Id)">
+            <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="wod-@wod.Id" onchange="updateProgress(@wod.Id, this.checked)">
+           
             <div class="card-header">@wod.Nombre</div>
             <div class="card-body ">
                 <ul>
                     @foreach (var wodXEjercicio in wod.WodXEjercicio)
                     {
+
                         <li>
                             @wodXEjercicio.GrupoEjercicios.Nombre
                             <a href="javascript:void(0);" onclick="openModal('instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id')">
@@ -69,20 +84,22 @@
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    function updateProgress(wodId) {
-        $.ajax({
-            type: 'POST',
-            url: '/Dias/UpdateProgress',
-            data: { wodId: wodId },
-            success: function (result) {
-                // Actualizar la interfaz de usuario según sea necesario
-                // Puedes manejar la lógica de actualización de la barra de progreso aquí
-            },
-            error: function (error) {
-                console.error('Error al actualizar el progreso:', error);
-            }
-        });
-    }
+    function updateProgress(wodId, isSelected) {
+    $.ajax({
+        type: 'POST',
+        url: '/Dias/UpdateProgress',
+            data: { wodId: wodId, isSelected: isSelected },
+        success: function (result) {
+              updateProgressBar(result.WodsCompletados, result.TotalWods);
+            // Actualizar la interfaz de usuario según sea necesario
+            // Puedes manejar la lógica de actualización de la barra de progreso aquí
+        },
+        error: function (error) {
+            console.error('Error al actualizar el progreso:', error);
+        }
+    });
+}
+
 
     function openModal(modalId) {
         var modal = document.getElementById(modalId);

@@ -69,13 +69,12 @@ namespace MVCCoachBuster.Controllers
             {
                 return NotFound();
             }
-
+            
             // Carga la relación entre Día, Wod, WodXEjercicio y GrupoEjercicios
             dia = await _context.Dia
                 .Include(d => d.Wod)
                     .ThenInclude(w => w.WodXEjercicio)
                         .ThenInclude(we => we.GrupoEjercicios)
-
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var progresoUsu = _context.Progreso
@@ -83,18 +82,102 @@ namespace MVCCoachBuster.Controllers
                 .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu)
                 .ToList();
 
+            int totalGruposEjercicios = dia.Wod
+                .SelectMany(w => w.WodXEjercicio.Select(we => we.Id))
+                .Distinct()
+                .Count();
+
+            int gruposEjerciciosCompletados = progresoUsu
+                .Select(p => p.IdWodXEjercicio)
+                .Distinct()
+                .Count();
+
             int totalWods = dia.Wod.Count();
             int wodsCompletados = progresoUsu.Count(p => p.IsCompleted);
 
+            ViewBag.TotalGruposEjercicios = totalGruposEjercicios;
+            ViewBag.GruposEjerciciosCompletados = gruposEjerciciosCompletados;
             ViewBag.TotalWods = totalWods;
             ViewBag.WodsCompletados = wodsCompletados;
 
+           
+
+        
             if (dia == null)
             {
                 return NotFound();
             }
 
             return View(dia);
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        [HttpPost]
+        public IActionResult UpdateProgress(int wodId, bool isSelected)
+        {
+            try
+            {
+                var wod = _context.Wod
+                    .Include(w => w.WodXEjercicio)
+                    .FirstOrDefault(p => p.Id == wodId);
+
+                if (wod != null)
+                {
+                    string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    int idUsu = int.Parse(userId);
+
+                    var idSuscripcion = _context.Suscripcion
+                        .Where(s => s.IdUsuario == idUsu)
+                        .Select(s => s.Id)
+                        .FirstOrDefault();
+
+                    foreach (var wodXEjercicio in wod.WodXEjercicio)
+                    {
+                        var progreso = _context.Progreso
+                            .FirstOrDefault(p => p.Suscripcion.IdUsuario == idUsu && p.IdWodXEjercicio == wodXEjercicio.Id);
+
+                        if (isSelected)
+                        {
+                            // Si el Wod se seleccionó, actualiza o crea la entrada de progreso
+                            if (progreso == null)
+                            {
+                                progreso = new Progreso
+                                {
+                                    IdSuscripcion = idSuscripcion,
+                                    IdWodXEjercicio = wodXEjercicio.Id,
+                                    Fecha = DateTime.Now,
+                                    IsCompleted = true
+                                };
+
+                                _context.Progreso.Add(progreso);
+                            }
+                            else
+                            {
+                                progreso.IsCompleted = true;
+                            }
+                        }
+                        else
+                        {
+                            // Si el Wod se deseleccionó, elimina la entrada de progreso si existe
+                            if (progreso != null)
+                            {
+                                _context.Progreso.Remove(progreso);
+                            }
+                        }
+                    }
+
+                    _context.SaveChanges();
+                    _servicioNotificacion.Success("Progreso actualizado correctamente.");
+                }
+                else
+                {
+                    _servicioNotificacion.Information("Wod no encontrado");
+                }
+            }
+            catch (Exception)
+            {
+                _servicioNotificacion.Error("Error al actualizar el progreso");
+            }
+            return RedirectToAction("Details", "Dias");
         }
 
 
@@ -232,65 +315,7 @@ namespace MVCCoachBuster.Controllers
             return _context.Dia.Any(e => e.Id == id);
         }
 
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        [HttpPost]
-        public IActionResult UpdateProgress(int wodId)
-        {
-            try
-            {
-                var wod = _context.Wod
-                    .Include(w => w.WodXEjercicio)
-                    .FirstOrDefault(p => p.Id == wodId);
 
-                if (wod != null)
-                {
-                    string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    int idUsu = int.Parse(userId);
-
-                    var idSuscripcion = _context.Suscripcion
-                        .Where(s => s.IdUsuario == idUsu)
-                        .Select(s => s.Id)
-                        .FirstOrDefault();
-
-                    foreach (var wodXEjercicio in wod.WodXEjercicio)
-                    {
-                        var progreso = _context.Progreso
-                            .FirstOrDefault(p => p.Suscripcion.IdUsuario == idUsu && p.IdWodXEjercicio == wodXEjercicio.Id);
-
-                        if (progreso == null)
-                        {
-                            // Si no hay una entrada existente, crea una nueva
-                            progreso = new Progreso
-                            {
-                                IdSuscripcion = idSuscripcion,
-                                IdWodXEjercicio = wodXEjercicio.Id,
-                                Fecha = DateTime.Now,
-                                IsCompleted = true
-                            };
-
-                            _context.Progreso.Add(progreso);
-                        }
-                        else
-                        {
-                            // Si ya existe una entrada, simplemente actualiza IsCompleted
-                            progreso.IsCompleted = true;
-                        }
-                    }
-
-                    _context.SaveChanges();
-                    _servicioNotificacion.Success("Progreso actualizado correctamente.");
-                }
-                else
-                {
-                    _servicioNotificacion.Information("Wod no encontrado");
-                }
-            }
-            catch (Exception)
-            {
-                _servicioNotificacion.Error("Error al actualizar el progreso");
-            }
-            return RedirectToAction("Details");
-        }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
