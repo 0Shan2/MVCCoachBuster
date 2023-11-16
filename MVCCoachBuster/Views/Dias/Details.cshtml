@@ -6,49 +6,57 @@
 
 <h3>@Model.Nombre</h3>
 
-  
-    <div>
+
+<div>
     <div class="alert alert-info" role="alert">
         Progreso Wods: @ViewBag.WodsCompletados / @ViewBag.TotalWods
     </div>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: @(ViewBag.WodsCompletados * 100 / ViewBag.TotalWods)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
-        </div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: @(ViewBag.WodsCompletados * 100 / ViewBag.TotalWods)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
     </div>
-
+</div>
 
 
 
 <div class="container">
+
     @foreach (var wod in Model.Wod)
     {
-        @foreach (var wodXEjercicio in wod.WodXEjercicio)
-        {
+        <div class="card border-primary mb-4 ">
 
+            <!--<input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="wod-@wod.Id" onchange="updateProgress(@wod.Id, this.checked)">-->
+            <input class="form-check-input position-absolute top-0 end-0 m-3"
+                   type="checkbox"
+                   id="wod-@wod.Id"
+            @(wod.WodXEjercicio != null && wod.WodXEjercicio.Any(we => we.Progresos != null && we.Progresos.Any(p => p.IsCompleted)) ? "checked" : "")
+                   onchange="updateProgress(@wod.Id, this.checked)" />
 
-           <div class="card border-primary mb-4 ">
+            <div class="card-header">
+                @wod.Nombre
+                @if (wod.WodXEjercicio != null)
+                {
 
-              <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="wod-@wod.Id" onchange="updateProgress(@wod.Id, this.checked)">
-                <div class="card-header">
-                    @wodXEjercicio.Wod.Nombre
-                   @if (wodXEjercicio.Progresos != null)
-                   {
-                 
-                        @foreach (var progreso in wodXEjercicio.Progresos)
+                    foreach (var wodXEjercicio in wod.WodXEjercicio)
+                    {
+                        if (wodXEjercicio.Progresos != null)
                         {
-                           <span>:
-                             <strong>Fecha: @progreso.Fecha, Completado: @progreso.IsCompleted</strong>
-                           </span>
+                            foreach (var progreso in wodXEjercicio.Progresos)
+                            {
+                                <span>
+                                    :
+                                    <strong>Fecha: @progreso.Fecha, Completado: @progreso.IsCompleted</strong>
+                                </span>
+                            }
                         }
-                  
-              
-              
-                  
-                   }
-                </div>
-              <div class="card-body ">
-                <ul>
-                   
+                    }
+                }
+            </div>
+            @foreach (var wodXEjercicio in wod.WodXEjercicio)
+            {
+
+                <div class="card-body ">
+                    <ul>
+
 
                         <li>
                             @wodXEjercicio.GrupoEjercicios.Nombre
@@ -59,17 +67,17 @@
                                 <i class="fas fa-video fa-lg"></i>
                             </a>
                         </li>
-                    
-                </ul>
-              </div>
-           </div>
-        }
+
+                    </ul>
+                </div>
+            }
+        </div>
     }
 </div>
 
-@foreach (var wod in Model.Wod)
+@foreach (var model in Model.Wod)
 {
-    foreach (var wodXEjercicio in wod.WodXEjercicio)
+    foreach (var wodXEjercicio in model.WodXEjercicio)
     {
         <div id="instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id" class="modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered ">
@@ -97,6 +105,18 @@
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+
+    // En el documento listo, restaurar el estado de los checkbox desde sessionStorage
+    $(document).ready(function () {
+        $('input[type="checkbox"]').each(function () {
+            var wodId = this.id.replace('wod-', '');
+            var storedValue = sessionStorage.getItem('wod-' + wodId);
+            if (storedValue !== null) {
+                $(this).prop('checked', storedValue === 'true');
+            }
+        });
+    });
+
     function updateProgress(wodId, isSelected) {
         $.ajax({
             type: 'POST',
@@ -114,7 +134,7 @@
                 sessionStorage.setItem('wod-' + wodId, result.IsWodCompleted);
 
                 checkbox.change(); // Simular un evento de cambio para asegurar la actualización visual
-               
+
                 // Actualizar la barra de progreso solo cuando se selecciona un elemento
                 if (isSelected) {
                     // Actualiza la barra de progreso
@@ -131,19 +151,6 @@
             }
         });
     }
-
-
-    // En el documento listo, restaurar el estado de los checkbox desde sessionStorage
-    $(document).ready(function () {
-        $('input[type="checkbox"]').each(function () {
-            var wodId = this.id.replace('wod-', '');
-            var storedValue = sessionStorage.getItem('wod-' + wodId);
-            if (storedValue !== null) {
-                $(this).prop('checked', storedValue === 'true');
-            }
-        });
-    });
-
 
 
     function openModal(modalId) {
