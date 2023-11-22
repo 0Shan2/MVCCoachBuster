@@ -78,14 +78,12 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-         
 
             // Solo cargar el progreso relacionado con el día actual
             var progresoUsu = _context.Progreso
                .Include(p => p.Suscripcion)
                .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu && p.WodXEjercicio.Wod.IdDia == dia.Id)
                .ToList();
-
 
             int totalWods = dia.Wod.Count();
             int wodsCompletados = progresoUsu.Count(p => p.IsCompleted);
@@ -110,12 +108,12 @@ namespace MVCCoachBuster.Controllers
             return View(dia);
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
+       
         [HttpPost]
         public IActionResult UpdateProgress(int wodId, bool isSelected)
         {
             try
             {
-         
                 var wod = _context.Wod
                     .Include(w => w.WodXEjercicio)
                     .FirstOrDefault(p => p.Id == wodId);
@@ -191,8 +189,8 @@ namespace MVCCoachBuster.Controllers
             return RedirectToAction("Details", "Dias");
         }
 
-
-
+       
+       
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Create

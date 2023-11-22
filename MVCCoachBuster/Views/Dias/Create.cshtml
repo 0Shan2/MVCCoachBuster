@@ -27,8 +27,6 @@
 
 <div>
     <div class="container">
-
-       
         <div class="row">
             @foreach (var dia in ViewBag.Dias)
             {
@@ -73,11 +71,17 @@
             }
         
         </div>
-       
+
     </div>
-
-
 </div>
+
+<br />
+<a onclick="window.history.back();" class="btn btn-secondary">
+    <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Regresar
+</a>
+<br />
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

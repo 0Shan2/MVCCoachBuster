@@ -6,7 +6,6 @@
 
 <h3>@Model.Nombre</h3>
 
-
 <div>
     <div class="alert alert-info" role="alert">
         Progreso Wods: @ViewBag.WodsCompletados / @ViewBag.TotalWods
@@ -16,15 +15,10 @@
     </div>
 </div>
 
-
-
 <div class="container">
-
     @foreach (var wod in Model.Wod)
     {
         <div class="card border-primary mb-4 ">
-
-            <!--<input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="wod-@wod.Id" onchange="updateProgress(@wod.Id, this.checked)">-->
             <input class="form-check-input position-absolute top-0 end-0 m-3"
                    type="checkbox"
                    id="wod-@wod.Id"
@@ -33,31 +27,12 @@
 
             <div class="card-header">
                 @wod.Nombre
-                @if (wod.WodXEjercicio != null)
-                {
-
-                    foreach (var wodXEjercicio in wod.WodXEjercicio)
-                    {
-                        if (wodXEjercicio.Progresos != null)
-                        {
-                            foreach (var progreso in wodXEjercicio.Progresos)
-                            {
-                                <span>
-                                    :
-                                    <strong>Fecha: @progreso.Fecha, Completado: @progreso.IsCompleted</strong>
-                                </span>
-                            }
-                        }
-                    }
-                }
             </div>
+
             @foreach (var wodXEjercicio in wod.WodXEjercicio)
             {
-
                 <div class="card-body ">
                     <ul>
-
-
                         <li>
                             @wodXEjercicio.GrupoEjercicios.Nombre
                             <a href="javascript:void(0);" onclick="openModal('instruccionesModal-@wodXEjercicio.GrupoEjercicios.Id')">
@@ -66,8 +41,18 @@
                             <a href="@wodXEjercicio.GrupoEjercicios.URLVideo" target="_blank">
                                 <i class="fas fa-video fa-lg"></i>
                             </a>
-                        </li>
 
+                            @if (wodXEjercicio.Progresos != null && wodXEjercicio.Progresos.Any())
+                            {
+                                <span class="ml-2">Progreso: </span>
+                                @foreach (var progreso in wodXEjercicio.Progresos)
+                                {
+                                    <span>
+                                        <strong>Fecha: @progreso.Fecha, Completado: @progreso.IsCompleted</strong>
+                                    </span>
+                                }
+                            }
+                        </li>
                     </ul>
                 </div>
             }
@@ -103,55 +88,82 @@
     <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Regresar
 </a>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 
     // En el documento listo, restaurar el estado de los checkbox desde sessionStorage
-    $(document).ready(function () {
-        $('input[type="checkbox"]').each(function () {
-            var wodId = this.id.replace('wod-', '');
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+            var wodId = checkbox.id.replace('wod-', '');
             var storedValue = sessionStorage.getItem('wod-' + wodId);
             if (storedValue !== null) {
-                $(this).prop('checked', storedValue === 'true');
+                checkbox.checked = storedValue === 'true';
             }
         });
     });
 
     function updateProgress(wodId, isSelected) {
-        $.ajax({
-            type: 'POST',
-            url: '/Dias/UpdateProgress',
-            data: { wodId: wodId, isSelected: isSelected },
-            success: function (result) {
+        var url = '/Dias/UpdateProgress';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ wodId: wodId, isSelected: isSelected }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(result => {
                 // Actualizar la interfaz de usuario según sea necesario
                 // Puedes manejar la lógica de actualización de la barra de progreso aquí
 
                 // Actualizar el estado del checkbox basado en el resultado de la respuesta
-                var checkbox = $('#wod-' + wodId);
-                checkbox.prop('checked', result.IsWodCompleted);
+                var checkbox = document.getElementById('wod-' + wodId);
+                checkbox.checked = result.IsWodCompleted;
 
                 // Almacenar el estado del checkbox en sessionStorage
                 sessionStorage.setItem('wod-' + wodId, result.IsWodCompleted);
 
-                checkbox.change(); // Simular un evento de cambio para asegurar la actualización visual
+                // Simular un evento de cambio para asegurar la actualización visual
+                var event = new Event('change');
+                checkbox.dispatchEvent(event);
 
                 // Actualizar la barra de progreso solo cuando se selecciona un elemento
                 if (isSelected) {
-                    // Actualiza la barra de progreso
-                    var progressBar = $(".progress-bar");
-                    var diasCompletados = $("input:checked").length;
-                    var totalDias = $("input").length;
+                    var progressBar = document.querySelector(".progress-bar");
+                    var diasCompletados = document.querySelectorAll("input:checked").length;
+                    var totalDias = document.querySelectorAll("input").length;
                     var progreso = (diasCompletados / totalDias) * 100;
-                    progressBar.css("width", progreso + "%");
-                    progressBar.attr("aria-valuenow", diasCompletados);
+                    progressBar.style.width = progreso + "%";
+                    progressBar.setAttribute("aria-valuenow", diasCompletados);
                 }
-            },
-            error: function (error) {
+            })
+            .catch(error => {
                 console.error('Error al actualizar el progreso:', error);
-            }
-        });
+            });
     }
 
+
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal(modalId);
+            }
+        };
+    }
+
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+        window.onclick = null;
+    }
 
     function openModal(modalId) {
         var modal = document.getElementById(modalId);
