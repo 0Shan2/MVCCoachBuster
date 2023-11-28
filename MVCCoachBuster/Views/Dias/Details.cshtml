@@ -11,7 +11,8 @@
         Progreso Wods: @ViewBag.WodsCompletados / @ViewBag.TotalWods
     </div>
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: @(ViewBag.WodsCompletados * 100 / ViewBag.TotalWods)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
+        <div class="progress-bar" role="progressbar" style="width: @(ViewBag.TotalWods != 0 ? ViewBag.WodsCompletados * 100 / ViewBag.TotalWods : 0)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
+
     </div>
 </div>
 

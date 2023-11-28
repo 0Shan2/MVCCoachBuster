@@ -1,33 +1,35 @@
 ﻿@model IEnumerable<MVCCoachBuster.Models.Dia>
 
 @{
-    ViewData["Title"] = "Listado de días del plan: " ;
+    ViewData["Title"] = "Listado de días del plan: " + Model.FirstOrDefault()?.Plan?.Nombre;
 }
 
-<h2>@ViewData["Title"] @Model.FirstOrDefault()?.Plan?.Nombre</h2>
+<h2>@ViewData["Title"]</h2>
 
 <hr />
 
-<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
 
-<br />
-
-<ul class="list-group">
-    @foreach (var item in Model)
-    {
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="day-info">
+            @foreach (var item in Model)
+            {
                 <a asp-controller="Dias" asp-action="Details" asp-route-id="@item.Id" class="day-link">
-                    @Html.DisplayFor(modelItem => item.Nombre)
+                    <div class="card mb-3">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: @(ViewBag.TotalWods != 0 ? ViewBag.WodsCompletados * 100 / ViewBag.TotalWods : 0)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
+
+                                </div>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
                 </a>
-            </div>
-            <div class="custom-control custom-switch">
-                <input class="custom-control-input" type="checkbox">
-                <label class="custom-control-label" for="check-@item.Id"></label>
+            }
 
-            </div>
-        </li>
-    }
-</ul>
-
-
+        </div>
+    </div>
+</div>
