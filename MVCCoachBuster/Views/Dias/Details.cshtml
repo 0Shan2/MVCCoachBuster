@@ -90,18 +90,6 @@
 
 <script>
 
-
-    // En el documento listo, restaurar el estado de los checkbox desde sessionStorage
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
-            let wodId = checkbox.id;
-            let storedValue = sessionStorage.getItem(wodId);
-            if (storedValue !== null) {
-                checkbox.checked = storedValue === 'true';
-            }
-        });
-    });
-
     function updateProgress(wodId, isSelected) {
         const url = '/Dias/UpdateProgress';
 

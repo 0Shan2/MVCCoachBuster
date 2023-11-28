@@ -169,17 +169,7 @@ namespace MVCCoachBuster.Controllers
 
                     _context.SaveChanges();
                     _servicioNotificacion.Success("Progreso actualizado correctamente.");
-                    // Obtén el estado actualizado de IsCompleted después de guardar cambios
-                    var updatedWod = _context.Wod
-                        .Include(w => w.WodXEjercicio)
-                        .FirstOrDefault(p => p.Id == val.WodId);
-
-                    var isWodCompleted = updatedWod?.WodXEjercicio.All(we => we.Progresos?.Any(p => p.IsCompleted) ?? false) ?? false;
-
-                    _servicioNotificacion.Success("Progreso actualizado correctamente.");
-
-                    // Devuelve la respuesta JSON con el estado actualizado de IsCompleted
-                    return Json(new { IsWodCompleted = isWodCompleted });
+                  
                 }
                 else
                 {
