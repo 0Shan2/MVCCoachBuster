@@ -78,7 +78,6 @@ namespace MVCCoachBuster.Controllers
                 return NotFound();
             }
 
-
             // Solo cargar el progreso relacionado con el día actual
             var progresoUsu = _context.Progreso
                .Include(p => p.Suscripcion)
@@ -99,7 +98,6 @@ namespace MVCCoachBuster.Controllers
                 return View(dia);
             }
 
-
             if (dia == null)
             {
                 return NotFound();
@@ -108,15 +106,21 @@ namespace MVCCoachBuster.Controllers
             return View(dia);
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
-       
+
+        public class Val
+        {
+            public int WodId { get; set; }
+            public bool IsSelected { get; set; }
+        }
+
         [HttpPost]
-        public IActionResult UpdateProgress(int wodId, bool isSelected)
+        public IActionResult UpdateProgress([FromBody]Val val)
         {
             try
             {
                 var wod = _context.Wod
                     .Include(w => w.WodXEjercicio)
-                    .FirstOrDefault(p => p.Id == wodId);
+                    .FirstOrDefault(p => p.Id == val.WodId);
 
                 if (wod != null)
                 {
@@ -133,7 +137,7 @@ namespace MVCCoachBuster.Controllers
                         var progreso = _context.Progreso
                             .FirstOrDefault(p => p.Suscripcion.IdUsuario == idUsu && p.IdWodXEjercicio == wodXEjercicio.Id);
 
-                        if (isSelected)
+                        if (val.IsSelected)
                         {
                             // Si el Wod se seleccionó, actualiza o crea la entrada de progreso
                             if (progreso == null)
@@ -168,7 +172,7 @@ namespace MVCCoachBuster.Controllers
                     // Obtén el estado actualizado de IsCompleted después de guardar cambios
                     var updatedWod = _context.Wod
                         .Include(w => w.WodXEjercicio)
-                        .FirstOrDefault(p => p.Id == wodId);
+                        .FirstOrDefault(p => p.Id == val.WodId);
 
                     var isWodCompleted = updatedWod?.WodXEjercicio.All(we => we.Progresos?.Any(p => p.IsCompleted) ?? false) ?? false;
 
@@ -189,8 +193,8 @@ namespace MVCCoachBuster.Controllers
             return RedirectToAction("Details", "Dias");
         }
 
-       
-       
+
+
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         // GET: Dias/Create
@@ -212,7 +216,7 @@ namespace MVCCoachBuster.Controllers
 
             // Configura ViewBag.Wod con la lista de Wods
             ViewBag.Wod = dias.SelectMany(dia => dia.Wod).ToList();
-          
+
             ViewBag.Dias = dias;
 
             return View();
@@ -243,8 +247,8 @@ namespace MVCCoachBuster.Controllers
                     {
                         IdPlan = planId, // Asigna el PlanId que recibes como parámetro
                         Nombre = "Día " + i, // Formatea el número de día
-                                              //NumDias = dia.NumDias,
-                                              // Otras propiedades del día
+                                             //NumDias = dia.NumDias,
+                                             // Otras propiedades del día
                     };
 
                     _context.Add(nuevoDia);
@@ -256,7 +260,7 @@ namespace MVCCoachBuster.Controllers
                 return RedirectToAction("Create", new { planId = planId });
 
             }
-           
+
             return View(dia);
         }
 
@@ -273,7 +277,7 @@ namespace MVCCoachBuster.Controllers
 
             var dia = await _context.Dia
                 .Include(d => d.Plan)
-                .Include(w => w.Wod) 
+                .Include(w => w.Wod)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dia == null)
             {
