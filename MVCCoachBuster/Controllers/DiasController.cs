@@ -67,12 +67,12 @@ namespace MVCCoachBuster.Controllers
             */
             // Carga la relación entre Día, Wod, WodXEjercicio y GrupoEjercicios
             var dia = await _context.Dia
-
                 .Include(d => d.Wod)
                 .ThenInclude(w => w.WodXEjercicio)
                 .ThenInclude(we => we.GrupoEjercicios)
                 .Include(d => d.Plan)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (dia == null)
             {
                 return NotFound();
@@ -80,15 +80,17 @@ namespace MVCCoachBuster.Controllers
 
             // Solo cargar el progreso relacionado con el día actual
             var progresoUsu = _context.Progreso
-               .Include(p => p.Suscripcion)
-               .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu && p.WodXEjercicio.Wod.IdDia == dia.Id)
-               .ToList();
+                .Include(p => p.Suscripcion)
+                .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu && p.WodXEjercicio.Wod.IdDia == dia.Id)
+                .ToList();
+
+            // Contar la cantidad de WODs completados de forma única
+            int wodsCompletados = progresoUsu.Select(p => p.WodXEjercicio.Wod.Id).Distinct().Count();
 
             int totalWods = dia.Wod.Count();
-            int wodsCompletados = progresoUsu.Count(p => p.IsCompleted);
-
             ViewBag.TotalWods = totalWods;
             ViewBag.WodsCompletados = wodsCompletados;
+
             // Verificar si se debe realizar un refresh
             if (TempData.ContainsKey("RefreshPage"))
             {
