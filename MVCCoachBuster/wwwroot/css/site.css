@@ -22,12 +22,17 @@ body {
 }
 
 
-/*imagen details*/
-.img-fluid {
-    max-width: 100px; /* Establece el ancho máximo deseado */
-    max-height: 100px;
-}
 
+/*imagen details*/
+/*.img-fluid {
+    max-width: 100px; 
+    max-height: 100px;
+}*/
+.img-index {
+    max-width: 800px; 
+    max-height: 600px;
+
+}
 
 .dark {
     background: #110f16;
@@ -52,7 +57,7 @@ a, a:hover {
 }
 
 /* Cards */
-.postcard {
+    .postcard {
     flex-wrap: wrap;
     display: flex;
     box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);

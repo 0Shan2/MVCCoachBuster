@@ -40,6 +40,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Usuarios" asp-action="ListaEntrenadores">Entrenadores</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Planes">Planes</a>
+                        </li>
 
                         <!--Solo los administradores podran ver el link de Rol, que nos lleva a su Index -->
                         @{
@@ -92,6 +95,8 @@
 
         </nav>
     </header>
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

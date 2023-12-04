@@ -1,0 +1,71 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using MVCCoachBuster.ViewModels
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+@model ListadoViewModel<Plan>
+
+@{
+
+    ViewData["Title"] = "Planes";
+
+}
+
+<section>
+    <div class="container py-2">
+        <div class="h1 text-center text-dark" style="font-family: 'TuFuente', sans-serif; font-size: 36px; font-weight: bold;" id="pageHeaderTitle">@ViewData["Title"]</div>
+        <div class="postcard-list">
+            @foreach (var item in Model.Registros)
+            {
+                <article class="postcard light yellow">
+                    <a class="postcard__img_link" href="#">
+                        @if (item.Foto != null)
+                        {
+                            <img class="postcard__img" src="/images/@(item.Foto)" alt="Foto del Plan" />
+                        }
+                    </a>
+                    <div class="postcard__text t-dark">
+                        <h1 class="postcard__title yellow" style="font-family: 'Radomir tinkov gilroy', Arial, sans-serif;">
+                            <a href="#">@item.Nombre</a>
+
+                        </h1>
+                        <div class="postcard__subtitle small">
+                            <p style="font-size: 15px; ">@item.Descripcion</p>
+
+                        </div>
+                        <div class="postcard__bar"></div>
+                        <div class="postcard__preview-txt" style="font-size: 20px;">
+                            <span style="font-weight: bold;">$</span>@item.Precio
+                        </div>
+
+                        @if (Model.PlanesSuscritosIds != null && Model.PlanesSuscritosIds.Contains(item.Id))
+                        {
+                            <a asp-controller="Dias" asp-action="Index" asp-route-planId="@item.Id" class="btn btn-primary" style="width: 110px; padding: 10px 15px;">
+                                <i class="fa-solid fa-play"></i>&nbsp;Iniciar
+                            </a>
+                        }
+                        else
+                        {
+                            <form asp-controller="Suscripciones" asp-action="Suscribirse" method="post">
+                                <input type="hidden" name="idPlan" value="@item.Id" />
+                                <button type="submit" class="btn btn-light">
+                                    <a class="nav-link text-grey fw-bold">Suscribirse</a>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("Index", new {
+    Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda
+}),
+new PagedListRenderOptions {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

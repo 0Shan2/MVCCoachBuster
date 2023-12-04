@@ -6,13 +6,17 @@
 
 <h3>@Model.Nombre</h3>
 
-<div>
-    <div class="alert alert-info" role="alert">
-        Progreso Wods: @ViewBag.WodsCompletados / @ViewBag.TotalWods
-    </div>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: @(ViewBag.TotalWods != 0 ? ViewBag.WodsCompletados * 100 / ViewBag.TotalWods : 0)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info" role="alert">
+                Progreso Wods: @ViewBag.WodsCompletados / @ViewBag.TotalWods
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: @(ViewBag.TotalWods != 0 ? ViewBag.WodsCompletados * 100 / ViewBag.TotalWods : 0)%;" aria-valuenow="@ViewBag.WodsCompletados" aria-valuemin="0" aria-valuemax="@ViewBag.TotalWods"></div>
 
+            </div>
+        </div>
     </div>
 </div>
 
@@ -91,51 +95,50 @@
 
 <script>
 
-    function updateProgress(wodId, isSelected) {
-        const url = '/Dias/UpdateProgress';
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ wodId: wodId, isSelected: isSelected }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+        function updateProgress(wodId, isSelected) {
+            const url = '/Dias/UpdateProgress';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ wodId: wodId, isSelected: isSelected }),
             })
-            .then(result => {
-                // Actualizar la interfaz de usuario según sea necesario
-                // Puedes manejar la lógica de actualización de la barra de progreso aquí
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        // Mostrar un mensaje de éxito (puedes utilizar tu lógica de notificación aquí)
+                        console.log(result.message);
 
-                // Actualizar el estado del checkbox basado en el resultado de la respuesta
-                let checkbox = document.getElementById(wodId);
-                checkbox.checked = result.IsWodCompleted;
+                        // Actualizar la interfaz de usuario según sea necesario
+                        updateUI(result.updatedDia, result.wodsCompletados);
+                    } else {
+                        // Mostrar un mensaje de error (puedes utilizar tu lógica de notificación aquí)
+                        console.error(result.message);
+                    }
+                })
+                .catch(error => {
+                    // Mostrar un mensaje de error en la consola
+                    console.error('Error al actualizar el progreso:', error);
+                });
+        }
 
-                // Almacenar el estado del checkbox en sessionStorage
-                sessionStorage.setItem(wodId, result.IsWodCompleted);
+    function updateUI(updatedDia, wodsCompletados) {
+        // Aquí debes implementar la lógica para actualizar la interfaz de usuario
+        // Puedes utilizar la información proporcionada en updatedDia y wodsCompletados
+        // para actualizar la barra de progreso y cualquier otro elemento necesario.
 
-                // Simular un evento de cambio para asegurar la actualización visual
-                let event = new Event('change');
-                checkbox.dispatchEvent(event);
-
-                // Actualizar la barra de progreso solo cuando se selecciona un elemento
-                if (isSelected) {
-                    let progressBar = document.querySelector(".progress-bar");
-                    let diasCompletados = document.querySelectorAll("input:checked").length;
-                    let totalDias = document.querySelectorAll("input").length;
-                    let progreso = (diasCompletados / totalDias) * 100;
-                    progressBar.style.width = progreso + "%";
-                    progressBar.setAttribute("aria-valuenow", diasCompletados);
-                }
-            })
-            .catch(error => {
-                console.error('Error al actualizar el progreso:', error);
-            });
+        // Ejemplo de actualización de la barra de progreso (ajústalo según tu estructura HTML)
+        let progressBar = document.querySelector(".progress-bar");
+        let totalWods = updatedDia.Wod.length;
+        let progreso = (wodsCompletados / totalWods) * 100;
+        progressBar.style.width = progreso + "%";
+        progressBar.setAttribute("aria-valuenow", wodsCompletados);
     }
+
+
 
 
     function openModal(modalId) {
@@ -155,20 +158,4 @@
         window.onclick = null;
     }
 
-    function openModal(modalId) {
-        var modal = document.getElementById(modalId);
-        modal.style.display = "block";
-
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                closeModal(modalId);
-            }
-        };
-    }
-
-    function closeModal(modalId) {
-        var modal = document.getElementById(modalId);
-        modal.style.display = "none";
-        window.onclick = null;
-    }
 </script>

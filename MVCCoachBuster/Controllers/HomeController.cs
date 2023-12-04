@@ -139,8 +139,35 @@ namespace MVCCoachBuster.Controllers
             // código asíncrono
             return View(viewModel);
 		}
+        public async Task<IActionResult> Planes(ListadoViewModel<Plan> viewModel)
+        {
+            // Obtén los IDs de los planes a los que el usuario está suscrito
+            var planesSuscritosIds = ObtenerPlanesSuscritosIds();
 
-		public IActionResult Privacy()
+            // Asigna planesSuscritosIds al modelo
+            viewModel.PlanesSuscritosIds = planesSuscritosIds;
+            var registrosPorPagina = _configuration.GetValue("RegistrosPorPagina", 5);
+            var consulta = _context.Planes
+                .OrderBy(m => m.Nombre)
+                .Include(m => m.UsuEntrenador)
+                .AsQueryable(); //AsQueryable para poder hacer la busqueda
+
+
+            //2º) Para buscar un plan
+            if (!String.IsNullOrEmpty(viewModel.TerminoBusqueda))
+            {
+                consulta = consulta.Where(u => u.Nombre.Contains(viewModel.TerminoBusqueda));
+            }
+
+            viewModel.Total = consulta.Count();
+            var numeroPagina = viewModel.Pagina ?? 1;
+            viewModel.Registros = await consulta.ToPagedListAsync(numeroPagina, registrosPorPagina);
+
+            // código asíncrono
+            return View(viewModel);
+        }
+
+        public IActionResult Privacy()
         {
             return View();
         }

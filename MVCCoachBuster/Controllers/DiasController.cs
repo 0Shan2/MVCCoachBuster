@@ -114,9 +114,8 @@ namespace MVCCoachBuster.Controllers
             public int WodId { get; set; }
             public bool IsSelected { get; set; }
         }
-
         [HttpPost]
-        public IActionResult UpdateProgress([FromBody]Val val)
+        public IActionResult UpdateProgress([FromBody] Val val)
         {
             try
             {
@@ -170,8 +169,38 @@ namespace MVCCoachBuster.Controllers
                     }
 
                     _context.SaveChanges();
-                    _servicioNotificacion.Success("Progreso actualizado correctamente.");
-                  
+
+                    // Obtener la información actualizada del día después de actualizar el progreso
+                    var updatedDia = _context.Dia
+                        .Include(d => d.Wod)
+                        .ThenInclude(w => w.WodXEjercicio)
+                        .ThenInclude(we => we.GrupoEjercicios)
+                        .Include(d => d.Plan)
+                        .FirstOrDefault(m => m.Id == wod.IdDia);
+
+                    if (updatedDia != null)
+                    {
+                        // Calcular la cantidad de WODs completados de forma única
+                        int wodsCompletados = _context.Progreso
+                            .Where(p => p.Suscripcion != null && p.Suscripcion.IdUsuario == idUsu && p.WodXEjercicio.Wod.IdDia == updatedDia.Id)
+                            .Select(p => p.WodXEjercicio.Wod.Id)
+                            .Distinct()
+                            .Count();
+
+                        // Devolver una respuesta JSON con la información actualizada
+                        return Json(new
+                        {
+                            success = true,
+                            message = "Progreso actualizado correctamente.",
+                            wodsCompletados = wodsCompletados,
+                            updatedDia = updatedDia
+                        });
+                    }
+                    else
+                    {
+                        // Devolver una respuesta JSON indicando que no se encontró el día actualizado
+                        return Json(new { success = false, message = "No se encontró el día actualizado." });
+                    }
                 }
                 else
                 {
@@ -182,7 +211,9 @@ namespace MVCCoachBuster.Controllers
             {
                 _servicioNotificacion.Error("Error al actualizar el progreso");
             }
-            return RedirectToAction("Details", "Dias");
+
+            // Devolver una respuesta JSON indicando un error
+            return Json(new { success = false, message = "Error al actualizar el progreso." });
         }
 
 

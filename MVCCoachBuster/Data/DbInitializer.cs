@@ -18,7 +18,7 @@ namespace MVCCoachBuster.Data
 
             
 
-            if (context.Roles.Any())
+            if (context.Roles.Any()) 
             {
                 return; // La BD ha sido inicializada con información
             }
